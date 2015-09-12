@@ -27,7 +27,6 @@ without the risk of name clashes.
 * version
 * data
 
-
 ```
 {
 	"description" : "Check that the route cache is flushed after NIC change",
@@ -173,13 +172,73 @@ and who added the object and the calculated sha256 sum for faster indexing.
 {
 	"object-id": 8f348a14934f302034a
 	"object" : <OBJECT>,
-	"object-attachment-id": 8f348a14934f302034a
 	"object-attachment" : <OBJECT>,
 	"date-added": 12-21-2013,
-	object-achievements = [
+	"object-achievements" = [
+		{
+			"id": 1,
+			"date-uploaded": "date when stored in database, not user provided date",
+			"data": <OBJECT ACHIEVEMENT>
+		},
+		{
+			"id": 2,
+			"date-uploaded": "date when stored in database, not user provided date",
+			"data": <OBJECT ACHIEVEMENT>
+		},
 	]
 }
 ```
 
+The object-id is the SHA256 of the object-issue. But the object container can
+only contain one particular object-issue. To identify a object-container
+exactly the SHA256 of the object-issue is the ideal key.
+
+Object achievement IDs are incremented at each new added achievement.
+
 
 ## Release Label ##
+
+[
+	{
+		"id": 1,
+		"description": "Tests for Release v4.1",
+		"content": [
+			{
+			"object-id": "8f348a14934f302034a",
+			"object-achievements-id": 2
+			},
+			{
+			"object-id": "df348a14934f302034a",
+			"object-achievements-id": 0
+			},
+		]
+	},
+	{
+		"id": 2,
+		"description": "Tests for Release v4.2",
+		"content": [
+			{
+			"object-id": "8f348a14934f302034a",
+			"object-achievements-id": 2
+			},
+		]
+	},
+	[...]
+]
+
+# Database File Layout #
+
+db/object-issues/
+db/release-labels.db
+
+## Typical Layout after some entries ##
+
+db/object-issues/35
+db/object-issues/35/
+db/object-issues/35/358548239f0593.db
+db/object-issues/f1/
+db/object-issues/f1/f1048a91949a32.db
+db/object-issues/f1/f1b19d018a4801.db
+db/object-issues/2a
+db/object-issues/2a/2a58ab18348219.db
+db/release-labels.db
