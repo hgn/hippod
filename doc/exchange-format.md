@@ -228,6 +228,18 @@ Object achievement IDs are incremented at each new added achievement.
 ]
 ```
 
+# SHA265 Calculation #
+
+The calculation of the unique sha265 is done in the following manner:
+
+* provide an emty string, called buf
+* sort the dictornary using the keys
+* iterate over the dictionary and add the value string to buf
+* if value is a integer convert to string before
+* if value is a string list: add each entry
+* if value is again a dictionary enter the loop again
+* at the end calculate the sha256 sum of the string - this is the ID.
+
 # Database File Layout #
 
 ```
