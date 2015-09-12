@@ -34,6 +34,17 @@ without the risk of name clashes.
 }
 ```
 
+#### Categories ####
+
+Categories are ordered in the list. A Object issue MUST specify at least one
+categories but can specify more. Categories are the mechanism to group test to
+teams or functional aspects. Categories are a powerfull and flexible mechanism
+for grouping.
+
+
+
+If you have no categories because the project is small you can use "common".
+
 ### Optional Attributes ###
 
 Optional attributes are not standardized. You can add all possible kind of
@@ -53,16 +64,6 @@ further name clashes.
 ```
 
 
-### Categories ###
-
-Categories are ordered in the list. A Object issue MUST specify at least one
-categories but can specify more. Categories are the mechanism to group test to
-teams or functional aspects. Categories are a powerfull and flexible mechanism
-for grouping.
-
-
-
-If you have no categories because the project is small you can use "common".
 
 ## Object Attachments ##
 
@@ -82,6 +83,7 @@ all already performed tests.
 	"media":      [ "image/svg+xml:base64encodedsvg", image/png:base64encodedpng ]
 	"references": [ "doors:234234", "doors:4391843" ],
 	"replaces":   [ "14d348a14934a02034b", "43348a234434934f0203421" ],
+	"tags":       [ "ip", "tcp", "stack" ],
 }
 ```
 
@@ -91,18 +93,41 @@ at any time.
 
 ## Object Achievement ##
 
-Durchgefuehrte arbeit:
+Executed test and their results are collected as *Object Achievements*. They
+can contain 
 
 ```
 {
 	"name": "John Doe",
 	"date": "30230303",
-	"result" : "passed | failed | unknown",
-	"data" : {
-		"pcap-log" = "binaryencoded"
-	}
+	"result" : "passed | failed | nonapplicable",
+	"sender-id" : "windows-workgroups-foo",
+	"data" : [
+	  {
+			"description": "foo-bar pcap file"
+			"mime-type":   "binary/octet-stream
+		  "data":        "<base64 encoded data>"
+		}
+	]
 }
 ```
+
+### Required Attributes ###
+
+* name
+* date
+* result
+
+### Optional Attributes
+
+Optional attributes are evaluated if available. 
+
+* sender-id
+* data
+
+### User Specific Attributes
+
+Must start with a underscore in their name.
 
 ## Object Container ##
 
