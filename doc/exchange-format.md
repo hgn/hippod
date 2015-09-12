@@ -1,7 +1,7 @@
 
 # Concept and Architecture #
 
-This document describe the internal and external API of contestcolld.
+This document describes the internal and external API of contestcolld.
 Understanding this document provides nearly all required information how
 contestcolld works internally, how contestcolld can be extended and what are
 the basic concept behind contestcolld.
@@ -24,15 +24,30 @@ without the risk of name clashes.
 
 * description
 * categories
+* version
+* data
+
 
 ```
 {
-	"description" : "Foo bar",
-	"categories": ["rpp", "ip"],
+	"description" : "Check that the route cache is flushed after NIC change",
+	"categories": [ "team:red", "topic:ip", "subtopic:route-cache" ],
+	"version":    0,
+	"data" : [
+	  {
+			"description": "network configuration script"
+			"file-name":   "network-config.sh"
+			"mime-type":   "text/plain",
+			"data":        "<base64 encoded data>"
+		}
+	]
 
 	[ optional attributes ]
 }
 ```
+
+#### Description ####
+
 
 #### Categories ####
 
@@ -41,11 +56,25 @@ categories but can specify more. Categories are the mechanism to group test to
 teams or functional aspects. Categories are a powerfull and flexible mechanism
 for grouping.
 
-
-
 If you have no categories because the project is small you can use "common".
 
-### Optional Attributes ###
+#### Version ####
+
+Version can be 0.
+
+#### Data ####
+
+data can be a empty list. If entry is provided then the description, file-name,
+mime-type and the base64 encoded data must be provided.
+
+### Tip ###
+
+
+Sometimes it is required to obsolete one particular test. Then the version
+can be incremented or on the other hand in the object attachments the replaces
+attribute can be used.
+
+### Optional User Attributes ###
 
 Optional attributes are not standardized. You can add all possible kind of
 optional attributes. The only limitation is that if new attributes added later
@@ -64,7 +93,6 @@ further name clashes.
 ```
 
 
-
 ## Object Attachments ##
 
 Object attachments are strictly bound to a particular object - but in contrast
@@ -80,10 +108,16 @@ all already performed tests.
 
 ```
 {
-	"media":      [ "image/svg+xml:base64encodedsvg", image/png:base64encodedpng ]
-	"references": [ "doors:234234", "doors:4391843" ],
+	"media":      [
+	  {
+			"description": "image of the routing architecture and test setup"
+			"mime-type":   "media/png",
+			"data":        "<base64 encoded image>"
+		},
+	],
+	"references": [ "doors:234234", "your-tool:4391843" ],
 	"replaces":   [ "14d348a14934a02034b", "43348a234434934f0203421" ],
-	"tags":       [ "ip", "tcp", "stack" ],
+	"tags":       [ "ip", "route", "cache", "performance" ],
 }
 ```
 
@@ -101,7 +135,7 @@ can contain
 	"name": "John Doe",
 	"date": "30230303",
 	"result" : "passed | failed | nonapplicable",
-	"sender-id" : "windows-workgroups-foo",
+	"sender-id" : "windows-workgroups-id",
 	"data" : [
 	  {
 			"description": "foo-bar pcap file"
