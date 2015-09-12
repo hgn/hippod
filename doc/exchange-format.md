@@ -6,7 +6,14 @@
 Is immutable once it is in the system. Has several required attributes. If a
 attribute change or new attributes are added a new object is internally
 generated. A object is unique identifyable by a ID. The id is a SHA256 of all
-ORed key and value pairs of the object
+ORed key and value pairs of the object.
+
+A *Object Issue* include two kind of attributes: required and optional
+attributes. The difference is that requires attributes are required for the
+base system to work with. They will be display, ordered etc. based on this
+information. Optional attributes on the other hand are in the responsibility of
+the user. They provide a way to extend contestcolld for special use-cases
+without the risk of name clashes.
 
 ### Required attributes ###
 
@@ -29,11 +36,14 @@ attributes. The only limitation is that new attributes added later will violate
 the *object issue* immutable guarantee and a new object is created - exactly
 the same behavior as *required attributes*.
 
+Optional attributes *MUST* start with a underscore in the name to prevent
+further name clashes.
+
 ```
 {
 	[ required attributes ]
 
-	"serial": 0
+	"_serial": 0
 }
 ```
 
