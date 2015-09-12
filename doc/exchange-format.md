@@ -34,12 +34,12 @@ without the risk of name clashes.
 }
 ```
 
-### Potential Optional Attributes ###
+### Optional Attributes ###
 
 Optional attributes are not standardized. You can add all possible kind of
-attributes. The only limitation is that new attributes added later will violate
-the *object issue* immutable guarantee and a new object is created - exactly
-the same behavior as *required attributes*.
+optional attributes. The only limitation is that if new attributes added later
+it will violate the *object issue* immutable guarantee and a new object is
+created - exactly the same behavior as for *required attributes*.
 
 Optional attributes *MUST* start with a underscore in the name to prevent
 further name clashes.
