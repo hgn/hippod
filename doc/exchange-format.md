@@ -198,6 +198,7 @@ Object achievement IDs are incremented at each new added achievement.
 
 ## Release Label ##
 
+```
 [
 	{
 		"id": 1,
@@ -225,14 +226,18 @@ Object achievement IDs are incremented at each new added achievement.
 	},
 	[...]
 ]
+```
 
 # Database File Layout #
 
+```
 db/object-issues/
 db/release-labels.db
+```
 
 ## Typical Layout after some entries ##
 
+```
 db/object-issues/35
 db/object-issues/35/
 db/object-issues/35/358548239f0593.db
@@ -242,3 +247,6 @@ db/object-issues/f1/f1b19d018a4801.db
 db/object-issues/2a
 db/object-issues/2a/2a58ab18348219.db
 db/release-labels.db
+```
+
+
