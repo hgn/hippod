@@ -30,7 +30,7 @@ without the risk of name clashes.
 ```
 {
 	"description" : "Check that the route cache is flushed after NIC change",
-	"categories": [ "team:red", "topic:ip", "subtopic:route-cache" ],
+	"categories": [ "team:orange", "topic:ip", "subtopic:route-cache" ],
 	"version":    0,
 	"data" : [
 	  {
@@ -55,11 +55,16 @@ categories but can specify more. Categories are the mechanism to group test to
 teams or functional aspects. Categories are a powerfull and flexible mechanism
 for grouping.
 
+You can categorize on the first level on the project structure. The next level
+can be the topic and next the subtopic. If a test was done as a unit-test or a
+black-box test should rather be specified as a tag in the object attachment
+attributes.
+
 If you have no categories because the project is small you can use "common".
 
 #### Version ####
 
-Version can be 0.
+Version start with 0 and can be an BigInt.
 
 #### Data ####
 
@@ -91,6 +96,12 @@ further name clashes.
 }
 ```
 
+NOTE: user attributed must start with a underscore followed by a character with
+the exception of another underscore. Keys starting with two underscore
+(```__foo```) are reserved for internal data. E.g. to save additional data
+without influence the common concept. So double underscore are special too.
+Double underscore data are for example not checksummed.
+
 
 ## Object Attachments ##
 
@@ -107,7 +118,7 @@ all already performed tests.
 
 ```
 {
-	"media":      [
+	"data":      [
 	  {
 			"description": "image of the routing architecture and test setup"
 			"mime-type":   "media/png",
@@ -138,10 +149,11 @@ can contain
 	"data" : [
 	  {
 			"description": "foo-bar pcap file"
+			"file-name":   "network-config.sh"
 			"mime-type":   "binary/octet-stream",
 			"data":        "<base64 encoded data>"
 		}
-	]
+	],
 
 	"__date_added": "30230303"
 }
@@ -163,6 +175,8 @@ may not be synced.
 To make things bullet proof the contestcolld will additionally store the date
 when the entry was added: ```__date_added```. The WEB GUI to display
 Achievements will use the internal format - just because it is bullet proof.
+If the date between __date_added and date differs for more then one day a
+warning is printed to the WEB GUI console.
 
 ### Optional Attributes
 
@@ -191,12 +205,10 @@ and who added the object and the calculated sha256 sum for faster indexing.
 		{
 			"id": 1,
 			"date-uploaded": "date when stored in database, not user provided date",
-			"data": <OBJECT ACHIEVEMENT>
 		},
 		{
 			"id": 2,
 			"date-uploaded": "date when stored in database, not user provided date",
-			"data": <OBJECT ACHIEVEMENT>
 		},
 	]
 }
@@ -256,22 +268,50 @@ The calculation of the unique sha265 is done in the following manner:
 # Database File Layout #
 
 ```
-db/object-issues/
+db/objects/
 db/release-labels.db
 ```
 
 ## Typical Layout after some entries ##
 
 ```
-db/object-issues/35
-db/object-issues/35/
-db/object-issues/35/358548239f0593.db
-db/object-issues/f1/
-db/object-issues/f1/f1048a91949a32.db
-db/object-issues/f1/f1b19d018a4801.db
-db/object-issues/2a
-db/object-issues/2a/2a58ab18348219.db
+db/objects/35/358548239f0593/container.db
+db/objects/35/358548239f0593/achievements/0.db
+db/objects/35/358548239f0593/achievements/1.db
+db/objects/35/358548239f0593/achievements/2.db
+db/objects/f1/f1048a91949a32/container.db
+db/objects/f1/f1048a91949a32/achievements/0.db
+db/objects/f1/f1048a91949a32/achievements/1.db
+db/objects/f1/f1b19d018a4801/container.db
+db/objects/f1/f1b19d018a4801/achievements/0.db
+db/objects/f1/f1b19d018a4801/achievements/1.db
+db/objects/f1/f1b19d018a4801/achievements/2.db
+db/objects/f1/f1b19d018a4801/achievements/3.db
+db/objects/2a/2a58ab18348219/container.db
+db/objects/2a/2a58ab18348219/achievements/0.db
+db/objects/2a/2a58ab18348219/achievements/2.db
 db/release-labels.db
 ```
 
+## REST Query and Manipulation API ###
+
+### Manipulation API ###
+
+```
+api/v1/add-full/
+api/v1/add-attachment-via-issue-id
+api/v1/add-achievement-via-issue-id
+
+api/v1/add-realease-label
+```
+
+### Query API ###
+
+Media and data types like files are not returned. To return media types as well
+the query string must explicetly enable this. This restriction is to reduce
+overall bandwidth consumption.
+
+```
+api/v1/get-full
+```
 
