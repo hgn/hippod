@@ -105,8 +105,8 @@ can contain
 	"data" : [
 	  {
 			"description": "foo-bar pcap file"
-			"mime-type":   "binary/octet-stream
-		  "data":        "<base64 encoded data>"
+			"mime-type":   "binary/octet-stream",
+			"data":        "<base64 encoded data>"
 		}
 	]
 }
