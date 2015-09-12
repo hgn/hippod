@@ -142,6 +142,8 @@ can contain
 			"data":        "<base64 encoded data>"
 		}
 	]
+
+	"__date_added": "30230303"
 }
 ```
 
@@ -150,6 +152,17 @@ can contain
 * name
 * date
 * result
+
+#### Date ####
+
+The exact date when the test was done. This must be provided from the user
+because a long running test may run over several days. The only way to get the
+exact date is that the user provide it. Disadvantage is that the local clock
+may not be synced.
+
+To make things bullet proof the contestcolld will additionally store the date
+when the entry was added: ```__date_added```. The WEB GUI to display
+Achievements will use the internal format - just because it is bullet proof.
 
 ### Optional Attributes
 
