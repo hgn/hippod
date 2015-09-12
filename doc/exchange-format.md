@@ -1,5 +1,10 @@
 
-# Client -> Daemon #
+# Concept and Architecture #
+
+This document describe the internal and external API of contestcolld.
+Understanding this document provides nearly all required information how
+contestcolld works internally, how contestcolld can be extended and what are
+the basic concept behind contestcolld.
 
 ## Object Issue ##
 
