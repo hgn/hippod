@@ -18,10 +18,16 @@ Python version.
 
 ### Linux ###
 
-#### Arch Linux ####
+#### Debian and Ubuntu ####
 
 ```
-sudo pacman -Ss community/python2-flask
+sudo apt-get install python-flask
+```
+
+#### Arch ####
+
+```
+sudo pacman -S community/python2-flask
 ```
 
 ## Starting contestcolld #
@@ -361,6 +367,10 @@ The calculation of the unique sha265 is done in the following manner:
 * if value is again a dictionary enter the loop again
 * at the end calculate the sha256 sum of the string - this is the ID.
 
+It is important that the calculation of the ID is known and implemented equally
+because client and server components will calculate their ID's on their own. Shifting
+the calculation to the server component result in unwanted higher network traffic.
+
 # Database File Layout #
 
 ```
@@ -394,11 +404,11 @@ db/release-labels.db
 ### Manipulation API ###
 
 ```
-api/v1/add-full/
-api/v1/add-attachment-via-issue-id
-api/v1/add-achievement-via-issue-id
+POST api/v1/object-issue
+POST api/v1/object-attachment
+POST api/v1/object-achievement
 
-api/v1/add-realease-label
+POST api/v1/release-label
 ```
 
 ### Query API ###
@@ -408,7 +418,14 @@ the query string must explicetly enable this. This restriction is to reduce
 overall bandwidth consumption.
 
 ```
-api/v1/lookup-full
+GET api/v1/object-issues
+GET api/v1/object-issues/id
+
+GET api/v1/object-attachment/id
+GET api/v1/object-achievement/id
+
+GET api/v1/release-label
+GET api/v1/release-label/id
 ```
 
 # Project Structure #
@@ -431,13 +448,13 @@ api/v1/lookup-full
 │   │       ├── jquery.min.js
 │   │       └── scripts.js
 │   ├── gui.py
-│   ├── gui.pyc
-│   ├── index.html
+│   ├── api.py
+│   ├── db-backend-file.py
 │   ├── __init__.py
-│   ├── __init__.pyc
 │   └── templates
 │       ├── footer.html
 │       ├── header.html
+│       ├── overview.html
 │       └── index.html
 ├── doc
 │   ├── architecture.png
@@ -456,5 +473,7 @@ api/v1/lookup-full
 ```
 
 # Further Information #
+
+## REST ##
 
 [Building RESTful API with flask](http://blog.miguelgrinberg.com/post/designing-a-restful-api-with-python-and-flask)
