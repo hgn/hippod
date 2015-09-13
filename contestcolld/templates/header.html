@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+		<meta charset="utf-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+		{% for cssinclude in css_includes %}<link href="{{cssinclude}}" rel="stylesheet">
+		{% endfor %}
+		<!-- script references -->
+    {% for includes in js_head_includes %}<script src="{{includes}}"></script>
+    {% endfor %}
+	</head>
