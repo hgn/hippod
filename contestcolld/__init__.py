@@ -14,3 +14,4 @@ app.config['HELLO_WORLD'] = 'Hello Flask!'
 # Importing views modules MUST BE in the end of the file to avoid problems
 # related to circular imports http://flask.pocoo.org/docs/patterns/packages
 import contestcolld.gui
+import contestcolld.api

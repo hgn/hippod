@@ -80,3 +80,9 @@ footer {
 .main .page-header {
   margin-top: 0;
 }
+
+/* modal dialog wider */
+.modal-wide {
+     width: 80%;
+}
+
