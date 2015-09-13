@@ -6,6 +6,14 @@
 
 # Installation #
 
+## Microsoft Windows ##
+
+Since Python version 2.7.9 *pip* is already included in standard python. A
+simple ```pip install flask``` will then install flask.
+
+There are several ways to install *pip* by hand but I recommend using a actual
+Python version.
+
 ## Linux ##
 
 ### Arch Linux ###
@@ -257,6 +265,7 @@ Optional attributes are evaluated if available.
 
 * sender-id
 * data
+* release
 
 ### User Specific Attributes
 
