@@ -1,6 +1,8 @@
 
 # Introduction #
 
+![alt tag](https://raw.githubusercontent.com/hgn/contestcolld/master/doc/process.png)
+
 
 # Installation #
 
