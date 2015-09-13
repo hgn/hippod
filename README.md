@@ -457,4 +457,4 @@ api/v1/lookup-full
 
 # Further Information #
 
-(Building RESTful API with flask)[http://blog.miguelgrinberg.com/post/designing-a-restful-api-with-python-and-flask]
+[Building RESTful API with flask](http://blog.miguelgrinberg.com/post/designing-a-restful-api-with-python-and-flask)
