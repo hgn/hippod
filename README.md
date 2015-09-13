@@ -411,3 +411,46 @@ overall bandwidth consumption.
 api/v1/lookup-full
 ```
 
+# Project Structure #
+
+```
+.
+├── contestcolld
+│   ├── assets
+│   │   ├── css
+│   │   │   ├── bootstrap.min.css
+│   │   │   └── styles.css
+│   │   ├── fonts
+│   │   │   ├── glyphicons-halflings-regular.eot
+│   │   │   ├── glyphicons-halflings-regular.svg
+│   │   │   ├── glyphicons-halflings-regular.ttf
+│   │   │   ├── glyphicons-halflings-regular.woff
+│   │   │   └── glyphicons-halflings-regular.woff2
+│   │   └── js
+│   │       ├── bootstrap.min.js
+│   │       ├── jquery.min.js
+│   │       └── scripts.js
+│   ├── gui.py
+│   ├── gui.pyc
+│   ├── index.html
+│   ├── __init__.py
+│   ├── __init__.pyc
+│   └── templates
+│       ├── footer.html
+│       ├── header.html
+│       └── index.html
+├── doc
+│   ├── architecture.png
+│   ├── architecture.svg
+│   ├── process.png
+│   └── process.svg
+├── LICENSE
+├── README.md
+├── reference-adapter
+│   ├── 0100-add-one-entry.py
+│   ├── 0101-add-million-entries.py
+│   └── 0200-query-recent-tests.py
+├── run.py
+├── setup.py
+└── TODO.md
+```
