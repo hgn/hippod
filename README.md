@@ -59,14 +59,29 @@ without the risk of name clashes.
 
 ### Required attributes ###
 
-* description
-* categories
-* version
-* data
+* Title
+* Description
+* Categories
+* Version
+* Data
 
 ```
 {
-	"description" : "Check that the route cache is flushed after NIC change",
+	"title" : "Check that the route cache is flushed after NIC change",
+	"description": [
+	  {
+			"type": "main":
+			"mime-type":   "text/markdown",
+			"data": "a mardown formatted long text encoded in base64"
+		},
+	  {
+			"type":        "media",
+			"mime-type":   "media/png",
+			"description": "image of the routing architecture and test setup",
+			"name":        "image-foo.png",
+			"data":        "<base64 encoded image>"
+		},
+	],
 	"categories": [ "team:orange", "topic:ip", "subtopic:route-cache" ],
 	"version":    0,
 	"data" : [
@@ -82,8 +97,26 @@ without the risk of name clashes.
 }
 ```
 
+#### Title ####
+
+The title should be short and concise. The title should be not longer then 100
+characters. In the Web GUI the title is shorten if longer.
+
 #### Description ####
 
+Must be available but can be an empty list if no further description is
+available or makes no sense. If a description is given then a *type* must be
+given. This must be *main* or *media*. There **MUST** be exactly one main type
+and 0 - \infty media types.
+
+Media types **MUST** have a mime type. Currently supported media types are:
+
+* ```media/png```
+* ```media/gif```
+* ```media/jpeg```
+
+The maximum size for media types is currently 500 kByte (base64 encoded, actual
+image size is even smaller). Larger media types are currently not supported.
 
 #### Categories ####
 
@@ -156,13 +189,6 @@ all already performed tests.
 
 ```
 {
-	"data":      [
-	  {
-			"description": "image of the routing architecture and test setup"
-			"mime-type":   "media/png",
-			"data":        "<base64 encoded image>"
-		},
-	],
 	"references": [ "doors:234234", "your-tool:4391843" ],
 	"replaces":   [ "14d348a14934a02034b", "43348a234434934f0203421" ],
 	"tags":       [ "ip", "route", "cache", "performance" ],
