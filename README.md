@@ -43,6 +43,8 @@ Understanding this document provides nearly all required information how
 contestcolld works internally, how contestcolld can be extended and what are
 the basic concept behind contestcolld.
 
+![alt tag](https://raw.githubusercontent.com/hgn/contestcolld/master/doc/architecture.png)
+
 ## Object Issue ##
 
 Is immutable once it is in the system. Has several required attributes. If a
@@ -117,6 +119,11 @@ Media types **MUST** have a mime type. Currently supported media types are:
 
 The maximum size for media types is currently 500 kByte (base64 encoded, actual
 image size is even smaller). Larger media types are currently not supported.
+
+If several media types are given the name must be unique. No name clashes are
+allowed.
+
+The description is optional.
 
 #### Categories ####
 
@@ -376,6 +383,6 @@ the query string must explicetly enable this. This restriction is to reduce
 overall bandwidth consumption.
 
 ```
-api/v1/get-full
+api/v1/lookup-full
 ```
 
