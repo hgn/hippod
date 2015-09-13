@@ -15,6 +15,16 @@ sudo pacman -Ss community/python2-flask
 
 # Developer Information #
 
+## Color Guidelines ##
+
+If colors are required for webdesign only a few should be taken. Each color
+**must** be taken from the Google Material Design scheme.
+
+If random colors are required, e.g. for users, then these colors should be
+monochromatic.
+
+A java script tool to generate monochromatic colors is [please](http://www.checkman.io/please/)
+
 ## Coding Guidelines ##
 
 * Python PEP8
