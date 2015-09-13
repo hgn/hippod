@@ -4,9 +4,11 @@
 ![alt tag](https://raw.githubusercontent.com/hgn/contestcolld/master/doc/process.png)
 
 
-# Installation #
+## Installation and Dependencies ##
 
-## Microsoft Windows ##
+Only python and python-flask is required to run contestcolld.
+
+### Microsoft Windows ###
 
 Since Python version 2.7.9 *pip* is already included in standard python. A
 simple ```pip install flask``` will then install flask.
@@ -14,13 +16,25 @@ simple ```pip install flask``` will then install flask.
 There are several ways to install *pip* by hand but I recommend using a actual
 Python version.
 
-## Linux ##
+### Linux ###
 
-### Arch Linux ###
+#### Arch Linux ####
 
 ```
 sudo pacman -Ss community/python2-flask
 ```
+
+## Starting contestcolld #
+
+Simple start the ```run.py``` script in the main directory for simple output.
+To use this package in a productive environment you can use *nginx* to power up
+flask. Search for *nginx* and *flask* how to setup nginx correctly.
+
+## Backup Production Data - Database ##
+
+All information is stored in plain txt files in the configured database path. A
+tarball and a previous temporary shutdown of the server (to eliminate
+inconsistency) is suficiently to backup all data.
 
 
 # Developer Information #
