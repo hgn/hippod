@@ -107,7 +107,7 @@ characters. In the Web GUI the title is shorten if longer.
 Must be available but can be an empty list if no further description is
 available or makes no sense. If a description is given then a *type* must be
 given. This must be *main* or *media*. There **MUST** be exactly one main type
-and 0 - \infty media types.
+and 0 - ∞ media types.
 
 Media types **MUST** have a mime type. Currently supported media types are:
 
