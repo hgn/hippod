@@ -30,6 +30,14 @@ sudo apt-get install python-flask
 sudo pacman -S community/python2-flask
 ```
 
+### Testing Dependencies ###
+
+Python request package is required for build in tests. You can use:
+
+```
+sudo pacman -S python2-requests-toolbelt-0.4.0-1
+```
+
 ## Starting contestcolld #
 
 Simple start the ```run.py``` script in the main directory for simple output.
