@@ -41,18 +41,16 @@ def create_container_data_merge_issue_new(sha_sum, xobj):
     date = datetime.datetime.now().isoformat('T') # ISO 8601 format
     d = dict()
     d['object-id'] = sha_sum
-    d['object'] = obj['object']
+    d['object'] = xobj['object']
     d['date-added'] = date
     d['attachment'] = { }
     d['attachment-last-modified'] = date
     d['achievements'] = []
-    d['achievements-last-added'] = date
 
     if 'attachment' in xobj and len(xobj['attachment']) > 0:
         if not check_attachment(xobj['attachment']):
             return [False, None]
         d['attachment'] = xobj['attachment']
-
 
     return [True, json.dumps(d, sort_keys=True,indent=4, separators=(',', ': '))]
 
@@ -65,6 +63,9 @@ def post_object_issue_db_save_new(sha_sum, xobj):
     obj_root_full_path = os.path.join(obj_root_pre_path, sha_sum)
     if not os.path.isdir(obj_root_full_path):
         os.makedirs(obj_root_full_path)
+    achie_path = os.path.join(obj_root_full_path, 'achievements')
+    if not os.path.isdir(achie_path):
+        os.makedirs(achie_path)
 
     file_path = os.path.join(obj_root_full_path, 'container.db')
     if os.path.isfile(file_path):
@@ -113,22 +114,60 @@ def write_file(sha, py_object):
     fd.write(data)
     fd.close()
 
+def write_achievement_file(sha, id_no, py_object):
+    data = json.dumps(py_object, sort_keys=True,indent=4, separators=(',', ': '))
+    path = os.path.join(app.config['DB_OBJECT_PATH'],
+                        sha[0:2],
+                        sha,
+                        'achievements',
+                        '{0:04d}.db'.format(id_no))
+    fd = open(path, 'w')
+    fd.write(data)
+    fd.close()
+
 
 def post_object_update_attachment_achievement(sha1, xobj):
     # ok, the object is in database, we now update the data
     # attachments are updated (overwrite), achievements are
     # added
+    rewrite_required = False
+    (ret, data) = read_obj_by_id(sha1)
+    if not ret:
+        app.logger.error("path is not available!")
+        return False
+
     if 'attachment' in xobj:
         if type(xobj['attachment']) is not dict:
                 app.logger.error("attachment data MUST be a dict - but isn't")
                 return False
-        (ret, data) = read_obj_by_id(sha1)
-        if not ret:
-            app.logger.error("path is not available!")
-            return False
         data['attachment'] = xobj['attachment']
         data['attachment-last-modified'] = datetime.datetime.now().isoformat('T')
+        rewrite_required = True
+
+    if 'achievements' in xobj:
+        if type(xobj['achievements']) is not list:
+                app.logger.error("achievements data MUST be a list - but isn't")
+                return False
+        current_achievements = data["achievements"]
+        current_achievements_no = len(current_achievements)
+        # add new achievements in same order
+        for a in xobj['achievements']:
+            new_data = dict()
+            new_data['id'] = current_achievements_no
+            new_data['date-added'] =  datetime.datetime.now().isoformat('T')
+            current_achievements.append(new_data)
+
+            # now we save the achievement in a seperate file
+            write_achievement_file(sha1, current_achievements_no, a)
+            current_achievements_no += 1
+
+        data["achievements"] = current_achievements
+        rewrite_required = True
+
+    if rewrite_required:
+        app.logger.error("rewrite object.db file")
         write_file(sha1, data)
+
 
     return True
 
