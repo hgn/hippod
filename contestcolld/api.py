@@ -31,12 +31,8 @@ def get_tasks():
     return jsonify({'tasks': "foo"})
 
 
-def add_attachment_to_object_container_object(container_obj, attachment_obj):
-    pass
-
-
 def check_attachment(attachment):
-    if type(attachment) is not list:
+    if type(attachment) is not dict:
         return False
     return True
 
@@ -96,6 +92,47 @@ def is_obj_already_in_db(sha_sum):
     return [False, None]
 
 
+def read_obj_by_id(sha_sum):
+    path = os.path.join(app.config['DB_OBJECT_PATH'],
+                        sha_sum[0:2],
+                        sha_sum,
+                        'container.db')
+    if not os.path.isfile(path):
+        return [False]
+    with open(path) as data_file:
+        data = json.load(data_file)
+    return [True, data]
+
+def write_file(sha, py_object):
+    data = json.dumps(py_object, sort_keys=True,indent=4, separators=(',', ': '))
+    path = os.path.join(app.config['DB_OBJECT_PATH'],
+                        sha[0:2],
+                        sha,
+                        'container.db')
+    fd = open(path, 'w')
+    fd.write(data)
+    fd.close()
+
+
+def post_object_update_attachment_achievement(sha1, xobj):
+    # ok, the object is in database, we now update the data
+    # attachments are updated (overwrite), achievements are
+    # added
+    if 'attachment' in xobj:
+        if type(xobj['attachment']) is not dict:
+                app.logger.error("attachment data MUST be a dict - but isn't")
+                return False
+        (ret, data) = read_obj_by_id(sha1)
+        if not ret:
+            app.logger.error("path is not available!")
+            return False
+        data['attachment'] = xobj['attachment']
+        data['attachment-last-modified'] = datetime.datetime.now().isoformat('T')
+        write_file(sha1, data)
+
+    return True
+
+
 def process_post_object_issues(xobj):
     ret = object_hasher.check_xobject(xobj)
     if ret == False:
@@ -120,6 +157,10 @@ def process_post_object_issues(xobj):
         app.logger.warning("%s" % (ret))
     else:
         app.logger.warning("{} already in DB".format(sha1))
+        ret = post_object_update_attachment_achievement(sha1, xobj)
+        if not ret:
+            app.logger.warning("%s" % ("save failed"))
+            return [False, None]
         pass
 
     # great, return success and sha1 (the client can
