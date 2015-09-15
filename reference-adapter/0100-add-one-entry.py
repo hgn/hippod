@@ -11,6 +11,11 @@ data = '''
     "object": 
     {
         "title": "Check that the route cache is flushed after NIC change",
+        "categories": [
+            "team:orange",
+            "topic:ip",
+            "subtopic:route-cache"
+        ],
         "description": [
             {
                 "type": "main",
@@ -25,11 +30,6 @@ data = '''
                 "data": "<base64 encoded image>"
             }
         ],
-        "categories": [
-            "team:orange",
-            "topic:ip",
-            "subtopic:route-cache"
-        ],
         "version": 0,
         "data": [
             {
@@ -40,8 +40,27 @@ data = '''
             }
         ]
     },
-    "attachment": { },
-    "achievements": []
+    "attachment": {
+        "references": [ "doors:234236", "your-tool:4391843" ],
+        "replaces":   [ "14d348a14934a02034b", "43348a234434934f0203421" ],
+        "tags":       [ "ip", "route", "cache", "performance" ]
+        },
+    "achievements": [
+        {
+            "submitter": "John Doe <john.doe@example.com>",
+            "test-date": "2015-09-15T22:24:29.158759",
+            "result": "passed",
+            "sender-id": "virgo.skynet.local",
+            "data" : [
+                        {
+                            "description": "foo-bar pcap file",
+                            "file-name":   "network-config.sh",
+                            "mime-type":   "binary/octet-stream",
+                            "data":        "<base64 encoded data>"
+                        }
+                     ]
+        }
+    ]
 }
 '''
 
