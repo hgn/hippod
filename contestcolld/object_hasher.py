@@ -28,6 +28,7 @@ def __sum_dict(o):
         return buf
 
 def check_sum_object_issue(o):
+        o = o['object']
         ''' return [[true|false], sha1-sum] '''
         buf = ''
         if type(o) is not dict:
@@ -44,3 +45,13 @@ def check_sum_object_issue(o):
                 return [False, None]
         buf_digest = hashlib.sha1(buf).hexdigest()
         return [True, buf_digest]
+
+def check_xobject(o):
+        if type(o) is not dict:
+            return False
+        if "object" not in o and 'object-id' not in o:
+            return False
+        if 'object' in o and 'object-id' in o:
+            return False
+        return True
+
