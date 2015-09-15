@@ -83,7 +83,21 @@ the basic concept behind contestcolld.
 
 ![alt tag](https://raw.githubusercontent.com/hgn/contestcolld/master/doc/architecture.png)
 
-## Object Issue ##
+## Exchange Object ##
+
+Short xobject is the exchange format where all data is encapsulated. The xobj
+**MUST** contain a object or a object-id - but not both. It **CAN** contain a
+attachment dictionary and **CAN** contain a achievements list.
+
+```
+{
+    "object-id": "c26446e12752fb6fea7aa834161fcc50fca7c38c",
+    "attachment": { },
+    "achievements": []
+}
+```
+
+## Object ##
 
 Is immutable once it is in the system. Has several required attributes. If a
 attribute change or new attributes are added a new object is internally
