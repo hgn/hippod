@@ -13,3 +13,8 @@
 	many packages, each with a own version. Which one is now the major one? This is not
 	the problem which should be solved in contestcolld! Currently I have no ideal solution
 	to this problem so the versioning is left out for upcoming versions.
+- [ ] Provide a knob to configure the maximum number of attachments and data per see.
+  If limit is reached a HTTP error code MUST be returned. This knob can be on a per
+	attachment basis and on a per object basis. E.g. to limit wild scripts. Another
+	idea is to limit this on a per category basis. Probably on a per user basis? Overall
+	maximum limit? This can all be presented on the admin panel. Hard quota
