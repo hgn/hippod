@@ -499,3 +499,28 @@ GET api/v1/release-label/id
 ## REST ##
 
 [Building RESTful API with flask](http://blog.miguelgrinberg.com/post/designing-a-restful-api-with-python-and-flask)
+
+## Nice Timeline ##
+
+http://www.bootply.com/106768#
+
+Dynamic Timelime:
+
+http://codyhouse.co/gem/vertical-timeline/
+
+# Data Compression #
+
+DOC file compression with python 
+
+```
+import gzip
+import shutil
+
+with open('9.pdf', 'rb') as f_in, gzip.open('9.pdf.gz', 'wb') as f_out:
+	shutil.copyfileobj(f_in, f_out)
+```
+
+DOC 1,1M -> 429K in 0.19s
+PDF 11M -> 7,2M in 0,38s
+
+Compression on mime type (jpeg no gain, etc) and data size: if data size < 100k compression benefit low.
