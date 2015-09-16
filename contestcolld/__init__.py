@@ -33,5 +33,8 @@ app.config['HELLO_WORLD'] = 'Hello Flask!'
 # The views modules that contain the application's routes are imported here
 # Importing views modules MUST BE in the end of the file to avoid problems
 # related to circular imports http://flask.pocoo.org/docs/patterns/packages
-import contestcolld.gui
-import contestcolld.api
+import contestcolld.gui_dashboard
+import contestcolld.gui_admin
+
+import contestcolld.api_object
+import contestcolld.api_resources
