@@ -28,7 +28,15 @@
 			</div><!--/span-->
 
 			<div class="col-sm-9 col-md-10 main">
+			<ul class="nav nav-tabs">
+					<li><a href="#tab1" data-toggle="tab">Tab 1</a></li>
+					<li><a href="#tab2" data-toggle="tab">Tab 2</a></li>
+					<li><a href="#tab3" data-toggle="tab">Tab 3</a></li>
+			</ul>
 
+
+			<div class="tab-content" id="tabs">
+				<div class="tab-pane" id="tab1">
 
 
 <p class="greeting-id"></p>
@@ -39,6 +47,8 @@
   Show specific Test
 </button>
 
+<img src="media/images/sunburst-d3js.png" />
+
 <!-- Modal -->
 <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
 	<div class="modal-dialog modal-wide" role="document">
@@ -47,10 +57,7 @@
 				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 				<h3 class="modal-title" id="myModalLabel">Lorizzle ipsizzle doggy fo shizzle amet, owned adipiscing elizzle. Nullam sapizzle</h3>
 			</div>
-
-
 			<div class="modal-body">
-
 				<div class="container-fluid">
 					<div class="row">
 						<div class="col-xs-6 col-md-4">
@@ -75,9 +82,13 @@
 	</div>
 	<!-- Modal end -->
 
-          
 
-</div>         
+</div>
+<div class="tab-pane" id="tab2">...f...</div>
+<div class="tab-pane" id="tab3">...g...</div>
+
+
+</div> <!-- tabs -->         
 </div><!--/row-->
 
 {% include "footer.html" %}
