@@ -1,51 +1,35 @@
 {% include "header.html" %}
 
-	<body>
-<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
-      <div class="container-fluid">
-        <div class="navbar-header">
-          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-            <span class="sr-only">Toggle navigation</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
-					<a class="navbar-brand" href="#">ConTestColld</a>
-        </div>
+<body>
+	<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+		<div class="container-fluid">
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+					<span class="sr-only">Toggle navigation</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="#">ConTestColld</a>
+			</div>
+		</div>
+	</nav>
 
-				<!-- 
-        <div class="navbar-collapse collapse">
-          <ul class="nav navbar-nav navbar-right">
-            <li><a href="#">Dashboard</a></li>
-            <li><a href="#">Settings</a></li>
-            <li><a href="#">Profile</a></li>
-            <li><a href="#">Help</a></li>
-          </ul>
-          <form class="navbar-form navbar-right">
-            <input type="text" class="form-control" placeholder="Search...">
-          </form>
-        </div>
+	<div class="container-fluid">
 
-				-->
-					
-      </div>
-</nav>
+		<div class="row row-offcanvas row-offcanvas-left">
 
-<div class="container-fluid">
-      
-      <div class="row row-offcanvas row-offcanvas-left">
-        
-				<div class="col-sm-3 col-md-2 sidebar-offcanvas" id="sidebar" role="navigation">
-					<ul class="nav nav-sidebar">
-						<li><a href="#">Dashboard</a></li>
-						<li class="active"><a href="#">Overview</a></li>
-						<li><a href="#">Reports</a></li>
-						<li><a href="#">Label</a></li>
-						<li><a href="#">Admin</a></li>
-					</ul>
-				</div><!--/span-->
-        
-        <div class="col-sm-9 col-md-10 main">
+			<div class="col-sm-3 col-md-2 sidebar-offcanvas" id="sidebar" role="navigation">
+				<ul class="nav nav-sidebar">
+					<li><a href="#">Dashboard</a></li>
+					<li class="active"><a href="#">Overview</a></li>
+					<li><a href="#">Reports</a></li>
+					<li><a href="#">Label</a></li>
+					<li><a href="#">Admin</a></li>
+				</ul>
+			</div><!--/span-->
+
+			<div class="col-sm-9 col-md-10 main">
 
 
 
@@ -59,48 +43,43 @@
 
 <!-- Modal -->
 <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-  <div class="modal-dialog modal-wide" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h3 class="modal-title" id="myModalLabel">Lorizzle ipsizzle doggy fo shizzle amet, owned adipiscing elizzle. Nullam sapizzle</h3>
-      </div>
-
-<div class="container-fluid">
-  <div class="row">
-		<div class="col-xs-6 col-md-4">
-    <p class="bg-primary">Last Tests</p>
-		<p>foo</p>
-    </div> <!-- <div class="col-xs-6 col-md-4"> -->
+	<div class="modal-dialog modal-wide" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h3 class="modal-title" id="myModalLabel">Lorizzle ipsizzle doggy fo shizzle amet, owned adipiscing elizzle. Nullam sapizzle</h3>
+			</div>
 
 
+			<div class="modal-body">
 
+				<div class="container-fluid">
+					<div class="row">
+						<div class="col-xs-6 col-md-4">
+							<p>foo</p>
+						</div> <!-- <div class="col-xs-6 col-md-4"> -->
 
+						<div class="col-xs-12 col-md-8">
+							<p>
+							bar
+							</p>
+						</div>
+						</div>
+					</div>
 
-
-		<div class="col-xs-12 col-md-8">
-    <p class="bg-primary">Last Tests</p>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+					<button type="button" class="btn btn-primary">Save changes</button>
+				</div>
+			</div>
 		</div>
-  </div>
-</div>
-
-			<!--
-      <div class="modal-body">
-        ...
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Save changes</button>
-      </div>
-			-->
-    </div>
-  </div>
-</div>
-
+	</div>
+	<!-- Modal end -->
 
           
 
-          
-      </div><!--/row-->
+</div>         
+</div><!--/row-->
 
 {% include "footer.html" %}
