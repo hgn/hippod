@@ -14,5 +14,11 @@ from flask import request
 
 @app.route('/api/v1.0/resources', methods=['GET'])
 def get_resources():
-    return jsonify({'tasks': "foo"})
+    data = dict()
+    data['overall'] = 10030303
+    data['subgroup-a'] = 4919223
+    data['subgroup-b'] = 391922
+    data['subgroup-c'] = 54922
+    data['subgroup-d'] = 395914
+    return jsonify(data)
 
