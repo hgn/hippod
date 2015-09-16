@@ -75,18 +75,14 @@ footer {
 }
 @media (min-width: 768px) {
   .main {
-    padding-right: 40px;
-    padding-left: 40px;
+    padding-right: 5px;
+    padding-left: 10px;
   }
 }
 .main .page-header {
   margin-top: 0;
 }
 
-/* modal dialog wider */
-.modal-wide {
-     width: 80%;
-}
 
 /* https://google-webfonts-helper.herokuapp.com/fonts/open-sans?subsets=latin */
 /* open-sans-300 - latin */

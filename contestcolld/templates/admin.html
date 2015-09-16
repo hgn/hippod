@@ -15,6 +15,35 @@
 		</div>
 	</nav>
 	<div class="container-fluid">
+
+
+		<!-- Modal -->
+		<div class="modal fade" id="error-dialog" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+			<div class="modal-dialog modal-wide" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+						<h3 class="modal-title" id="myModalLabel">Oh snap! You got an error!</h3>
+					</div>
+					<div class="modal-body">
+						<div class="alert alert-danger" role="alert">
+							<h4>
+							<span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+							Cannot connect to server!?
+							</h4>
+						</div>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- Modal end -->
+
+
+
+
 		<div class="row row-offcanvas row-offcanvas-left">
 
 			<div class="col-sm-3 col-md-2 sidebar-offcanvas" id="sidebar" role="navigation">
@@ -24,7 +53,6 @@
 					<li class="active"><a href="#">Admin</a></li>
 				</ul>
 			</div>
-
 			<div class="col-sm-9 col-md-10 main">
 				<h1>Admin</h1>
 
