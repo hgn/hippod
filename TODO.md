@@ -18,3 +18,13 @@
 	attachment basis and on a per object basis. E.g. to limit wild scripts. Another
 	idea is to limit this on a per category basis. Probably on a per user basis? Overall
 	maximum limit? This can all be presented on the admin panel. Hard quota
+- [ ] Private User Concept (Incognito Mode) - Users should be switched into a
+	private mode. E.g. during developing these user test results are not
+	displayed in the statistics and any other output. The generated tests
+	nevertheless added and collected. If Incognito mode is disabled later all
+	results are displayed. The idea behind is that the user should do their tests
+	even when they are in heavy debugging mode.
+- [ ] Result compression feature. Should the webgui collect several good and/or
+	bad results and show only one result (e.g. with the number of successive
+	failed/passed)? Idea is that there is no real gain to see when everything
+	works for a while.
