@@ -35,6 +35,7 @@ app.config['HELLO_WORLD'] = 'Hello Flask!'
 # related to circular imports http://flask.pocoo.org/docs/patterns/packages
 import contestcolld.gui_dashboard
 import contestcolld.gui_admin
+import contestcolld.gui_items
 
 import contestcolld.api_object
 import contestcolld.api_resources
