@@ -1,10 +1,12 @@
 #!/usr/bin/python
 # coding: utf-8
 
-import object_hasher
 import json
 import os
 import datetime
+
+import object_hasher
+import api_err_obj
 
 from contestcolld import app
 
