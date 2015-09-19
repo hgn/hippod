@@ -4,47 +4,49 @@
 import json
 import requests
 
-url = 'http://localhost:5000/api/v1/object-issue'
+url = 'http://localhost:5000/api/v1/object'
 
 data = '''
 {
-    "object": 
+    "object-item": 
     {
         "title": "Check that the route cache is flushed after NIC change",
-        "categories": [
-            "team:orange",
-            "topic:ip",
-            "subtopic:route-cache"
-        ],
-        "description": [
+        "data": [
             {
                 "type": "main",
                 "mime-type": "text/markdown",
                 "data": "a mardown formatted long text encoded in base64"
             },
             {
-                "type": "media",
-                "mime-type": "media/png",
                 "description": "image of the routing architecture and test setup",
-                "name": "image-foo.png",
-                "data": "<base64 encoded image>"
-            }
-        ],
-        "version": 0,
-        "data": [
+                "file-name": "image-foo.png",
+                "mime-type": "media/png",
+                "data": "iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg=="
+            },
             {
                 "description": "network configuration script",
                 "file-name": "network-config.sh",
                 "mime-type": "text/plain",
-                "data": "<base64 encoded data>"
+                "data": "iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg=="
             }
-        ]
+        ],
+        "categories": [
+            "team:orange",
+            "topic:ip",
+            "subtopic:route-cache"
+        ],
+        "version": 0
     },
+
+
     "attachment": {
-        "references": [ "doors:234236", "your-tool:4391843" ],
-        "replaces":   [ "14d348a14934a02034b", "43348a234434934f0203421" ],
-        "tags":       [ "ip", "route", "cache", "performance" ]
+        "references":  [ "doors:234236", "your-tool:4391843" ],
+        "replaces":    [ "14d348a14934a02034b", "43348a234434934f0203421" ],
+        "tags":        [ "ip", "route", "cache", "performance" ],
+        "responsible": "John Doe <john.doe@example.com>"
         },
+
+
     "achievements": [
         {
             "submitter": "John Doe <john.doe@example.com>",
@@ -56,7 +58,7 @@ data = '''
                             "description": "foo-bar pcap file",
                             "file-name":   "network-config.sh",
                             "mime-type":   "binary/octet-stream",
-                            "data":        "<base64 encoded data>"
+                            "data": "iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg=="
                         }
                      ]
         }
