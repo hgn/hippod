@@ -41,12 +41,12 @@ def get_resources():
         start = time.clock()
         data = calc_ressource()
         end = time.clock()
-    except ApiError as e:
+    except apierror as e:
         return e.transform()
-    except Exception as e:
-        return ApiError(str(e), 202).transform()
+    except exception as e:
+        return apierror(str(e), 202).transform()
 
-    o = Dict3000()
+    o = dict3000()
     o['data'] = data
     o.http_code(202)
     return o.transform()

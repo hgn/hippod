@@ -15,6 +15,16 @@ def check_db_environmet(path):
     if not os.path.isdir(obj_path):
         os.makedirs(obj_path)
 
+    obj_path = os.path.join(path, 'data_uncompressed')
+    app.config['DB_UNCOMPRESSED_PATH'] = obj_path
+    if not os.path.isdir(obj_path):
+        os.makedirs(obj_path)
+
+    obj_path = os.path.join(path, 'data_compressed')
+    app.config['DB_COMPRESSED_PATH'] = obj_path
+    if not os.path.isdir(obj_path):
+        os.makedirs(obj_path)
+
 
 app = Flask(__name__, static_folder='assets', static_url_path='')
 app.config.from_pyfile('testcolld.cfg', silent=False)

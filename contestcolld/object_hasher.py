@@ -1,10 +1,14 @@
 import json
 import hashlib
+import base64
+
+from api_err_obj import *
 
 def __sum_list(o):
         buf = ''
         if type(o) is not list:
-                raise ValueError('must be a list')
+                msg = "object data currupt - must be list: {}".format(str(o))
+                raise ApiError(msg, 404)
         for i in sorted(o):
                 if type(i) is dict:
                         buf += __sum_dict(i)
@@ -16,8 +20,10 @@ def __sum_list(o):
 
 def __sum_dict(o):
         buf = ''
+        return buf
         if type(o) is not dict:
-                raise ValueError('must be a dict')
+                msg = "object data currupt - must be dict: {}".format(str(o))
+                raise ApiError(msg, 404)
         for key in sorted(o):
                 if type(o[key]) is dict:
                         buf += "{}{}".format(key, __sum_dict(o[key]))
@@ -27,24 +33,39 @@ def __sum_dict(o):
                         buf += "{}{}".format(key, o[key])
         return buf
 
+
 def check_sum_object_issue(o):
-        o = o['object']
-        ''' return [[true|false], sha1-sum] '''
+        ''' reurns SHA1 sum'''
         buf = ''
         if type(o) is not dict:
-                return [False, None]
+            msg = "object data currupt - must be dict: {}".format(str(o))
+            raise ApiError(msg, 404)
         # check if required attributes are all available
-        if "title" not in o: return [False, None]
-        if "description" not in o: return [False, None]
-        if "categories" not in o: return [False, None]
-        if "version" not in o: return [False, None]
+        if "title" not in o:
+            msg = "object data currupt - title missing: {}".format(str(o))
+            raise ApiError(msg, 404)
+        if "categories" not in o:
+            msg = "object data currupt - categories missing: {}".format(str(o))
+            raise ApiError(msg, 404)
+        if "version" not in o:
+            msg = "object data currupt - version missing: {}".format(str(o))
+            raise ApiError(msg, 404)
 
-        try:
-                buf = __sum_dict(o)
-        except ValueError:
-                return [False, None]
-        buf_digest = hashlib.sha1(buf).hexdigest()
-        return [True, buf_digest]
+        buf = __sum_dict(o)
+        return hashlib.sha1(buf).hexdigest()
+
+
+def hash_data(data):
+    return hashlib.sha1(data).hexdigest()
+
+
+def decode_base64_data(data):
+    return base64.b64decode(data)
+
+
+def encode_base64_data(data):
+    return base64.b64encode(data)
+
 
 def check_xobject(o):
         if type(o) is not dict:
