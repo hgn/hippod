@@ -42,7 +42,7 @@ class Dict3000(collections.MutableMapping):
 
 class ApiError(Exception):
     def __init__(self, message, http_code):
-        super(ValidationError, self).__init__(message)
+        super(Exception, self).__init__(message)
         self.dict3000 = Dict3000()
         self.dict3000.http_code(http_code)
         self.dict3000['status'] = 'fail'
@@ -55,9 +55,3 @@ class ApiError(Exception):
 
     def transform(self):
         return self.dict3000.transform()
-
-
-# {"stat":"fail","code":99,"message":"Insufficient permissions. Method requires read privileges; none granted."}
-# {"stat":"ok","code":99,"message":"Insufficient permissions. Method requires read privileges; none granted."}
-
-
