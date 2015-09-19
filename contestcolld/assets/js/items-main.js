@@ -3,8 +3,5 @@ function activaTab(tab){
 };
 
 $(document).ready(function() {
-
     activaTab('tab1');
-
-
 });

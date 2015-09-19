@@ -32,11 +32,13 @@ function prettyNumber(pBytes, pUnits) {
     }
 }
 
-$(document).ready(function() {
 
+function activaTab(tab){
+    $('.nav-tabs a[href="#' + tab + '"]').tab('show');
+};
 
+function loadRessourceData() {
   var res_url = "/api/v1.0/resources";
-
 	$.ajax({
 		type: "GET",
 		url: res_url,
@@ -60,5 +62,13 @@ $(document).ready(function() {
             $("#usage-data").html(buf);
 		}
 	})
+}
+
+
+$(document).ready(function() {
+  activaTab('tab1');
+
+	loadRessourceData();
+
 });
 
