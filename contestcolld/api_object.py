@@ -253,6 +253,10 @@ def validate_achievement(achievement):
         msg = "achievements result MUST be passed, failed, nonapplicable"
         raise ApiError(msg, 400)
 
+    if not "test-date" in achievement:
+        msg = "achievements has no test-date!"
+        raise ApiError(msg, 400)
+
 
 def update_attachment_achievement(sha_sum, xobj):
     # ok, the object is in database, we now update the data
