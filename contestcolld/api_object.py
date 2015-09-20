@@ -199,7 +199,7 @@ def is_obj_already_in_db(sha_sum):
         return False
 
 
-def read_obj_by_id(sha_sum):
+def read_cont_obj_by_id(sha_sum):
     path = os.path.join(app.config['DB_OBJECT_PATH'],
                         sha_sum[0:2],
                         sha_sum,
@@ -210,7 +210,7 @@ def read_obj_by_id(sha_sum):
         data = json.load(data_file)
     return [True, data]
 
-def write_file(sha, py_object):
+def write_cont_obj_by_id(sha, py_object):
     data = json.dumps(py_object, sort_keys=True,indent=4, separators=(',', ': '))
     path = os.path.join(app.config['DB_OBJECT_PATH'],
                         sha[0:2],
@@ -237,23 +237,23 @@ def update_attachment_achievement(sha_sum, xobj):
     # attachments are updated (overwrite), achievements are
     # added
     rewrite_required = False
-    (ret, data) = read_obj_by_id(sha_sum)
+    (ret, data) = read_cont_obj_by_id(sha_sum)
     if not ret:
-        app.logger.error("path is not available!")
-        return False
+        msg = "cannot read object although it is an update!?"
+        raise ApiError(msg, 500)
 
     if 'attachment' in xobj:
         if type(xobj['attachment']) is not dict:
-                app.logger.error("attachment data MUST be a dict - but isn't")
-                return False
+                msg = "attachment data MUST be a dict - but isn't"
+                raise ApiError(msg, 400)
         data['attachment'] = xobj['attachment']
         data['attachment-last-modified'] = datetime.datetime.now().isoformat('T')
         rewrite_required = True
 
     if 'achievements' in xobj:
         if type(xobj['achievements']) is not list:
-                app.logger.error("achievements data MUST be a list - but isn't")
-                return False
+                msg = "achievements data MUST be a list - but isn't"
+                raise ApiError(msg, 400)
         current_achievements = data["achievements"]
         current_achievements_no = len(current_achievements)
         # add new achievements in same order
@@ -271,11 +271,8 @@ def update_attachment_achievement(sha_sum, xobj):
         rewrite_required = True
 
     if rewrite_required:
-        app.logger.error("rewrite object.db file")
-        write_file(sha_sum, data)
-
-
-    return True
+        app.logger.info("rewrite object DB container file")
+        write_cont_obj_by_id(sha_sum, data)
 
 
 def try_adding_xobject(xobj):
@@ -294,16 +291,16 @@ def try_adding_xobject(xobj):
             if sha_sum != xobj['object-item-id']:
                 msg = "object data corrupt - object item " \
                       "sha_sum missmatch to object-item-id"
-                raise ApiError(msg, 404)
+                raise ApiError(msg, 400)
     else:
         sha_sum = xobj['object-item-id']
 
     ret = is_obj_already_in_db(sha_sum)
     if not ret:
-        # new entry
+        # new entry, save to file
         save_new_object_container(sha_sum, xobj['object-item'])
 
-    #update_attachment_achievement(sha_sum, xobj)
+    update_attachment_achievement(sha_sum, xobj)
 
 
 
