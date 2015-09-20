@@ -20,7 +20,13 @@ from flask import request
 
 
 def object_get_int(xobj):
-    pass
+    ordering = "by-submitting-date-reverse"
+    limit = sys.maxsize # "unlimited"
+    if 'ordering' in xobj:
+        ordering = xobj['ordering']
+    if 'limit' in xobj:
+        limit = int(xobj['limit'])
+    
 
 
 
