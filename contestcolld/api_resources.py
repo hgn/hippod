@@ -7,6 +7,8 @@ import datetime
 import time
 
 import object_hasher
+import api_comm
+
 from api_err_obj import *
 
 from contestcolld import app
@@ -44,9 +46,9 @@ def get_resources():
     except apierror as e:
         return e.transform()
     except exception as e:
-        return apierror(str(e), 202).transform()
+        return apierror(str(e), 200).transform()
 
-    o = dict3000()
+    o = api_comm.Dict3000()
     o['data'] = data
     o.http_code(202)
     return o.transform()
