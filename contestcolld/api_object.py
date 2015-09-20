@@ -244,6 +244,16 @@ def write_achievement_file(sha, id_no, achievement):
     fd.close()
 
 
+def validate_achievement(achievement):
+    if not "result" in achievement:
+        msg = "achievements has no result!"
+        raise ApiError(msg, 400)
+
+    if achievement['result'] not in ['passed', 'failed', 'nonapplicable']:
+        msg = "achievements result MUST be passed, failed, nonapplicable"
+        raise ApiError(msg, 400)
+
+
 def update_attachment_achievement(sha_sum, xobj):
     # ok, the object is in database, we now update the data
     # attachments are updated (overwrite), achievements are
@@ -270,6 +280,7 @@ def update_attachment_achievement(sha_sum, xobj):
         current_achievements_no = len(current_achievements)
         # add new achievements in same order
         for a in xobj['achievements']:
+            validate_achievement(a)
             new_data = dict()
             new_data['id'] = current_achievements_no
             new_data['date-added'] =  datetime.datetime.now().isoformat('T')
