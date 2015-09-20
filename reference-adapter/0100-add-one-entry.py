@@ -3,6 +3,7 @@
 
 import json
 import requests
+import pprint
 
 url = 'http://localhost:5000/api/v1/object'
 
@@ -70,6 +71,8 @@ data = '''
 
 headers = {'Content-type': 'application/json', 'Accept': 'application/json'}
 r = requests.post(url, data=data, headers=headers)
-#r = requests.post(url, data=json.dumps(data), headers=headers)
+print("\nStatus Code:")
 print(r.status_code)
-print(r.json())
+pp = pprint.PrettyPrinter(depth=6)
+print("\nRet Data:")
+pp.pprint(r.json())
