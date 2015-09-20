@@ -75,4 +75,13 @@ print("\nStatus Code:")
 print(r.status_code)
 pp = pprint.PrettyPrinter(depth=6)
 print("\nRet Data:")
-pp.pprint(r.json())
+data = r.json()
+pp.pprint(data)
+assert len(data['data']['id']) > 0
+
+
+
+
+
+
+
