@@ -19,13 +19,15 @@ data = '''
             },
             {
                 "description": "image of the routing architecture and test setup",
-                "file-name": "image-foo.png",
+                "name": "image-foo",
+                "type": "png",
                 "mime-type": "media/png",
                 "data": "iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg=="
             },
             {
                 "description": "network configuration script",
-                "file-name": "network-config.sh",
+                "name": "network-config",
+                "type": "sh",
                 "mime-type": "text/plain",
                 "data": "iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg=="
             }
@@ -56,7 +58,8 @@ data = '''
             "data" : [
                         {
                             "description": "foo-bar pcap file",
-                            "file-name":   "network-config.sh",
+                            "name":   "network-config",
+                            "type": "sh",
                             "mime-type":   "binary/octet-stream",
                             "data": "iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg=="
                         }
