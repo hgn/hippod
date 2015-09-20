@@ -219,7 +219,8 @@ def read_cont_obj_by_id(sha_sum):
 
 
 def write_cont_obj_by_id(sha, py_object):
-    data = json.dumps(py_object, sort_keys=True,indent=4, separators=(',', ': '))
+    data = json.dumps(py_object, sort_keys=True,indent=4,
+                      separators=(',', ': '))
     path = os.path.join(app.config['DB_OBJECT_PATH'],
                         sha[0:2],
                         sha,
@@ -239,7 +240,8 @@ def write_achievement_file(sha, id_no, achievement):
                         sha,
                         'achievements',
                         '{}.db'.format(id_no))
-    data = json.dumps(achievement, sort_keys=True,indent=4, separators=(',', ': '))
+    data = json.dumps(achievement, sort_keys=True,indent=4,
+                      separators=(',', ': '))
     fd = open(path, 'w')
     fd.write(data)
     fd.close()
@@ -274,6 +276,7 @@ def update_attachment_achievement(sha_sum, xobj):
     # attachments are updated (overwrite), achievements are
     # added
     rewrite_required = False
+    date = datetime.datetime.now().isoformat('T')
     (ret, data) = read_cont_obj_by_id(sha_sum)
     if not ret:
         msg = "cannot read object although it is an update!?"
@@ -284,7 +287,7 @@ def update_attachment_achievement(sha_sum, xobj):
                 msg = "attachment data MUST be a dict - but isn't"
                 raise ApiError(msg, 400)
         data['attachment'] = xobj['attachment']
-        data['attachment-last-modified'] = datetime.datetime.now().isoformat('T')
+        data['attachment-last-modified'] = date
         rewrite_required = True
 
     if 'achievements' in xobj:
@@ -298,7 +301,7 @@ def update_attachment_achievement(sha_sum, xobj):
             validate_achievement(a)
             new_data = dict()
             new_data['id'] = current_achievements_no
-            new_data['date-added'] =  datetime.datetime.now().isoformat('T')
+            new_data['date-added'] =  date
             current_achievements.append(new_data)
 
             # now we save the achievement in a seperate file
@@ -349,9 +352,13 @@ def try_adding_xobject(xobj):
 
     update_attachment_achievement(sha_sum, xobj)
 
+    ret_data = dict()
+    ret_data['id'] = sha_sum
+    return ret_data
+
 
 @app.route('/api/v1/object', methods=['POST'])
-def post_xobject():
+def object_post():
     try:
         start = time.clock()
         xobj = request.get_json(force=False)
@@ -359,8 +366,8 @@ def post_xobject():
         end = time.clock()
     except ApiError as e:
         return e.transform()
-    #except Exception as e:
-    #    return ApiError(str(e), 202).transform()
+    except Exception as e:
+        return ApiError(str(e), 500).transform()
 
     o = api_comm.Dict3000()
     o['data'] = data
