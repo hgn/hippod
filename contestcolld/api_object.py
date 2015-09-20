@@ -233,12 +233,12 @@ def write_achievement_file(sha, id_no, achievement):
     # achievement inplace to reflect changes
     save_object_item_data_list(achievement)
 
-    data = json.dumps(achievement, sort_keys=True,indent=4, separators=(',', ': '))
     path = os.path.join(app.config['DB_OBJECT_PATH'],
                         sha[0:2],
                         sha,
                         'achievements',
-                        '{0:04d}.db'.format(id_no))
+                        '{}.db'.format(id_no))
+    data = json.dumps(achievement, sort_keys=True,indent=4, separators=(',', ': '))
     fd = open(path, 'w')
     fd.write(data)
     fd.close()
