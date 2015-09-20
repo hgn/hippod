@@ -59,4 +59,5 @@ import contestcolld.gui_admin
 import contestcolld.gui_items
 
 import contestcolld.api_object_push
+import contestcolld.api_object_get
 import contestcolld.api_resources
