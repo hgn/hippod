@@ -2,14 +2,6 @@ import collections
 
 from flask import jsonify
 
-# HTTP REST (Error) Codes
-#
-# 200 - everything is ok
-# 400 - Missing parameter, Invalid format, Invalid param
-# 404 - object not found (is object-id correct?)
-# 500 - internal error
-
-
 class Dict3000(collections.MutableMapping):
 
     def __init__(self, *args, **kwargs):

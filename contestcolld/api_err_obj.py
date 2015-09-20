@@ -3,6 +3,13 @@ import collections
 from flask import jsonify
 import api_comm
 
+# HTTP REST (Error) Codes
+#
+# 200 - everything is ok
+# 400 - Missing parameter, Invalid format, Invalid param
+# 404 - object not found (is object-id correct?)
+# 500 - internal error
+
 
 class ApiError(Exception):
     def __init__(self, message, http_code):

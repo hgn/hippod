@@ -34,9 +34,14 @@ def is_mime_type_compressable(mime_type):
         return True
     return False
 
-def decode_and_write_file_uncompressed(sha_sum, data):
+def decode_and_write_file_uncompressed(sha_sum, data_type, data):
     path = app.config['DB_UNCOMPRESSED_PATH']
-    data_path = os.path.join(path, sha_sum)
+    type_path = os.path.join(path, data_type)
+    # check that type path (png, jpg, ...) is already created
+    if not os.path.isdir(type_path):
+        os.makedirs(type_path)
+
+    data_path = os.path.join(type_path, sha_sum)
     if os.path.isfile(data_path):
         # great, file already in the database
         # do nothing
@@ -49,9 +54,14 @@ def decode_and_write_file_uncompressed(sha_sum, data):
     fd.close()
 
 
-def decode_and_write_file_compressed(sha_sum, data):
+def decode_and_write_file_compressed(sha_sum, data_type, data):
     path = app.config['DB_COMPRESSED_PATH']
-    data_path = os.path.join(path, sha_sum)
+    type_path = os.path.join(path, data_type)
+    # check that type path (png, jpg, ...) is already created
+    if not os.path.isdir(type_path):
+        os.makedirs(type_path)
+
+    data_path = os.path.join(type_path, sha_sum)
     if os.path.isfile(data_path):
         # great, file already in the database
         # do nothing
@@ -62,7 +72,7 @@ def decode_and_write_file_compressed(sha_sum, data):
     #decoded = decode_base64_data(data['data'])
     compressed_data = zlib.compress(data)
     compressed_len = len(compressed_data)
-    msg = "compressed from {} byte to {} byte".format(uncompressed_len,
+    msg = "compressed data from {} byte to {} byte".format(uncompressed_len,
                                                       compressed_len)
     app.logger.info(msg)
 
@@ -91,24 +101,28 @@ def save_object_item_data(object_item):
             continue
 
         # we need at least some data now:
-        # - file-name
+        # - name
+        # - type
         # - data
-        if not 'file-name' in data:
+        if not 'name' in data:
+            msg = "for data a name is required: {}".format(str(data))
+            raise ApiError(msg, 400)
+        if not 'type' in data:
             msg = "for data a file-name is required: {}".format(str(data))
-            raise ApiError(msg, 404)
+            raise ApiError(msg, 400)
         if not 'data' in data:
             msg = "a data section is required at least: {}".format(str(data))
-            raise ApiError(msg, 404)
+            raise ApiError(msg, 400)
 
 
         # ok, data stuff
         sha = object_hasher.hash_data(data['data'])
         if not is_mime_type_compressable(data['mime-type']):
             # save the file directly but decode first
-            decode_and_write_file_uncompressed(sha, data['data'])
+            path = decode_and_write_file_uncompressed(sha, data['type'], data['data'])
             path = app.config['DB_UNCOMPRESSED_PATH']
         else:
-            decode_and_write_file_compressed(sha, data['data'])
+            path = decode_and_write_file_compressed(sha, data['type'], data['data'])
             path = app.config['DB_COMPRESSED_PATH']
 
         # update data entry
