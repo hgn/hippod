@@ -9,6 +9,7 @@ import time
 import zlib
 
 import object_hasher
+import api_comm
 from api_err_obj import *
 
 from contestcolld import app
@@ -26,6 +27,10 @@ def check_attachment(attachment):
 
 def is_mime_type_compressable(mime_type):
     if mime_type == "binary/octet-stream":
+        return True
+    if mime_type == "text/html":
+        return True
+    if mime_type == "text/plain":
         return True
     return False
 
@@ -52,9 +57,14 @@ def decode_and_write_file_compressed(sha_sum, data):
         # do nothing
         return
 
+    uncompressed_len = len(data)
     # decode first
     #decoded = decode_base64_data(data['data'])
     compressed_data = zlib.compress(data)
+    compressed_len = len(compressed_data)
+    msg = "compressed from {} byte to {} byte".format(uncompressed_len,
+                                                      compressed_len)
+    app.logger.info(msg)
 
     fd = open(data_path, 'w')
     fd.write(compressed_data)
@@ -71,7 +81,8 @@ def save_object_item_data(object_item):
 
         if 'type' in data and data['type'] == "main":
             # the main type is not compressable
-            # because main must be text or markdown
+            # because it has performance impact and is expected
+            # not large. main must be text or markdown
             if not "text/markdown" in data['mime-type'] and \
                not "text/plain" in data['mime-type']:
                 msg = "mime type for main plain or markdown: {}".format(str(data))
@@ -106,6 +117,14 @@ def save_object_item_data(object_item):
         data['data-id'] = sha
 
 
+def add_initial_maturity_level(object_item):
+    data = dict()
+    data['level'] = 'testing'
+    data['cause'] = 'initial'
+    data['since'] = datetime.datetime.now().isoformat('T')
+
+    object_item['maturity-level'] = list()
+    object_item['maturity-level'].append(data)
 
 def create_container_data_merge_issue_new(sha_sum, object_item):
     date = datetime.datetime.now().isoformat('T') # ISO 8601 format
@@ -115,6 +134,8 @@ def create_container_data_merge_issue_new(sha_sum, object_item):
     d['attachment'] = { }
     d['attachment-last-modified'] = date
     d['achievements'] = []
+
+    add_initial_maturity_level(object_item)
 
     # the object is a little bit special. We iterate over the
     # data section as always and compress or not compress
@@ -284,10 +305,10 @@ def post_xobject():
     #except Exception as e:
     #    return ApiError(str(e), 202).transform()
 
-    o = Dict3000()
+    o = api_comm.Dict3000()
     o['data'] = data
     o['duration'] = end - start
-    o.http_code(202)
+    o.http_code(200)
     return o.transform()
 
 

@@ -27,8 +27,19 @@ def check_db_environmet(path):
 
 
 app = Flask(__name__, static_folder='assets', static_url_path='')
+
 app.config.from_pyfile('testcolld.cfg', silent=False)
 app.config.from_envvar('APP_CONFIG_FILE', silent=True)
+
+# log to stderr
+import logging
+from logging import StreamHandler
+del app.logger.handlers[:]
+file_handler = StreamHandler()
+app.logger.setLevel(logging.DEBUG)
+formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
+file_handler.setFormatter(formatter)
+app.logger.addHandler(file_handler)
 
 db_path_root = os.path.join(app.instance_path, app.config['RELATIVE_DB_PATH'])
 app.config['DB_ROOT_PATH'] = db_path_root
