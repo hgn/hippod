@@ -81,6 +81,7 @@ def decode_and_write_file_compressed(sha_sum, data_type, data):
     fd.write(compressed_data)
     fd.close()
 
+
 def save_object_item_data_list(object_item):
     if not 'data' in object_item:
         return
@@ -244,6 +245,14 @@ def write_achievement_file(sha, id_no, achievement):
     fd.close()
 
 
+def validate_date(formated_data):
+    # only supported format: 2015-09-15T22:24:29.158759"
+    try:
+        datetime.datetime.strptime(formated_data, "%Y-%m-%dT%H:%M:%S.%f")
+    except ValueError as e:
+        return ApiError("date is not ISO8601 formatted", 400).transform()
+
+
 def validate_achievement(achievement):
     if not "result" in achievement:
         msg = "achievements has no result!"
@@ -256,6 +265,8 @@ def validate_achievement(achievement):
     if not "test-date" in achievement:
         msg = "achievements has no test-date!"
         raise ApiError(msg, 400)
+
+    validate_date(achievement['test-date'])
 
 
 def update_attachment_achievement(sha_sum, xobj):
@@ -326,6 +337,11 @@ def try_adding_xobject(xobj):
     else:
         sha_sum = xobj['object-item-id']
 
+    # FIXME: in the remaining paragraph there is a race condition
+    # leads to data corruption. Problem is that data is writen
+    # to file partly and later the achievement can be miss-formated.
+    # object container file write should be delayed until everything
+    # is sane.
     ret = is_obj_already_in_db(sha_sum)
     if not ret:
         # new entry, save to file
@@ -348,7 +364,7 @@ def post_xobject():
 
     o = api_comm.Dict3000()
     o['data'] = data
-    o['duration'] = end - start
+    o['processing-time'] = "{0:.4f}".format(end - start)
     o.http_code(200)
     return o.transform()
 
