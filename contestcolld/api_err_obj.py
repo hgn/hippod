@@ -18,10 +18,7 @@ class ApiError(Exception):
         self.dict3000.http_code(http_code)
         self.dict3000['status'] = 'fail'
         self.dict3000['message'] = message
-
         self.http_code = http_code
-        msg = "message: {}, code: {}".format(message, http_code)
-        app.logger.error("Exception raised: {}".format(msg))
 
     def msg(self):
         return message

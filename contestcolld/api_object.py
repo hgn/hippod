@@ -7,6 +7,7 @@ import datetime
 import inspect
 import time
 import zlib
+import sys
 
 import object_hasher
 import api_comm
@@ -80,55 +81,58 @@ def decode_and_write_file_compressed(sha_sum, data_type, data):
     fd.write(compressed_data)
     fd.close()
 
-
-def save_object_item_data(object_item):
+def save_object_item_data_list(object_item):
     if not 'data' in object_item:
         return
     for data in object_item['data']:
-        if not 'mime-type' in data:
-            msg = "mime type always required for data: {}".format(str(data))
+        save_object_item_data(data)
+
+
+def save_object_item_data(data):
+    if not 'mime-type' in data:
+        msg = "mime type always required for data: {}".format(str(data))
+        raise ApiError(msg, 404)
+
+    if 'type' in data and data['type'] == "main":
+        # the main type is not compressable
+        # because it has performance impact and is expected
+        # not large. main must be text or markdown
+        if not "text/markdown" in data['mime-type'] and \
+           not "text/plain" in data['mime-type']:
+            msg = "mime type for main plain or markdown: {}".format(str(data))
             raise ApiError(msg, 404)
+        # ok, fine - now skip this valid main (description) type
+        return
 
-        if 'type' in data and data['type'] == "main":
-            # the main type is not compressable
-            # because it has performance impact and is expected
-            # not large. main must be text or markdown
-            if not "text/markdown" in data['mime-type'] and \
-               not "text/plain" in data['mime-type']:
-                msg = "mime type for main plain or markdown: {}".format(str(data))
-                raise ApiError(msg, 404)
-            # ok, fine - now skip this valid main (description) type
-            continue
-
-        # we need at least some data now:
-        # - name
-        # - type
-        # - data
-        if not 'name' in data:
-            msg = "for data a name is required: {}".format(str(data))
-            raise ApiError(msg, 400)
-        if not 'type' in data:
-            msg = "for data a file-name is required: {}".format(str(data))
-            raise ApiError(msg, 400)
-        if not 'data' in data:
-            msg = "a data section is required at least: {}".format(str(data))
-            raise ApiError(msg, 400)
+    # we need at least some data now:
+    # - name
+    # - type
+    # - data
+    if not 'name' in data:
+        msg = "for data a name is required: {}".format(str(data))
+        raise ApiError(msg, 400)
+    if not 'type' in data:
+        msg = "for data a file-name is required: {}".format(str(data))
+        raise ApiError(msg, 400)
+    if not 'data' in data:
+        msg = "a data section is required at least: {}".format(str(data))
+        raise ApiError(msg, 400)
 
 
-        # ok, data stuff
-        sha = object_hasher.hash_data(data['data'])
-        if not is_mime_type_compressable(data['mime-type']):
-            # save the file directly but decode first
-            path = decode_and_write_file_uncompressed(sha, data['type'], data['data'])
-            path = app.config['DB_UNCOMPRESSED_PATH']
-        else:
-            path = decode_and_write_file_compressed(sha, data['type'], data['data'])
-            path = app.config['DB_COMPRESSED_PATH']
+    # ok, data stuff
+    sha = object_hasher.hash_data(data['data'])
+    if not is_mime_type_compressable(data['mime-type']):
+        # save the file directly but decode first
+        path = decode_and_write_file_uncompressed(sha, data['type'], data['data'])
+        path = app.config['DB_UNCOMPRESSED_PATH']
+    else:
+        path = decode_and_write_file_compressed(sha, data['type'], data['data'])
+        path = app.config['DB_COMPRESSED_PATH']
 
-        # update data entry
-        del data['data']
-        data['data-path'] = os.path.join(path, sha)
-        data['data-id'] = sha
+    # update data entry
+    del data['data']
+    data['data-path'] = os.path.join(path, sha)
+    data['data-id'] = sha
 
 
 def add_initial_maturity_level(object_item):
@@ -140,9 +144,11 @@ def add_initial_maturity_level(object_item):
     object_item['maturity-level'] = list()
     object_item['maturity-level'].append(data)
 
-def create_container_data_merge_issue_new(sha_sum, object_item):
+
+def create_container_data_merge_issue_new(sha_sum, object_item, submitter):
     date = datetime.datetime.now().isoformat('T') # ISO 8601 format
     d = dict()
+    d['submitter'] = submitter
     d['object-item-id'] = sha_sum
     d['date-added'] = date
     d['attachment'] = { }
@@ -154,7 +160,7 @@ def create_container_data_merge_issue_new(sha_sum, object_item):
     # the object is a little bit special. We iterate over the
     # data section as always and compress or not compress
     # data and save it in a different path
-    save_object_item_data(object_item)
+    save_object_item_data_list(object_item)
     d['object-item'] = object_item
 
     #if 'attachment' in xobj and len(xobj['attachment']) > 0:
@@ -165,7 +171,7 @@ def create_container_data_merge_issue_new(sha_sum, object_item):
     return json.dumps(d, sort_keys=True,indent=4, separators=(',', ': '))
 
 
-def save_new_object_container(sha_sum, object_item):
+def save_new_object_container(sha_sum, object_item, submitter):
     obj_root_path = app.config['DB_OBJECT_PATH']
     obj_root_pre_path = os.path.join(obj_root_path, sha_sum[0:2])
     if not os.path.isdir(obj_root_pre_path):
@@ -182,7 +188,7 @@ def save_new_object_container(sha_sum, object_item):
         msg = "internal error: {}".format(inspect.currentframe())
         raise ApiError(msg, 404)
     else:
-        cd = create_container_data_merge_issue_new(sha_sum, object_item)
+        cd = create_container_data_merge_issue_new(sha_sum, object_item, submitter)
         fd = open(file_path, 'w')
         fd.write(cd)
         fd.close()
@@ -210,6 +216,7 @@ def read_cont_obj_by_id(sha_sum):
         data = json.load(data_file)
     return [True, data]
 
+
 def write_cont_obj_by_id(sha, py_object):
     data = json.dumps(py_object, sort_keys=True,indent=4, separators=(',', ': '))
     path = os.path.join(app.config['DB_OBJECT_PATH'],
@@ -220,8 +227,13 @@ def write_cont_obj_by_id(sha, py_object):
     fd.write(data)
     fd.close()
 
-def write_achievement_file(sha, id_no, py_object):
-    data = json.dumps(py_object, sort_keys=True,indent=4, separators=(',', ': '))
+
+def write_achievement_file(sha, id_no, achievement):
+    # swap out data if mime types say so and modify
+    # achievement inplace to reflect changes
+    save_object_item_data_list(achievement)
+
+    data = json.dumps(achievement, sort_keys=True,indent=4, separators=(',', ': '))
     path = os.path.join(app.config['DB_OBJECT_PATH'],
                         sha[0:2],
                         sha,
@@ -276,10 +288,14 @@ def update_attachment_achievement(sha_sum, xobj):
 
 
 def try_adding_xobject(xobj):
+    if not 'submitter' in xobj:
+        msg = "No submitter in xobject given!"
+        raise ApiError(msg, 400)
+
     if not 'object-item' in xobj and not 'object-item-id' in xobj:
         msg = "object data corrupt - no object-item" \
               " or object-item-id given"
-        raise ApiError(msg, 404)
+        raise ApiError(msg, 400)
 
     sha_sum=""
     if 'object-item' in xobj:
@@ -298,10 +314,9 @@ def try_adding_xobject(xobj):
     ret = is_obj_already_in_db(sha_sum)
     if not ret:
         # new entry, save to file
-        save_new_object_container(sha_sum, xobj['object-item'])
+        save_new_object_container(sha_sum, xobj['object-item'], xobj['submitter'])
 
     update_attachment_achievement(sha_sum, xobj)
-
 
 
 @app.route('/api/v1/object', methods=['POST'])

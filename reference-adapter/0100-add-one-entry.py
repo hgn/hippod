@@ -8,6 +8,7 @@ url = 'http://localhost:5000/api/v1/object'
 
 data = '''
 {
+    "submitter": "John Doe <john.doe@example.com>",
     "object-item": 
     {
         "title": "Check that the route cache is flushed after NIC change",
@@ -51,15 +52,13 @@ data = '''
 
     "achievements": [
         {
-            "submitter": "John Doe <john.doe@example.com>",
             "test-date": "2015-09-15T22:24:29.158759",
             "result": "passed",
-            "sender-id": "virgo.skynet.local",
             "data" : [
                         {
                             "description": "foo-bar pcap file",
                             "name":   "network-config",
-                            "type": "sh",
+                            "type": "pcap",
                             "mime-type":   "binary/octet-stream",
                             "data": "iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg=="
                         }
