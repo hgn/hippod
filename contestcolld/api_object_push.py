@@ -316,6 +316,36 @@ def update_attachment_achievement(sha_sum, xobj):
         write_cont_obj_by_id(sha_sum, data)
 
 
+def object_index_init():
+    db_path = app.config['DB_OBJECT_PATH']
+    object_index_db_path = os.path.join(db_path, "object-index.db")
+    if not os.path.isfile(object_index_db_path):
+        return list()
+    with open(object_index_db_path) as data_file:
+        return json.load(data_file)
+
+
+def object_index_update(d):
+    db_path = app.config['DB_OBJECT_PATH']
+    object_index_db_path = os.path.join(db_path, "object-index.db")
+    data = json.dumps(d, sort_keys=True, indent=4, separators=(',', ': '))
+    fd = open(object_index_db_path, 'w')
+    fd.write(data)
+    fd.close()
+
+
+def object_index_initial_add(sha_sum, xobj):
+    # read existing data set
+    object_index = object_index_init()
+    # create new data set
+    d = dict()
+    d['object-item-id'] = sha_sum
+    # append new data set
+    object_index.append(d)
+    # update the object index
+    object_index_update(object_index)
+
+
 def try_adding_xobject(xobj):
     if not 'submitter' in xobj:
         msg = "No submitter in xobject given!"
@@ -349,6 +379,7 @@ def try_adding_xobject(xobj):
     if not ret:
         # new entry, save to file
         save_new_object_container(sha_sum, xobj['object-item'], xobj['submitter'])
+        object_index_initial_add(sha_sum, xobj)
 
     update_attachment_achievement(sha_sum, xobj)
 
