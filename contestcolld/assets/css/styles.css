@@ -278,5 +278,8 @@ padding-left:90px;
   margin-top: 5px;
 }
 
-
+/* for object item list */
+.list-group > a { background: #ddd; }
+.list-group > a:nth-child(odd) { background: #eee; }
+.list-group > a:hover { background: #ccc; }
 
