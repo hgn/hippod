@@ -19,13 +19,33 @@ from flask import jsonify
 from flask import request
 
 
-def object_get_int(xobj):
+def check_request_data(xobj):
     ordering = "by-submitting-date-reverse"
-    limit = sys.maxsize # "unlimited"
+    limit = 0 # "unlimited"
+    maturity_level = "all"
     if 'ordering' in xobj:
         ordering = xobj['ordering']
     if 'limit' in xobj:
         limit = int(xobj['limit'])
+        if limit < 0 or limit > 1000000:
+            msg = "limit must be between 0 and 1000000"
+            raise ApiError(msg, 400)
+    if 'maturity-level' in xobj:
+        maturity_level = xobj['maturity-level']
+        if maturity_level not in ("all", "testing", "stable", "outdated"):
+            msg = "maturity_level must be all, testing, stable or outdated "
+            raise ApiError(msg, 400)
+
+    # fine, arguments are fime
+    request_data = dict()
+    request_data['ordering'] = ordering
+    request_data['limit'] = limit
+    request_data['maturity-level'] = maturity_level
+    return request_data
+
+
+def object_get_int(xobj):
+    request_data = check_request_data(xobj)
     
 
 
