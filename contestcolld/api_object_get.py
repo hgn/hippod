@@ -18,6 +18,13 @@ from contestcolld import app
 from flask import jsonify
 from flask import request
 
+def object_index_read():
+    db_path = app.config['DB_OBJECT_PATH']
+    object_index_db_path = os.path.join(db_path, "object-index.db")
+    assert os.path.isfile(object_index_db_path)
+    with open(object_index_db_path) as data_file:
+        return json.load(data_file)
+
 
 def check_request_data(xobj):
     ordering = "by-submitting-date-reverse"
@@ -44,10 +51,42 @@ def check_request_data(xobj):
     return request_data
 
 
+def null_func(data):
+    pass
+
+
+def object_data_by_id(sha_sum):
+    d = dict()
+    d['object-item-id'] = sha_sum
+    return d
+
+
+def object_get_by_sub_data_rev(request_data, reverse=True):
+    object_index_data = object_index_read()
+    limit = request_data['limit']
+    limit_enabled = True if limit > 0 else False
+    ret_data = list()
+    list_sort_func = (null_func, reversed)[bool(reverse)]
+    for i in list_sort_func(object_index_data):
+        data = object_data_by_id(i['object-item-id'])
+        ret_data.append(data)
+        if limit_enabled:
+            limit -= 1
+            if limit <= 0:
+                break
+    return ret_data
+
+
 def object_get_int(xobj):
     request_data = check_request_data(xobj)
+    if request_data['ordering'] == "by-submitting-date-reverse":
+        return object_get_by_sub_data_rev(request_data, reverse=True)
+    elif request_data['ordering'] == "by-submitting-date":
+        return object_get_by_sub_data_rev(request_data, reverse=False)
+    else:
+        msg = "ordering not supported"
+        raise ApiError(msg, 400)
     
-
 
 
 @app.route('/api/v1/object', methods=['GET'])
