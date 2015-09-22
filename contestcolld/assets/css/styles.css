@@ -290,3 +290,19 @@ padding-left:90px;
     float: left;
     margin: 0 10px;
 }
+
+.navbar-brand {
+	/*padding: 5px 30px;*/
+	font-size: 150%;
+	font-weight: 100;
+}
+
+.padding10 {
+	padding-left: 50px;
+	margin: 10px;
+}
+
+.navbar-brand > img {
+	display: inline-block;
+	float: left;
+}
