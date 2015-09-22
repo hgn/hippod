@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # coding: utf-8
 
-from contestcolld import app
+from hippod import app
 
 from flask import render_template
 

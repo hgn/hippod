@@ -11,7 +11,7 @@ import api_comm
 
 from api_err_obj import *
 
-from contestcolld import app
+from hippod import app
 
 from flask import jsonify
 from flask import request
