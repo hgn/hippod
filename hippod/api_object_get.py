@@ -11,7 +11,11 @@ import sys
 
 import object_hasher
 import api_comm
+
+import api_shared
+
 from api_err_obj import *
+
 
 from hippod import app
 
@@ -55,10 +59,56 @@ def null_func(data):
     pass
 
 
+def get_last_achievement_data(sha_sum, cont_obj):
+    if len(cont_obj['achievements']) <= 0:
+        return None
+
+    last_date_added = cont_obj['achievements'][-1]["date-added"]
+    last_element_id = cont_obj['achievements'][-1]["id"]
+
+    data = api_shared.get_achievement_data_by_sha_id(sha_sum, last_element_id)
+    test_result = data["result"]
+    test_date   = data["test-date"]
+
+    r = dict()
+    r['test-date']= test_date
+    r['test-result']= test_result
+    r['id']= last_element_id
+    r['date-added']= last_date_added
+
+    return r
+
+
+def container_obj_to_ret_obj(sha_sum, cont_obj):
+    ret_obj = dict()
+
+    # add object item ID
+    ret_obj['object-item-id'] = sha_sum
+
+    # add some object items
+    ret_obj['object-item'] = dict()
+    ret_obj['object-item']['categories'] = cont_obj['object-item']['categories']
+    ret_obj['object-item']['maturity-level'] = cont_obj['object-item']['maturity-level'][-1]
+    ret_obj['object-item']['title'] = cont_obj['object-item']['title'] 
+    ret_obj['object-item']['version'] = cont_obj['object-item']['version'] 
+
+    # add full attachment
+    ret_obj['object-attachment'] = cont_obj['attachment']
+
+    # add last achievement with basic information
+    data = get_last_achievement_data(sha_sum, cont_obj)
+    if data:
+        ret_obj['object-achievements'] = data
+
+    return ret_obj
+
+
 def object_data_by_id(sha_sum):
-    d = dict()
-    d['object-item-id'] = sha_sum
-    return d
+    (ret, data) = api_shared.read_cont_obj_by_id(sha_sum)
+    if not ret:
+        msg = "cannot read object by id: {}".format(sha_sum)
+        raise ApiError(msg, 500)
+    return container_obj_to_ret_obj(sha_sum, data)
 
 
 def object_get_by_sub_data_rev(request_data, reverse=True):

@@ -11,6 +11,8 @@ import sys
 
 import object_hasher
 import api_comm
+import api_shared
+
 from api_err_obj import *
 
 from hippod import app
@@ -206,16 +208,6 @@ def is_obj_already_in_db(sha_sum):
         return False
 
 
-def read_cont_obj_by_id(sha_sum):
-    path = os.path.join(app.config['DB_OBJECT_PATH'],
-                        sha_sum[0:2],
-                        sha_sum,
-                        'container.db')
-    if not os.path.isfile(path):
-        return [False]
-    with open(path) as data_file:
-        data = json.load(data_file)
-    return [True, data]
 
 
 def write_cont_obj_by_id(sha, py_object):
@@ -277,7 +269,7 @@ def update_attachment_achievement(sha_sum, xobj):
     # added
     rewrite_required = False
     date = datetime.datetime.now().isoformat('T')
-    (ret, data) = read_cont_obj_by_id(sha_sum)
+    (ret, data) = api_shared.read_cont_obj_by_id(sha_sum)
     if not ret:
         msg = "cannot read object although it is an update!?"
         raise ApiError(msg, 500)
