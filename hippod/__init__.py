@@ -58,6 +58,6 @@ import hippod.gui_dashboard
 import hippod.gui_admin
 import hippod.gui_items
 
-import hippod.api_object_push
+import hippod.api_object_post
 import hippod.api_object_get
 import hippod.api_resources
