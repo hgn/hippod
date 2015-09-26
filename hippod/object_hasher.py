@@ -1,3 +1,4 @@
+import sys
 import json
 import hashlib
 import base64
@@ -20,7 +21,6 @@ def __sum_list(o):
 
 def __sum_dict(o):
         buf = ''
-        return buf
         if type(o) is not dict:
                 msg = "object data currupt - must be dict: {}".format(str(o))
                 raise ApiError(msg, 404)
