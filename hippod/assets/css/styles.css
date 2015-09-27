@@ -279,16 +279,17 @@ padding-left:90px;
 }
 
 /* for object item list */
-.list-group > a { background: #ddd; }
-.list-group > a:nth-child(odd) { background: #eee; }
-.list-group > a:hover { background: #ccc; }
+.list-group > li a  { background: #ddd; }
+.list-group > li a :nth-child(odd) { background: #eee; }
+.list-group > li a :hover { background: #ccc; }
 
 .list-group li {
     list-style: none;
 }
 .panel-info, .panel-rating, .panel-more1 {
     float: left;
-    margin: 0 10px;
+    margin: 0 5px;
+		text-align: center;
 }
 
 .navbar-brand {
