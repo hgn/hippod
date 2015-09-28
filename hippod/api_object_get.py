@@ -9,13 +9,11 @@ import time
 import zlib
 import sys
 
-import object_hasher
-import api_comm
+import hippod.object_hasher
+import hippod.api_comm
+import hippod.api_shared
 
-import api_shared
-
-from api_err_obj import *
-
+from hippod.api_err_obj import *
 
 from hippod import app
 
@@ -66,7 +64,7 @@ def get_last_achievement_data(sha_sum, cont_obj):
     last_date_added = cont_obj['achievements'][-1]["date-added"]
     last_element_id = cont_obj['achievements'][-1]["id"]
 
-    data = api_shared.get_achievement_data_by_sha_id(sha_sum, last_element_id)
+    data = hippod.api_shared.get_achievement_data_by_sha_id(sha_sum, last_element_id)
     test_result = data["result"]
     test_date   = data["test-date"]
 
@@ -104,7 +102,7 @@ def container_obj_to_ret_obj(sha_sum, cont_obj):
 
 
 def object_data_by_id(sha_sum):
-    (ret, data) = api_shared.read_cont_obj_by_id(sha_sum)
+    (ret, data) = hippod.api_shared.read_cont_obj_by_id(sha_sum)
     if not ret:
         msg = "cannot read object by id: {}".format(sha_sum)
         raise ApiError(msg, 500)
@@ -139,7 +137,7 @@ def object_get_int(xobj):
     
 
 
-@app.route('/api/v1/object', methods=['GET'])
+@app.route('/api/v1/objects', methods=['GET', 'POST'])
 def object_get():
     try:
         start = time.clock()
@@ -148,10 +146,10 @@ def object_get():
         end = time.clock()
     except ApiError as e:
         return e.transform()
-    except Exception as e:
-        return ApiError(str(e), 500).transform()
+    #except Exception as e:
+    #    return ApiError(str(e), 500).transform()
 
-    o = api_comm.Dict3000()
+    o = hippod.api_comm.Dict3000()
     o['data'] = data
     o['processing-time'] = "{0:.4f}".format(end - start)
     o.http_code(200)

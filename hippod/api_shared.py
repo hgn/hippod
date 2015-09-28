@@ -9,12 +9,6 @@ import time
 import zlib
 import sys
 
-import object_hasher
-import api_comm
-
-from api_err_obj import *
-
-
 from hippod import app
 
 from flask import jsonify

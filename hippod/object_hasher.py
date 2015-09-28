@@ -3,14 +3,14 @@ import json
 import hashlib
 import base64
 
-from api_err_obj import *
+from hippod.api_err_obj import *
 
 def __sum_list(o):
         buf = ''
         if type(o) is not list:
                 msg = "object data currupt - must be list: {}".format(str(o))
                 raise ApiError(msg, 404)
-        for i in sorted(o):
+        for i in o:
                 if type(i) is dict:
                         buf += __sum_dict(i)
                 elif type(i) is list:
@@ -24,7 +24,7 @@ def __sum_dict(o):
         if type(o) is not dict:
                 msg = "object data currupt - must be dict: {}".format(str(o))
                 raise ApiError(msg, 404)
-        for key in sorted(o):
+        for key in o:
                 if type(o[key]) is dict:
                         buf += "{}{}".format(key, __sum_dict(o[key]))
                 elif type(o[key]) is list:
@@ -52,11 +52,11 @@ def check_sum_object_issue(o):
             raise ApiError(msg, 404)
 
         buf = __sum_dict(o)
-        return hashlib.sha1(buf).hexdigest()
+        return hashlib.sha1(buf.encode('utf-8')).hexdigest()
 
 
 def hash_data(data):
-    return hashlib.sha1(data).hexdigest()
+    return hashlib.sha1(data.encode('utf-8')).hexdigest()
 
 
 def decode_base64_data(data):

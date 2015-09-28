@@ -9,11 +9,11 @@ import time
 import zlib
 import sys
 
-import object_hasher
-import api_comm
-import api_shared
+import hippod.object_hasher
+import hippod.api_comm
+import hippod.api_shared
 
-from api_err_obj import *
+from hippod.api_err_obj import *
 
 from hippod import app
 
@@ -51,7 +51,7 @@ def decode_and_write_file_uncompressed(sha_sum, data_type, data):
         return
 
     # decode first
-    decoded = object_hasher.decode_base64_data(data)
+    decoded = hippod.object_hasher.decode_base64_data(data)
     fd = open(data_path, 'w')
     fd.write(decoded)
     fd.close()
@@ -73,13 +73,13 @@ def decode_and_write_file_compressed(sha_sum, data_type, data):
     uncompressed_len = len(data)
     # decode first
     #decoded = decode_base64_data(data['data'])
-    compressed_data = zlib.compress(data)
+    compressed_data = zlib.compress(data.encode('utf-8'))
     compressed_len = len(compressed_data)
     msg = "compressed data from {} byte to {} byte".format(uncompressed_len,
                                                       compressed_len)
     app.logger.info(msg)
 
-    fd = open(data_path, 'w')
+    fd = open(data_path, 'wb')
     fd.write(compressed_data)
     fd.close()
 
@@ -123,7 +123,7 @@ def save_object_item_data(data):
 
 
     # ok, data stuff
-    sha = object_hasher.hash_data(data['data'])
+    sha = hippod.object_hasher.hash_data(data['data'])
     if not is_mime_type_compressable(data['mime-type']):
         # save the file directly but decode first
         path = decode_and_write_file_uncompressed(sha, data['type'], data['data'])
@@ -269,7 +269,7 @@ def update_attachment_achievement(sha_sum, xobj):
     # added
     rewrite_required = False
     date = datetime.datetime.now().isoformat('T')
-    (ret, data) = api_shared.read_cont_obj_by_id(sha_sum)
+    (ret, data) = hippod.api_shared.read_cont_obj_by_id(sha_sum)
     if not ret:
         msg = "cannot read object although it is an update!?"
         raise ApiError(msg, 500)
@@ -351,7 +351,7 @@ def try_adding_xobject(xobj):
     sha_sum=""
     if 'object-item' in xobj:
         # calculate the ID now
-        sha_sum = object_hasher.check_sum_object_issue(xobj['object-item'])
+        sha_sum = hippod.object_hasher.check_sum_object_issue(xobj['object-item'])
         if 'object-item-id' in xobj:
             # this is an additional check - both should be
             # identical
@@ -389,10 +389,10 @@ def object_post():
         end = time.clock()
     except ApiError as e:
         return e.transform()
-    except Exception as e:
-        return ApiError(str(e), 500).transform()
+    #except Exception as e:
+    #    return ApiError(str(e), 500).transform()
 
-    o = api_comm.Dict3000()
+    o = hippod.api_comm.Dict3000()
     o['data'] = data
     o['processing-time'] = "{0:.4f}".format(end - start)
     o.http_code(200)
