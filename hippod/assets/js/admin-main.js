@@ -1,6 +1,6 @@
+
 // pBytes: the size in bytes to be converted.
 // pUnits: 'si'|'iec' si units means the order of magnitude is 10^3, iec uses 2^10
-
 function prettyNumber(pBytes, pUnits) {
     // Handle some special cases
     if(pBytes == 0) return '0 Bytes';

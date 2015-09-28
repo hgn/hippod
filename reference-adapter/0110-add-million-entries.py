@@ -6,9 +6,13 @@ import json
 import requests
 import pprint
 import unittest
+import string
+import random
 
 pp = pprint.PrettyPrinter(depth=6)
 
+def random_title(length):
+    return ''.join(random.choice(string.lowercase) for i in range(length))
 
 def add_n(n):
     url = 'http://localhost:5000/api/v1/object'
@@ -23,7 +27,7 @@ def add_n(n):
 
     headers = {'Content-type': 'application/json', 'Accept': 'application/json'}
     for i in range(n):
-        data['object-item']['title'] = "title {}".format(i)
+        data['object-item']['title'] = "{}".format(random_title(80))
         #pp.pprint(data)
         dj = json.dumps(data, sort_keys=True, separators=(',', ': '))
         r = requests.post(url, data=dj, headers=headers)
@@ -38,7 +42,7 @@ def add_n(n):
 
     print("\r\n\n")
 
-    url = 'http://localhost:5000/api/v1/object'
+    url = 'http://localhost:5000/api/v1/objects'
     data = '''
     {
         "limit": 1000,

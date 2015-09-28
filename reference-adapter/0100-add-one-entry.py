@@ -85,7 +85,7 @@ def add_one():
 
 
 def query_one():
-        url = 'http://localhost:5000/api/v1/object'
+        url = 'http://localhost:5000/api/v1/objects'
         data = '''
         {
             "limit": 1000,

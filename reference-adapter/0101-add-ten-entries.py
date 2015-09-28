@@ -35,7 +35,7 @@ def add_n(n):
 
 
 
-    url = 'http://localhost:5000/api/v1/object'
+    url = 'http://localhost:5000/api/v1/objects'
     data = '''
     {
         "limit": 1000,
