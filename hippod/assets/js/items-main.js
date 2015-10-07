@@ -16,6 +16,12 @@ function ObjectData() {
 		this.version        = item['object-item'].version;
 		this.categories     = item['object-item']['categories'];
 		this.maturity_level = item['object-item']['maturity-level'].level;
+		this.object_id      = item['object-item-id'];
+
+	  this.tags = "-";
+	  this.replaces = "-";
+	  this.responsible = "Unknown";
+	  this.references = "-";
 
 		var references, replaces, responsible, tags;
 
@@ -56,13 +62,66 @@ function ObjectData() {
 	}
 
 	this.htmlize = function () {
-		var buf = "<li><div class=\"panel panel-default\">";
+    var buf = '<div class="item-container">';
+    buf += '<div class="attachment-result"></div>';
+    buf += '<div class="item-data">';
+    buf += '<div class="item-container-title">';
+    buf += this.title;
+    buf += '</div>';
+    buf += '<div class="item-data-left">';
+    buf += '<div><strong>Last achievement:</strong> ';
+    buf += '<span class="glyphicon glyphicon-time" aria-hidden="true"></span> ';
+    buf += '4 days ago';
+    buf += '</div>';
+    buf += '<div><strong>Submitter:</strong> ';
+    buf += 'John Doe';
+    buf += '</div>';
+    buf += '<div><strong>Result:</strong> ';
+    buf += '<span class="label label-success">';
+    buf += 'passed';
+    buf += '</span>';
+    buf += '</div>';
+    buf += '</div>';
+    buf += '<div class="item-data-middle"> ';
+    buf += '<div><strong>Tags:</strong> ';
+    buf += 'foo, bar, foobar';
+    buf += '</div>';
+    buf += '<div><strong>References:</strong> ';
+    buf += 'ref:03030, ref:0509382, ref:29239';
+    buf += '</div>';
+    buf += '<div><strong>Responsible:</strong> ';
+    buf += this.responsible;
+    buf += '</div>';
+    buf += '</div>';
+    buf += '<div class="item-data-right">';
+    buf += '<div><strong>Category:</strong> ';
+    buf += this.categories;
+    buf += '</div>';
+    buf += '<div><strong>ID:</strong> ';
+    buf += this.object_id;
+    buf += '</div>';
+    buf += '<div><strong>Maturity Level:</strong> ';
+    buf += '<span class="label label-info">';
+    buf += this.maturity_level;
+		buf += '</span>';
+    buf += '</div>';
+    buf += '<div><strong>Version:</strong> ';
+    buf += this.version;
+    buf += '</div>';
+    buf += '</div>';
+    buf += '</div>';
+    buf += '</div>';
+    buf += '';
+		return buf;
+
+		buf = "<li><div class=\"panel panel-default\">";
 		buf += "<div class=\"panel-body\">";
 		buf += "<div class=\"panel-info\">";
-		buf += "<p>";
+		buf += "<p>Title: ";
 		buf += this.title;
-		buf += "</p>";
+		buf += "</p> Version: ";
 		buf += this.version + "<br />";
+		buf += "Categories: " + this.categories + "<br />";
     buf += "</div>";
     buf += "</div>";
     buf += "</div>";
@@ -85,7 +144,7 @@ function displayItemData() {
       $("#items-statistic").html(buf);
 }
 
-var obj = { "ordering": "by-submitting-date-reverse", "limit": 50 }
+var obj = { "ordering": "by-submitting-date-reverse", "limit": 200 }
 
 function loadItemData() {
   var query_url = "/api/v1/objects";
