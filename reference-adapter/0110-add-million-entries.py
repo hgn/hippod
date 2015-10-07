@@ -12,14 +12,15 @@ import random
 pp = pprint.PrettyPrinter(depth=6)
 
 def random_title(length):
-    return ''.join(random.choice(string.lowercase) for i in range(length))
+    words = ['Foo', 'Bar', 'Linux', 'Something', 'Yeah', 'Nope', 'Random']
+    s = ' '.join(random.choice(words) for _ in range(5))
+    return s
 
 def add_n(n):
     url = 'http://localhost:5000/api/v1/object'
     data = dict()
     data["submitter"] = "John Doe <john.doe@example.com>"
     data["object-item"] = dict()
-    data["object-item"]['title'] = "Foo Bar Title"
     data["object-item"]['categories'] = [ "team:orange", "topic:ip", "subtopic:route-cache" ]
     data["object-item"]['version'] = 0
     data["attachment"] = dict()
@@ -45,7 +46,7 @@ def add_n(n):
     url = 'http://localhost:5000/api/v1/objects'
     data = '''
     {
-        "limit": 1000,
+        "limit": 0,
         "ordering": "by-submitting-date-reverse",
         "maturity-level": "all"
     }
@@ -61,4 +62,4 @@ def add_n(n):
 
 
 if __name__ == '__main__':
-    add_n(5000)
+    add_n(100)
