@@ -23,7 +23,8 @@ from flask import request
 def object_index_read():
     db_path = app.config['DB_OBJECT_PATH']
     object_index_db_path = os.path.join(db_path, "object-index.db")
-    assert os.path.isfile(object_index_db_path)
+    if not os.path.isfile(object_index_db_path):
+        return None
     with open(object_index_db_path) as data_file:
         return json.load(data_file)
 
@@ -111,6 +112,8 @@ def object_data_by_id(sha_sum):
 
 def object_get_by_sub_data_rev(request_data, reverse=True):
     object_index_data = object_index_read()
+    if not object_index_data:
+        return None
     limit = request_data['limit']
     limit_enabled = True if limit > 0 else False
     ret_data = list()
