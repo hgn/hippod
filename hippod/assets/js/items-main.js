@@ -50,15 +50,23 @@ function ObjectData() {
 		if (item['object-achievements']) {
 			$.each(item['object-achievements'], function(i, data) {
 				if (i == 'date-added') {
+					this.date_added  = data;
 				}
 				if (i == 'id') {
+					this.id  = data;
 				}
 				if (i == 'test-date') {
+					this.test_date  = data;
 				}
-				if (i == 'test-result') {
+				if (i == 'result') {
+					this.result  = data;
 				}
 			});
 		}
+	}
+
+	this.getResult = function (item) {
+		return this.result
 	}
 
 	this.htmlize = function () {
@@ -129,11 +137,34 @@ function ObjectData() {
   }
 }
 
+var stats_no_items;
+var stats_no_items_passed;
+var stats_no_items_failed;
+var stats_no_items_unknown;
+
+function updateStats(data) {
+	stats_no_items += 1;
+	if (data.getResult() === "passed") {
+		stats_no_items_passed += 1;
+	} else if (data.getResult() === "failed") {
+		stats_no_items_failed += 1;
+	} else {
+		stats_no_items_unknown += 1;
+	}
+}
+
 function displayItemData() {
       var buf = "";
+			stats_no_items = 0;
+			stats_no_items_passed = 0;
+			stats_no_items_failed = 0;
+			stats_no_items_unknown = 0;
+
       $.each(item_data, function(i, item) {
+
 				objectData = new ObjectData();
 				objectData.read(item);
+				updateStats(objectData);
 				//console.log(objectData);
 				buf += objectData.htmlize() + "<br />\n";
       });
@@ -141,7 +172,18 @@ function displayItemData() {
 
 		  buf = "";
 			buf += "Number of Items to display: " + item_data.length + "<br />";
+			buf += "Number of Items passed: " + stats_no_items_passed + "<br />";
+			buf += "Number of Items failed: " + stats_no_items_failed + "<br />";
+			buf += "Number of Items unknown: " + stats_no_items_unknown + "<br />";
       $("#items-statistic").html(buf);
+}
+
+function displayDonut() {
+  $("#doughnutChart").drawDoughnutChart([
+    { title: "Passed",         value : 120,  color: "#5BC394" },
+    { title: "Failed",         value:  20,   color: "#D32F2F" },
+    { title: "Inapplicable",   value : 5,    color: "#795548" }
+  ]);
 }
 
 var obj = { "ordering": "by-submitting-date-reverse", "limit": 200 }
@@ -164,6 +206,7 @@ function loadItemData() {
 		success: function(data){
 			item_data = data.data;
 			displayItemData();
+			displayDonut();
 		}
 	})
 }

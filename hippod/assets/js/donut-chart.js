@@ -2,13 +2,6 @@
 
 
 
-$(function(){
-  $("#doughnutChart").drawDoughnutChart([
-    { title: "Passed",         value : 120,  color: "#4CAF50" },
-    { title: "Failed",         value:  20,   color: "#D32F2F" },
-    { title: "Inapplicable",   value : 5,    color: "#795548" }
-  ]);
-});
 /*!
  * jquery.drawDoughnutChart.js
  * Version: 0.4.1(Beta)
