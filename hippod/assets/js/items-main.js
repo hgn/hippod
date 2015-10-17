@@ -28,7 +28,7 @@ function ObjectData() {
 		if (item['object-attachment']) {
 			$.each(item['object-attachment'], function(i, data) {
 				if (i == 'references') {
-					references =  data;
+					references = data;
 				}
 				if (i == 'replaces') {
 					replaces = data;
@@ -53,7 +53,7 @@ function ObjectData() {
 					this.date_added  = data;
 				}
 				if (i == 'id') {
-					this.id  = data;
+					this.id = data;
 				}
 				if (i == 'test-date') {
 					this.test_date  = data;
@@ -92,10 +92,16 @@ function ObjectData() {
     buf += '</div>';
     buf += '<div class="item-data-middle"> ';
     buf += '<div><strong>Tags:</strong> ';
-    buf += 'foo, bar, foobar';
+		if (this.tags) {
+			for (var i in this.tags) {
+				buf += '<span class="boxtag">' + this.tags[i] + '</span>, ';
+			}
+		} else {
+    	buf += 'no tags';
+		}
     buf += '</div>';
     buf += '<div><strong>References:</strong> ';
-    buf += 'ref:03030, ref:0509382, ref:29239';
+    buf += this.references;
     buf += '</div>';
     buf += '<div><strong>Responsible:</strong> ';
     buf += this.responsible;
@@ -172,6 +178,7 @@ function displayItemData() {
 
 		  buf = "";
 			buf += "Number of Items to display: " + item_data.length + "<br />";
+			buf += "<div class='ruler'></div>";
 			buf += "Number of Items passed: " + stats_no_items_passed + "<br />";
 			buf += "Number of Items failed: " + stats_no_items_failed + "<br />";
 			buf += "Number of Items inapplicable: " + stats_no_items_inapplicable + "<br />";
