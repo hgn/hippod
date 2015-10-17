@@ -140,7 +140,7 @@ function ObjectData() {
 var stats_no_items;
 var stats_no_items_passed;
 var stats_no_items_failed;
-var stats_no_items_unknown;
+var stats_no_items_inapplicable;
 
 function updateStats(data) {
 	stats_no_items += 1;
@@ -149,7 +149,7 @@ function updateStats(data) {
 	} else if (data.getResult() === "failed") {
 		stats_no_items_failed += 1;
 	} else {
-		stats_no_items_unknown += 1;
+		stats_no_items_inapplicable += 1;
 	}
 }
 
@@ -158,7 +158,7 @@ function displayItemData() {
 			stats_no_items = 0;
 			stats_no_items_passed = 0;
 			stats_no_items_failed = 0;
-			stats_no_items_unknown = 0;
+			stats_no_items_inapplicable = 0;
 
       $.each(item_data, function(i, item) {
 
@@ -174,15 +174,15 @@ function displayItemData() {
 			buf += "Number of Items to display: " + item_data.length + "<br />";
 			buf += "Number of Items passed: " + stats_no_items_passed + "<br />";
 			buf += "Number of Items failed: " + stats_no_items_failed + "<br />";
-			buf += "Number of Items unknown: " + stats_no_items_unknown + "<br />";
+			buf += "Number of Items inapplicable: " + stats_no_items_inapplicable + "<br />";
       $("#items-statistic").html(buf);
 }
 
 function displayDonut() {
   $("#doughnutChart").drawDoughnutChart([
-    { title: "Passed",         value : 120,  color: "#5BC394" },
-    { title: "Failed",         value:  20,   color: "#D32F2F" },
-    { title: "Inapplicable",   value : 5,    color: "#795548" }
+    { title: "Passed",         value : stats_no_items_passed,  color: "#5BC394" },
+    { title: "Failed",         value:  stats_no_items_failed,   color: "#D32F2F" },
+    { title: "Inapplicable",   value : stats_no_items_inapplicable,    color: "#795548" }
   ]);
 }
 
