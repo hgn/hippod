@@ -94,14 +94,21 @@ function ObjectData() {
     buf += '<div><strong>Tags:</strong> ';
 		if (this.tags) {
 			for (var i in this.tags) {
-				buf += '<span class="boxtag">' + this.tags[i] + '</span>, ';
+				buf += '<span class="boxtag">' + this.tags[i] + '</span> ';
 			}
 		} else {
     	buf += 'no tags';
 		}
     buf += '</div>';
     buf += '<div><strong>References:</strong> ';
-    buf += this.references;
+		if (this.references) {
+			for (var i in this.references) {
+				splitted = this.references[i].split(":");
+				buf += '<span class="refbox-left">' + splitted[0] + ':</span><span class="refbox-right">' + splitted[1] + '</span> ';
+			}
+		} else {
+    	buf += 'no references';
+		}
     buf += '</div>';
     buf += '<div><strong>Responsible:</strong> ';
     buf += this.responsible;
