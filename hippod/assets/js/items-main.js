@@ -9,6 +9,46 @@ function activaTab(tab){
 
 var item_data = null;
 
+function humanRelativeDate(date) {
+	var actual_date = new Date();
+	var delta = actual_date.getDate() - date.getDate();
+
+	if (delta < 60)
+	{
+		return delta == 1 ? "one second ago" : delta + " seconds ago";
+	}
+	if (delta < 120)
+	{
+		return "a minute ago";
+	}
+	if (delta < 2700) // 45 * 60
+	{
+		return delta / 60 + " minutes ago";
+	}
+	if (delta < 5400) // 90 * 60
+	{
+		return "an hour ago";
+	}
+	if (delta < 86400) // 24 * 60 * 60
+	{
+		return delta / (60 * 60) + " hours ago";
+	}
+	if (delta < 172800) // 48 * 60 * 60
+	{
+		return "yesterday";
+	}
+	if (delta < 2592000) // 30 * 24 * 60 * 60
+	{
+		return delta / (60 * 60 * 24) + " days ago";
+	}
+	if (delta < 31104000) // 12 * 30 * 24 * 60 * 60
+	{
+		return "XXX month ago";
+	}
+		return "XXX one, n years";
+}
+
+
 function ObjectData() {
 
 	this.read = function (item) {
@@ -50,7 +90,7 @@ function ObjectData() {
 		if (item['object-achievements']) {
 			$.each(item['object-achievements'], function(i, data) {
 				if (i == 'date-added') {
-					this.date_added  = data;
+					this.date_added = data;
 				}
 				if (i == 'id') {
 					this.id = data;
@@ -79,7 +119,11 @@ function ObjectData() {
     buf += '<div class="item-data-left">';
     buf += '<div><strong>Last achievement:</strong> ';
     buf += '<span class="glyphicon glyphicon-time" aria-hidden="true"></span> ';
-    buf += '4 days ago';
+		if (this.test_date) {
+			  buf += humanRelativeDate(this.test_date);
+		} else {
+    	buf += ' none ';
+		}
     buf += '</div>';
     buf += '<div><strong>Submitter:</strong> ';
     buf += 'John Doe';
@@ -129,6 +173,15 @@ function ObjectData() {
     buf += '<div><strong>Version:</strong> ';
     buf += this.version;
     buf += '</div>';
+
+    buf += '<div><strong>Date added:</strong> ';
+		if (this.date_added) {
+			  buf += humanRelativeDate(this.date_added);
+		} else {
+    	buf += ' INTERNAL ERROR ';
+		}
+    buf += '</div>';
+
     buf += '</div>';
     buf += '</div>';
     buf += '</div>';
