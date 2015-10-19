@@ -280,20 +280,37 @@ function displayItemData() {
       $("#fooooo").html(buf);
 
 		  buf = "";
-			buf += "Number of Items to display: " + item_data.length + "<br />";
+			buf += "Number of Items to Display: " + item_data.length + "<br />";
 			buf += "<div class='ruler'></div>";
-			buf += "Number of Items passed: " + stats_no_items_passed + "<br />";
-			buf += "Number of Items failed: " + stats_no_items_failed + "<br />";
-			buf += "Number of Items inapplicable: " + stats_no_items_inapplicable + "<br />";
-      $("#items-statistic").html(buf);
-}
+			buf += "Passed: " + stats_no_items_passed + "<br />";
+			buf += "Failed: " + stats_no_items_failed + "<br />";
+			buf += "Inapplicable: " + stats_no_items_inapplicable + "<br />";
 
-function displayDonut() {
-  $("#doughnutChart").drawDoughnutChart([
-    { title: "Passed",         value : stats_no_items_passed,  color: "#5BC394" },
-    { title: "Failed",         value:  stats_no_items_failed,   color: "#D32F2F" },
-    { title: "Inapplicable",   value : stats_no_items_inapplicable,    color: "#795548" }
-  ]);
+			var all = stats_no_items_passed + stats_no_items_failed + stats_no_items_inapplicable;
+			if (all > 0) {
+				var stats_no_items_passed_pct = (stats_no_items_passed / all) * 100;
+				var stats_no_items_failed_pct = (stats_no_items_failed / all) * 100;
+				var stats_no_items_inapplicable_pct = (stats_no_items_inapplicable / all) * 100;
+			} else {
+				var stats_no_items_passed_pct = 0;
+				var stats_no_items_failed_pct = 0;
+				var stats_no_items_inapplicable_pct = 0;
+		  }
+
+			buf += '<div class="progress">';
+			buf += '<div class="progress-bar progress-bar-success progress-bar-striped active" style="width: ' + stats_no_items_passed_pct  + '%">';
+			buf += '<span class="sr-only">35% Complete (success)</span>';
+			buf += '</div>';
+			buf += '<div class="progress-bar progress-bar-danger progress-bar-striped active" style="width: ' + stats_no_items_failed_pct  + '%">';
+			buf += '<span class="sr-only">10% Complete (danger)</span>';
+			buf += '</div>';
+			buf += '<div class="progress-bar progress-bar-warning progress-bar-striped active"" style="width: ' + stats_no_items_inapplicable_pct  + '%">';
+			buf += '<span class="sr-only">20% Complete (warning)</span>';
+			buf += '</div>';
+			buf += '</div>';
+
+
+      $("#items-statistic").html(buf);
 }
 
 var obj = { "ordering": "by-submitting-date-reverse", "limit": 200 }
@@ -315,7 +332,6 @@ function loadItemData() {
 		success: function(data){
 			item_data = data.data;
 			displayItemData();
-			displayDonut();
 		}
 	})
 }
