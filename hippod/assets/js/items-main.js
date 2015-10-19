@@ -11,8 +11,15 @@ var item_data = null;
 
 function humanRelativeDate(date) {
 	var actual_date = new Date();
-	var delta = actual_date.getDate() - date.getDate();
+	var current_date_timezone_offset = actual_date.getTimezoneOffset();
+	var offset = Math.abs(current_date_timezone_offset) * 60;
+	var prev_date = new Date(date);
+	var delta = Math.floor((actual_date - prev_date) / 1000) + offset;
 
+	if (delta < 0)
+	{
+		return String(delta);
+	}
 	if (delta < 60)
 	{
 		return delta == 1 ? "one second ago" : delta + " seconds ago";
@@ -23,7 +30,7 @@ function humanRelativeDate(date) {
 	}
 	if (delta < 2700) // 45 * 60
 	{
-		return delta / 60 + " minutes ago";
+		return Math.ceil(delta / 60) + " minutes ago";
 	}
 	if (delta < 5400) // 90 * 60
 	{
@@ -31,7 +38,7 @@ function humanRelativeDate(date) {
 	}
 	if (delta < 86400) // 24 * 60 * 60
 	{
-		return delta / (60 * 60) + " hours ago";
+		return Math.ceil(delta / (60 * 60)) + " hours ago";
 	}
 	if (delta < 172800) // 48 * 60 * 60
 	{
@@ -39,13 +46,16 @@ function humanRelativeDate(date) {
 	}
 	if (delta < 2592000) // 30 * 24 * 60 * 60
 	{
-		return delta / (60 * 60 * 24) + " days ago";
+		return Math.ceil(delta / (60 * 60 * 24)) + " days ago";
 	}
 	if (delta < 31104000) // 12 * 30 * 24 * 60 * 60
 	{
-		return "XXX month ago";
+		return Math.ceil(delta / (60 * 60 * 24 * 30)) + " month ago (" +
+			     prev_date.getUTCDate() + "-" +  (prev_date.getUTCMonth() + 1) + "-" +
+					 prev_date.getUTCFullYear() + ")";
 	}
-		return "XXX one, n years";
+
+	return delta + " one, n years";
 }
 
 
@@ -87,23 +97,31 @@ function ObjectData() {
 		this.responsible = responsible;
 		this.tags = tags;
 
+		var id_no = "", date_added, test_date, result;
+
 		if (item['object-achievements']) {
 			$.each(item['object-achievements'], function(i, data) {
-				if (i == 'date-added') {
-					this.date_added = data;
-				}
 				if (i == 'id') {
-					this.id = data;
+					id_no = data;
+				}
+				if (i == 'date-added') {
+					date_added = data;
 				}
 				if (i == 'test-date') {
-					this.test_date  = data;
+					test_date  = data;
 				}
 				if (i == 'result') {
-					this.result  = data;
+					result  = data;
 				}
 			});
 		}
+
+		this.id_no      = id_no;
+		this.date_added = date_added;
+		this.test_date  = test_date;
+		this.result     = result;
 	}
+
 
 	this.getResult = function (item) {
 		return this.result
@@ -268,7 +286,6 @@ function loadItemData() {
 
 		error: function(data){
 			alert("Cannot fetch item data" + data);
-			//console.log(data);
 		},
 		success: function(data){
 			item_data = data.data;

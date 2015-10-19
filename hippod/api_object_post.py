@@ -52,7 +52,7 @@ def decode_and_write_file_uncompressed(sha_sum, data_type, data):
 
     # decode first
     decoded = hippod.object_hasher.decode_base64_data(data)
-    fd = open(data_path, 'w')
+    fd = open(data_path, 'wb')
     fd.write(decoded)
     fd.close()
 
