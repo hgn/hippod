@@ -99,7 +99,7 @@ function ObjectData() {
 		this.responsible = responsible;
 		this.tags = tags;
 
-		var id_no = "", date_added, test_date, result;
+		var id_no = "-", date_added, test_date, result;
 
 		if (item['object-achievements']) {
 			$.each(item['object-achievements'], function(i, data) {
@@ -158,6 +158,11 @@ function ObjectData() {
     buf += '<div><strong>Submitter:</strong> ';
     buf += 'John Doe';
     buf += '</div>';
+
+    buf += '<div><strong>No:</strong> ';
+    buf += this.id_no;
+    buf += '</div>';
+
     buf += '<div><strong>Result:</strong> ';
 		if (this.result) {
 			if (this.result == "passed") {
