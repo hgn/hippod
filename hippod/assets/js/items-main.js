@@ -110,10 +110,10 @@ function ObjectData() {
 					date_added = data;
 				}
 				if (i == 'test-date') {
-					test_date  = data;
+					test_date = data;
 				}
-				if (i == 'result') {
-					result  = data;
+				if (i == 'test-result') {
+					result = data;
 				}
 			});
 		}
@@ -131,7 +131,17 @@ function ObjectData() {
 
 	this.htmlize = function () {
     var buf = '<div class="item-container">';
-    buf += '<div class="attachment-result"></div>';
+		if (this.result) {
+			if (this.result == "passed") {
+    		buf += '<div class="attachment-result result-bg-passed"></div>';
+			} else if (this.result == "failed") {
+    		buf += '<div class="attachment-result result-bg-failed"></div>';
+			} else {
+    		buf += '<div class="attachment-result result-bg-inapplicable"></div>';
+			}
+		} else {
+    	buf += '<div class="attachment-result result-bg-inapplicable"></div>';
+		}
     buf += '<div class="item-data">';
     buf += '<div class="item-container-title">';
     buf += this.title;
@@ -149,9 +159,17 @@ function ObjectData() {
     buf += 'John Doe';
     buf += '</div>';
     buf += '<div><strong>Result:</strong> ';
-    buf += '<span class="label label-success">';
-    buf += 'passed';
-    buf += '</span>';
+		if (this.result) {
+			if (this.result == "passed") {
+    		buf += '<span class="label label-success">passed</span>';
+			} else if (this.result == "failed") {
+    		buf += '<span class="label label-danger">failed</span>';
+			} else {
+    		buf += '<span class="label label-warning">not applicable</span>';
+			}
+		} else {
+    	buf += '<span class="label label-warning">not applicable</span>';
+		}
     buf += '</div>';
     buf += '</div>';
     buf += '<div class="item-data-middle"> ';
