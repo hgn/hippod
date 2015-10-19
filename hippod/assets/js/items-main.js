@@ -55,7 +55,9 @@ function humanRelativeDate(date) {
 					 prev_date.getUTCFullYear() + ")";
 	}
 
-	return delta + " one, n years";
+	return prev_date.getUTCDate() + "-" +
+		     (prev_date.getUTCMonth() + 1) + "-" +
+				 prev_date.getUTCFullYear();
 }
 
 
