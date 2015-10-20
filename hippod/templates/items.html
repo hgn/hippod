@@ -132,8 +132,42 @@
 	-webkit-border-radius: 5px;
 }
 
-
 </style>
+<script>
+
+var urlParams = {
+    limit: "unlimited",
+    i: "main"
+};
+
+(window.onpopstate = function () {
+    var match,
+        pl     = /\+/g,
+        search = /([^&=]+)=?([^&]*)/g,
+        decode = function (s) { return decodeURIComponent(s.replace(pl, " ")); },
+        query  = window.location.search.substring(1);
+
+    urlParams = urlParams;
+    while (match = search.exec(query))
+       urlParams[decode(match[1])] = decode(match[2]);
+})();
+
+console.log(urlParams);
+
+function continueExecution()
+{
+	var parser = document.createElement('a');
+	parser.href = document.URL;;
+
+  var str = jQuery.param( urlParams );
+  var url = parser.pathname + "?" + str;
+  console.log(url);
+	//window.location.href = url;
+}
+
+setTimeout(continueExecution, 1000);
+
+</script>
 
 <body>
 	<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
