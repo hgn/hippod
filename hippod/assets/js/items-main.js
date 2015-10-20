@@ -339,4 +339,11 @@ function loadItemData() {
 $(document).ready(function() {
     activaTab('tab1');
     loadItemData();
+
+		$(".dropdown-menu li a").click(function(){
+			$(this).parents(".btn-group").find('.btn').html($(this).text() + ' <span class="caret"></span>');
+			$(this).parents(".btn-group").find('.btn').val($(this).data('value'));
+		});
 });
+
+

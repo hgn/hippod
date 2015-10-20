@@ -132,6 +132,10 @@
 	-webkit-border-radius: 5px;
 }
 
+.vert-spacer {
+	margin-bottom: 15px;
+}
+
 </style>
 <script>
 
@@ -216,11 +220,51 @@ setTimeout(continueExecution, 1000);
 
 					<br /> 
 
+
+
+
 			<div class="alert alert-info" role="alert">
 				<span class="glyphicon glyphicon-hand-up" aria-hidden="true"></span>
 				Show items sorted by newest achievements! In other words: the
 				last executed tests are on top of the page!
 			</div>
+
+
+
+
+      <div class="btn-group">
+				<button class="btn btn-info dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+					Limit Result
+					<span class="caret"></span>
+				</button>
+				<ul class="dropdown-menu">
+					<li><a href="#">Limit Result</a></li>
+					<li role="separator" class="divider"></li>
+					<li><a href="#" data-value="all">All</a></li>
+					<li><a href="#" data-value="failed">Failed</a></li>
+					<li><a href="#" data-value="passed">Passed</a></li>
+					<li><a href="#" data-value="inapplicable">Inapplicable</a></li>
+				</ul>
+			</div>
+
+      <div class="btn-group">
+				<button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+					Maturity Level
+					<span class="caret"></span>
+				</button>
+				<ul class="dropdown-menu">
+					<li><a href="#">Maturity Level</a></li>
+					<li role="separator" class="divider"></li>
+					<li><a href="#" data-value="testing">Testing</a></li>
+					<li><a href="#" data-value="stable">Stable</a></li>
+					<li><a href="#" data-value="outdated">Outdated</a></li>
+				</ul>
+			</div>
+
+			</div> <!-- btn-group -->
+
+
+					<div class="vert-spacer"></div> 
 
 			<div class='row'>
 				    <div class="col-xs-8">
