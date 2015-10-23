@@ -1,3 +1,9 @@
+var urlParams = {
+    limit: "Unlimited",
+		filterByMaturityLevel: "All",
+		filterByResult: "All",
+		tab: "tab1",
+};
 
 
 
@@ -313,8 +319,6 @@ function displayItemData() {
       $("#items-statistic").html(buf);
 }
 
-var obj = { "ordering": "by-submitting-date-reverse", "limit": 200 }
-
 function loadItemData() {
   var query_url = "/api/v1/objects";
 	$.ajax({
@@ -366,13 +370,6 @@ $(document).ready(function() {
 });
 
 
-var urlParams = {
-    limit: "Unlimited",
-		filterByMaturityLevel: "All",
-		filterByResult: "All",
-		tab: "tab1",
-};
-
 (window.onpopstate = function () {
     var match,
         pl     = /\+/g,
@@ -397,5 +394,12 @@ function reloadPageWithNewURL()
   console.log(url);
 	window.location.href = url;
 }
+
+var obj = { }
+obj['limit'] = 0;
+obj['ordering'] = "by-submitting-date-reverse";
+obj['filter-by-result'] = urlParams["filterByResult"].toLowerCase();
+obj['filter-by-maturity-level'] = urlParams["filterByMaturityLevel"].toLowerCase();
+
 
 //setTimeout(reloadPageWithNewURL, 1000);

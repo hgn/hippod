@@ -40,17 +40,23 @@ def check_request_data(xobj):
         if limit < 0 or limit > 1000000:
             msg = "limit must be between 0 and 1000000"
             raise ApiError(msg, 400)
-    if 'maturity-level' in xobj:
-        maturity_level = xobj['maturity-level']
+    if 'filter-by-maturity-level' in xobj:
+        maturity_level = xobj['filter-by-maturity-level']
         if maturity_level not in ("all", "testing", "stable", "outdated"):
             msg = "maturity_level must be all, testing, stable or outdated "
+            raise ApiError(msg, 400)
+    if 'filter-by-result' in xobj:
+        filter_result = xobj['filter-by-result']
+        if filter_result not in ("all", "passed", "failed", "inapplicable"):
+            msg = "maturity_level must be all, passed, failed or inapplicable "
             raise ApiError(msg, 400)
 
     # fine, arguments are fime
     request_data = dict()
     request_data['ordering'] = ordering
     request_data['limit'] = limit
-    request_data['maturity-level'] = maturity_level
+    request_data['filter-by-maturity-level'] = maturity_level
+    request_data['filter-by-result'] = filter_result
     return request_data
 
 
@@ -78,7 +84,7 @@ def get_last_achievement_data(sha_sum, cont_obj):
     return r
 
 
-def container_obj_to_ret_obj(sha_sum, cont_obj):
+def container_obj_to_ret_obj(request_data, sha_sum, cont_obj):
     ret_obj = dict()
 
     # add object item ID
@@ -99,15 +105,23 @@ def container_obj_to_ret_obj(sha_sum, cont_obj):
     if data:
         ret_obj['object-achievements'] = data
 
-    return ret_obj
+    sys.stderr.write(str(ret_obj['object-item']['maturity-level']['level']) + " " +
+            request_data['filter-by-maturity-level'] + "XXX\n")
+
+    # filter checks
+    if request_data['filter-by-maturity-level'] != "all":
+        if request_data['filter-by-maturity-level'] != ret_obj['object-item']['maturity-level']['level']:
+            return False, None
+
+    return True, ret_obj
 
 
-def object_data_by_id(sha_sum):
+def object_data_by_id(request_data, sha_sum):
     (ret, data) = hippod.api_shared.read_cont_obj_by_id(sha_sum)
     if not ret:
         msg = "cannot read object by id: {}".format(sha_sum)
         raise ApiError(msg, 500)
-    return container_obj_to_ret_obj(sha_sum, data)
+    return container_obj_to_ret_obj(request_data, sha_sum, data)
 
 
 def object_get_by_sub_data_rev(request_data, reverse=True):
@@ -119,7 +133,10 @@ def object_get_by_sub_data_rev(request_data, reverse=True):
     ret_data = list()
     list_sort_func = (null_func, reversed)[bool(reverse)]
     for i in list_sort_func(object_index_data):
-        data = object_data_by_id(i['object-item-id'])
+        success, data = object_data_by_id(request_data, i['object-item-id'])
+        if not success:
+            # probably a filter (status, maturity_level, ..)
+            next
         ret_data.append(data)
         if limit_enabled:
             limit -= 1
