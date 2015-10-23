@@ -345,22 +345,32 @@ function readyBB() {
 		console.log(cat);
 		$(this).parents(".btn-group").find('.btn').html(selected + ' <span class="caret"></span>');
 
-		urlParams[cat] = selected.toLowerCase();
+		urlParams[cat] = selected;
 		reloadPageWithNewURL();
 	});
 }
 
+function updateButtonSelection() {
+	var buttons = $('.btn-group button');
+	buttons.each(function( index ) {
+		var v = $(this).attr("id");
+		$(this).html(urlParams[v] + ' <span class="caret"></span>');
+	});
+}
+
 $(document).ready(function() {
-    activaTab('tab1');
+    activaTab(urlParams['tab']);
     loadItemData();
 		readyBB();
+		updateButtonSelection();
 });
 
 
 var urlParams = {
-    limit: "unlimited",
-		filterByMaturityLevel: "all",
-		filterByResult: "all",
+    limit: "Unlimited",
+		filterByMaturityLevel: "All",
+		filterByResult: "All",
+		tab: "tab1",
 };
 
 (window.onpopstate = function () {
