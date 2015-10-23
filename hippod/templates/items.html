@@ -139,37 +139,6 @@
 </style>
 <script>
 
-var urlParams = {
-    limit: "unlimited",
-    i: "main"
-};
-
-(window.onpopstate = function () {
-    var match,
-        pl     = /\+/g,
-        search = /([^&=]+)=?([^&]*)/g,
-        decode = function (s) { return decodeURIComponent(s.replace(pl, " ")); },
-        query  = window.location.search.substring(1);
-
-    urlParams = urlParams;
-    while (match = search.exec(query))
-       urlParams[decode(match[1])] = decode(match[2]);
-})();
-
-console.log(urlParams);
-
-function continueExecution()
-{
-	var parser = document.createElement('a');
-	parser.href = document.URL;;
-
-  var str = jQuery.param( urlParams );
-  var url = parser.pathname + "?" + str;
-  console.log(url);
-	//window.location.href = url;
-}
-
-setTimeout(continueExecution, 1000);
 
 </script>
 
@@ -233,7 +202,10 @@ setTimeout(continueExecution, 1000);
 
 
       <div class="btn-group">
-				<button class="btn btn-info dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+				<button class="btn btn-default dropdown-toggle"
+						    id="filterByResult" type="button"
+								data-toggle="dropdown" aria-haspopup="true"
+								aria-expanded="false">
 					Filter by Result
 					<span class="caret"></span>
 				</button>
@@ -248,7 +220,10 @@ setTimeout(continueExecution, 1000);
 			</div> <!-- btn-group -->
 
       <div class="btn-group">
-				<button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+				<button class="btn btn-default dropdown-toggle"
+				        id="filterByMaturityLevel" type="button"
+								data-toggle="dropdown" aria-haspopup="true"
+								aria-expanded="false">
 					Filter by Maturity Level
 					<span class="caret"></span>
 				</button>

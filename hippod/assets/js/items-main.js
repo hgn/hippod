@@ -336,14 +336,56 @@ function loadItemData() {
 	})
 }
 
+function readyBB() {
+	$('.dropdown-menu li a').click(function(e){
+		e.preventDefault();
+		var selected = $(this).text();
+		var cat = $(this).parents(".btn-group").find('button').attr("id");
+		console.log(selected);
+		console.log(cat);
+		$(this).parents(".btn-group").find('.btn').html(selected + ' <span class="caret"></span>');
+
+		urlParams[cat] = selected.toLowerCase();
+		reloadPageWithNewURL();
+	});
+}
+
 $(document).ready(function() {
     activaTab('tab1');
     loadItemData();
-
-		$(".dropdown-menu li a").click(function(){
-			$(this).parents(".btn-group").find('.btn').html($(this).text() + ' <span class="caret"></span>');
-			$(this).parents(".btn-group").find('.btn').val($(this).data('value'));
-		});
+		readyBB();
 });
 
 
+var urlParams = {
+    limit: "unlimited",
+		filterByMaturityLevel: "all",
+		filterByResult: "all",
+};
+
+(window.onpopstate = function () {
+    var match,
+        pl     = /\+/g,
+        search = /([^&=]+)=?([^&]*)/g,
+        decode = function (s) { return decodeURIComponent(s.replace(pl, " ")); },
+        query  = window.location.search.substring(1);
+
+    urlParams = urlParams;
+    while (match = search.exec(query))
+       urlParams[decode(match[1])] = decode(match[2]);
+})();
+
+console.log(urlParams);
+
+function reloadPageWithNewURL()
+{
+	var parser = document.createElement('a');
+	parser.href = document.URL;;
+
+  var str = jQuery.param( urlParams );
+  var url = parser.pathname + "?" + str;
+  console.log(url);
+	window.location.href = url;
+}
+
+//setTimeout(reloadPageWithNewURL, 1000);
