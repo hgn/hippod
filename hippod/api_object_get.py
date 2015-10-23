@@ -104,13 +104,14 @@ def container_obj_to_ret_obj(request_data, sha_sum, cont_obj):
     data = get_last_achievement_data(sha_sum, cont_obj)
     if data:
         ret_obj['object-achievements'] = data
-
-    sys.stderr.write(str(ret_obj['object-item']['maturity-level']['level']) + " " +
-            request_data['filter-by-maturity-level'] + "XXX\n")
+        if request_data['filter-by-result'] != "all":
+            if request_data['filter-by-result'] != data['test-result']:
+                return False, None
 
     # filter checks
     if request_data['filter-by-maturity-level'] != "all":
-        if request_data['filter-by-maturity-level'] != ret_obj['object-item']['maturity-level']['level']:
+        if request_data['filter-by-maturity-level'] != \
+                ret_obj['object-item']['maturity-level']['level']:
             return False, None
 
     return True, ret_obj
@@ -136,7 +137,7 @@ def object_get_by_sub_data_rev(request_data, reverse=True):
         success, data = object_data_by_id(request_data, i['object-item-id'])
         if not success:
             # probably a filter (status, maturity_level, ..)
-            next
+            continue
         ret_data.append(data)
         if limit_enabled:
             limit -= 1
