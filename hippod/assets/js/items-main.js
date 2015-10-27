@@ -165,7 +165,7 @@ function ObjectData() {
     buf += 'John Doe';
     buf += '</div>';
 
-    buf += '<div><strong>No:</strong> ';
+    buf += '<div><strong>Test Iteration:</strong> ';
     buf += this.id_no;
     buf += '</div>';
 
@@ -304,13 +304,13 @@ function displayItemData() {
 		  }
 
 			buf += '<div class="progress">';
-			buf += '<div class="progress-bar progress-bar-success progress-bar-striped active" style="width: ' + stats_no_items_passed_pct  + '%">';
+			buf += '<div class="progress-bar progress-bar-success progress-bar-striped" style="width: ' + stats_no_items_passed_pct  + '%">';
 			buf += '<span class="sr-only">35% Complete (success)</span>';
 			buf += '</div>';
-			buf += '<div class="progress-bar progress-bar-danger progress-bar-striped active" style="width: ' + stats_no_items_failed_pct  + '%">';
+			buf += '<div class="progress-bar progress-bar-danger progress-bar-striped" style="width: ' + stats_no_items_failed_pct  + '%">';
 			buf += '<span class="sr-only">10% Complete (danger)</span>';
 			buf += '</div>';
-			buf += '<div class="progress-bar progress-bar-warning progress-bar-striped active"" style="width: ' + stats_no_items_inapplicable_pct  + '%">';
+			buf += '<div class="progress-bar progress-bar-warning progress-bar-striped"" style="width: ' + stats_no_items_inapplicable_pct  + '%">';
 			buf += '<span class="sr-only">20% Complete (warning)</span>';
 			buf += '</div>';
 			buf += '</div>';
