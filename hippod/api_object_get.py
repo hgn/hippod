@@ -33,6 +33,8 @@ def check_request_data(xobj):
     ordering = "by-submitting-date-reverse"
     limit = 0 # "unlimited"
     maturity_level = "all"
+    filter_result = "all"
+
     if 'ordering' in xobj:
         ordering = xobj['ordering']
     if 'limit' in xobj:
