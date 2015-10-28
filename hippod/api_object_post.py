@@ -294,8 +294,10 @@ def update_attachment_achievement(sha_sum, xobj):
             new_data = dict()
             new_data['id'] = current_achievements_no
             new_data['date-added'] =  date
-            new_data['submitter'] =  xobj['submitter']
             current_achievements.append(new_data)
+
+            # additionally, we add the submitter to the achievement
+            a['submitter'] = xobj['submitter']
 
             # now we save the achievement in a seperate file
             write_achievement_file(sha_sum, current_achievements_no, a)

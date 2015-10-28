@@ -76,12 +76,14 @@ def get_last_achievement_data(sha_sum, cont_obj):
     data = hippod.api_shared.get_achievement_data_by_sha_id(sha_sum, last_element_id)
     test_result = data["result"]
     test_date   = data["test-date"]
+    submitter   = data["submitter"]
 
     r = dict()
     r['test-date']= test_date
     r['test-result']= test_result
     r['id']= last_element_id
     r['date-added']= last_date_added
+    r['submitter']= submitter
 
     return r
 
