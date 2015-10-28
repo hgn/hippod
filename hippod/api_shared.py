@@ -35,3 +35,14 @@ def get_achievement_data_by_sha_id(sha, id_no):
     with open(path) as data_file:
         data = json.load(data_file)
     return data
+
+
+def get_attachment_data_by_sha_id(sha, id_no):
+    path = os.path.join(app.config['DB_OBJECT_PATH'],
+                        sha[0:2],
+                        sha,
+                        'attachments',
+                        '{}.db'.format(id_no))
+    with open(path) as data_file:
+        data = json.load(data_file)
+    return data

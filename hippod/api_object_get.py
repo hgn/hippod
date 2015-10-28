@@ -88,6 +88,26 @@ def get_last_achievement_data(sha_sum, cont_obj):
     return r
 
 
+def get_last_attachment_data(sha_sum, cont_obj):
+    if len(cont_obj['attachments']) <= 0:
+        return None
+
+    last_date_added = cont_obj['attachments'][-1]["date-added"]
+    last_element_id = cont_obj['attachments'][-1]["id"]
+
+    data = hippod.api_shared.get_attachment_data_by_sha_id(sha_sum, last_element_id)
+
+    r = dict()
+    r['references']  = data['references']
+    r['responsible'] = data['responsible']
+    r['tags']        = data['tags']
+
+    r['id']= last_element_id
+    r['date-added']= last_date_added
+
+    return r
+
+
 def container_obj_to_ret_obj(request_data, sha_sum, cont_obj):
     ret_obj = dict()
 
@@ -101,8 +121,10 @@ def container_obj_to_ret_obj(request_data, sha_sum, cont_obj):
     ret_obj['object-item']['title'] = cont_obj['object-item']['title'] 
     ret_obj['object-item']['version'] = cont_obj['object-item']['version'] 
 
-    # add full attachment
-    ret_obj['object-attachment'] = cont_obj['attachment']
+    # add last attachment
+    data = get_last_attachment_data(sha_sum, cont_obj)
+    if data:
+        ret_obj['object-attachment'] = data
 
     # add last achievement with basic information
     data = get_last_achievement_data(sha_sum, cont_obj)
@@ -110,7 +132,7 @@ def container_obj_to_ret_obj(request_data, sha_sum, cont_obj):
         ret_obj['object-achievements'] = data
         if request_data['filter-by-result'] != "all":
             if request_data['filter-by-result'] != data['test-result']:
-                return False, None
+                return false, none
 
     # filter checks
     if request_data['filter-by-maturity-level'] != "all":

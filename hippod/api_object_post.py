@@ -154,7 +154,7 @@ def create_container_data_merge_issue_new(sha_sum, object_item, submitter):
     d['submitter'] = submitter
     d['object-item-id'] = sha_sum
     d['date-added'] = date
-    d['attachment'] = { }
+    d['attachments'] = []
     d['attachment-last-modified'] = date
     d['achievements'] = []
 
@@ -185,6 +185,9 @@ def save_new_object_container(sha_sum, object_item, submitter):
     achie_path = os.path.join(obj_root_full_path, 'achievements')
     if not os.path.isdir(achie_path):
         os.makedirs(achie_path)
+    attachie_path = os.path.join(obj_root_full_path, 'attachments')
+    if not os.path.isdir(attachie_path):
+        os.makedirs(attachie_path)
 
     file_path = os.path.join(obj_root_full_path, 'container.db')
     if os.path.isfile(file_path):
@@ -239,6 +242,19 @@ def write_achievement_file(sha, id_no, achievement):
     fd.close()
 
 
+def write_attachment_file(sha, id_no, attachment):
+    path = os.path.join(app.config['DB_OBJECT_PATH'],
+                        sha[0:2],
+                        sha,
+                        'attachments',
+                        '{}.db'.format(id_no))
+    data = json.dumps(attachment, sort_keys=True,indent=4,
+                      separators=(',', ': '))
+    fd = open(path, 'w')
+    fd.write(data)
+    fd.close()
+
+
 def validate_date(formated_data):
     # only supported format: 2015-09-15T22:24:29.158759"
     try:
@@ -278,8 +294,18 @@ def update_attachment_achievement(sha_sum, xobj):
         if type(xobj['attachment']) is not dict:
                 msg = "attachment data MUST be a dict - but isn't"
                 raise ApiError(msg, 400)
-        data['attachment'] = xobj['attachment']
-        data['attachment-last-modified'] = date
+
+        current_attachments = data['attachments']
+        current_attachments_no = len(current_attachments)
+
+        new_attachment_meta = dict()
+        new_attachment_meta['id'] = current_attachments_no
+        new_attachment_meta['date-added'] = date
+        new_attachment_meta['submitter'] = xobj['submitter']
+
+        current_attachments.append(new_attachment_meta)
+        write_attachment_file(sha_sum, current_attachments_no, xobj['attachment'])
+        data['attachments'] = current_attachments
         rewrite_required = True
 
     if 'achievements' in xobj:
