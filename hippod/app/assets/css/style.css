@@ -69,20 +69,3 @@
     background: none;
 }
 
-@media(min-width:1300px) {
-    #wrapper {
-        padding-left: 250;
-    }
-
-    #sidebar-wrapper {
-        width: 250px;
-    }
-
-    .sidebar-nav {
-        width: 250px;
-    }
-
-    #page-content-wrapper {
-        padding: 40px;
-    }
-}

@@ -10,8 +10,13 @@
     <meta name="author" content="">
 
     <script src="assets/js/angular.min.js"></script>
+    <script src="assets/js/angular-ui-router.min.js"></script>
     <script src="assets/js/ui-bootstrap-tpls-0.14.3.min.js"></script>
+
     <script src="app.js"></script>
+
+    <script src="controllers/home.js"></script>
+
 
     <title>hippod</title>
 
@@ -38,67 +43,38 @@
         <div id="sidebar-wrapper">
             <ul class="sidebar-nav">
                 <li class="sidebar-brand">
-                    <a href="#">
+                    <a ui-sref="dashboard">
                         HippoD
                     </a>
                 </li>
-                <li>
-                    <a href="#">Dashboard</a>
-                </li>
-                <li>
-                    <a href="#">Items</a>
-                </li>
-                <li>
-                    <a href="#">Admin</a>
-                </li>
+
+        <li><a ui-sref="dashboard">Dashboard</a></li>
+				<li><a ui-sref="items">Items</a></li>
+				<li><a ui-sref="admin">Admin</a></li>
+
             </ul>
         </div> <!-- /#sidebar-wrapper -->
 
         <!-- Page Content -->
-        <div id="page-content-wrapper">
             <div class="container-fluid">
                 <div class="row">
                     <div class="col-lg-12">
 
 
-<div ng-controller="ModalDemoCtrl">
 
-    <button type="button" class="btn btn-default" ng-click="open()">Open me!</button>
-    <button type="button" class="btn btn-default" ng-click="open('lg')">Large modal</button>
-    <button type="button" class="btn btn-default" ng-click="open('sm')">Small modal</button>
-    <button type="button" class="btn btn-default" ng-click="toggleAnimation()">Toggle Animation ({{ animationsEnabled }})</button>
-    <div ng-show="selected">Selection from a modal: {{ selected }}</div>
-</div>
+											<!-- MAIN CONTENT -->
+											<div class="container-fluid">
 
+									    <div ui-view></div>
 
+											</div>
 
+<!--
+-->
 
-    Write some text in textbox:
-    <input type="text" ng-model="sometext" />
- 
-    <h1>Hello {{ sometext }}</h1>
-     
-
-<div ng-controller="MainCtrl">
-  <h1>Modal example</h1>
-  <button ng-click="toggleModal()" class="btn btn-default">Open modal</button>
-    
-  <modal title="Login form" visible="showModal">
-    <form role="form">
-      <div class="form-group">
-        <label for="email">Email address</label>
-        <input type="email" class="form-control" id="email" placeholder="Enter email" />
-      </div>
-      <div class="form-group">
-        <label for="password">Password</label>
-        <input type="password" class="form-control" id="password" placeholder="Password" />
-      </div>
-      <button type="submit" class="btn btn-default">Submit</button>
-    </form>
-  </modal>
-</div>
-
-        </div> <!-- /#page-content-wrapper -->
+											</div>
+											</div>
+											</div>
 
     </div> <!-- /#wrapper -->
 

@@ -1,0 +1,23 @@
+<div class="jumbotron text-center">
+    <h1>Home</h1>
+</div>
+
+
+<div ng-controller="ModalDemoCtrl">
+
+    <button type="button" class="btn btn-default" ng-click="open()">Open me!</button>
+    <button type="button" class="btn btn-default" ng-click="open('lg')">Large modal</button>
+    <button type="button" class="btn btn-default" ng-click="open('sm')">Small modal</button>
+    <div ng-show="selected">Selection from a modal: {{ selected }}</div>
+</div>
+
+
+
+
+    Write some text in textbox:
+    <input type="text" ng-model="sometext" />
+ 
+    <h1>Hello {{ sometext }}</h1>
+     
+
+
