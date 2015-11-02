@@ -26,7 +26,7 @@ def check_db_environmet(path):
         os.makedirs(obj_path)
 
 
-app = Flask(__name__, static_folder='assets', static_url_path='')
+app = Flask(__name__, static_folder='app', static_url_path='')
 
 app.config.from_pyfile('testcolld.cfg', silent=False)
 app.config.from_envvar('APP_CONFIG_FILE', silent=True)
@@ -54,9 +54,7 @@ app.config['HELLO_WORLD'] = 'Hello Flask!'
 # The views modules that contain the application's routes are imported here
 # Importing views modules MUST BE in the end of the file to avoid problems
 # related to circular imports http://flask.pocoo.org/docs/patterns/packages
-import hippod.gui_dashboard
-import hippod.gui_admin
-import hippod.gui_items
+import hippod.gui_app
 
 import hippod.api_object_post
 import hippod.api_object_get
