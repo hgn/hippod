@@ -8,7 +8,7 @@ hippoD.controller("ModalDemoCtrl", function ($scope, $uibModal, $log) {
 
     var modalInstance = $uibModal.open({
       animation: false,
-      templateUrl: 'modal-object-item.html',
+      templateUrl: 'templates/modal-object-item.html',
       controller: 'ModalInstanceCtrl',
       size: size,
       resolve: {
