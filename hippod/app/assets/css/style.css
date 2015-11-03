@@ -42,6 +42,10 @@
     color: #444;
 }
 
+.sidebar-nav  .active_nav {
+    background: #ddd;
+}
+
 .sidebar-nav li a:hover {
     text-decoration: none;
     color: #111;
