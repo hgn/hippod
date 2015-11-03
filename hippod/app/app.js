@@ -1,4 +1,4 @@
-var hippoD = angular.module('helloApp', ['ui.router', 'ui.bootstrap']);
+var hippoD = angular.module('hippoDApp', ['ui.router', 'ui.bootstrap']);
 
 hippoD.config(function($stateProvider, $urlRouterProvider) {
 
@@ -17,7 +17,8 @@ hippoD.config(function($stateProvider, $urlRouterProvider) {
 
         .state('admin', {
             url: '/admin',
-            templateUrl: 'templates/admin.html'
+            templateUrl: 'templates/admin.html',
+						controller: 'AdminCtrl'
         });
         
 });
