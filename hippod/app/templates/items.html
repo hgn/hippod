@@ -6,7 +6,11 @@
 
     <div class="col-sm-8">
 
+
 <div ng-repeat="items in data">
+        <button type="button" class="btn btn-default"
+					ng-click='open(items["object-item-id"])'>{{
+					items["object-item-id"] }}</button><br>
         {{items}}
         <br>
         <br>
