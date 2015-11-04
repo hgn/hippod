@@ -12,13 +12,14 @@ hippoD.config(function($stateProvider, $urlRouterProvider) {
 
         .state('items', {
             url: '/items',
-            templateUrl: 'templates/items.html'
+            templateUrl: 'templates/items.html',
+            controller: 'ItemsCtrl'
         })
 
         .state('admin', {
             url: '/admin',
             templateUrl: 'templates/admin.html',
-						controller: 'AdminCtrl'
+            controller: 'AdminCtrl'
         });
         
 });
