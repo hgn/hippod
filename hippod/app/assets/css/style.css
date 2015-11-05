@@ -73,3 +73,77 @@
     background: none;
 }
 
+.mainbar {
+	height: 65px;
+	background-color: #f6f6f6;
+	width: 100%;
+	margin-bottom:20px;
+	padding-top:10px;
+	padding-left:100px;
+	font-size: 30px;
+}
+
+.container-fluid {
+	  padding-right: 0px;
+	  padding-left: 0px;
+}
+
+/* button styling */
+
+.btn, .btn-flat, .btn-floating {
+	position: relative;
+	margin: 0px;
+}
+
+
+
+.primary-color{background-color:#4285F4}.primary-color-dark{background-color:#0d47a1}.secondary-color{background-color:#a6c}.secondary-color-dark{background-color:#93C}
+
+.btn, .btn-floating, .card, .card-panel, .dropdown-content, .dropdown-menu, .panel-group, .z-depth-1 {
+    box-shadow: 0 2px 5px 0 rgba(0,0,0,.16),0 2px 10px 0 rgba(0,0,0,.12);
+}
+
+.btn-floating:hover,.btn:hover,.z-depth-1-half{box-shadow:0 5px 11px 0 rgba(0,0,0,.18),0 4px 15px 0 rgba(0,0,0,.15)}
+.btn-primary:focus,.btn-primary:hover{background-color:#5a95f5!important;color:#fff}.btn-success{background-color:#00c853}.btn-success:focus,.btn-success:hover{background-color:#00e25e!important;color:#fff}.btn-info{background-color:#03A9F4}.btn-info:focus,.btn-info:hover{background-color:#14b4fc!important;color:#fff}.btn-warning{background-color:#FF5722}.btn-warning:focus,.btn-warning:hover{background-color:#ff6a3c!important;color:#fff}.btn-danger{background-color:#d32f2f}.btn-danger:focus,.btn-danger:hover{background-color:#d74444!important;color:#fff}.btn-link,.btn-link:focus,.btn-link:hover{background-color:transparent}.btn-link{color:#000}.btn-xlg{padding:18px 24px;font-size:21px}.btn-lg{padding:14px 20px;font-size:18px}
+btn:visited {background-color:#03A9F4}
+
+.btn-primary {
+    background-color: #4285F4;
+}
+
+.btn-default:hover{background-color:#30cfc0!important;color:#fff!important}
+
+.btn-default {
+	color: #fff;
+	background-color: #2BBBAD;
+}
+
+.btn {
+    line-height: 31px;
+    padding: 5px 22px;
+    border: 0;
+    border-radius: 2px;
+    -webkit-transition: .2s ease-out;
+    -moz-transition: .2s ease-out;
+    -o-transition: .2s ease-out;
+    -ms-transition: .2s ease-out;
+    transition: .2s ease-out;
+}
+.btn, .btn-flat, .btn-floating {
+    position: relative;
+    margin: 0px;
+}
+.btn, .btn-floating, .card .card-title.activator {
+    cursor: pointer;
+}
+.btn, .btn-flat, .card .card-action a {
+    text-transform: uppercase;
+}
+.btn, .btn-flat {
+    text-decoration: none;
+    outline: 0!important;
+}
+
+
+.btn:hover{
+}
