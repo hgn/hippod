@@ -41,3 +41,4 @@ def generate_and_scale(filename):
     do(cmd)
 
 generate_and_scale("hippod-logo")
+generate_and_scale("hippod-logo-ear")
