@@ -29,6 +29,7 @@
     margin: 0;
     padding: 0;
     list-style: none;
+		z-index: 2000;
 }
 
 .sidebar-nav li {
@@ -240,3 +241,16 @@ btn:visited {background-color:#03A9F4}
     flex: 1;
     padding: 3px;
 }
+
+/* fixed logo */
+
+#hippod-logo {
+	background-image:url("../images/hippod-logo-100.png");
+	background-repeat:no-repeat;
+	position: fixed;
+	position: absolute;
+	height: 100%;
+	width: 100%;
+	background-position: bottom 50px center;
+}
+
