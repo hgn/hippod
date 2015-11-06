@@ -242,6 +242,32 @@ btn:visited {background-color:#03A9F4}
     padding: 3px;
 }
 
+/* item container condensed */
+.alignleft {
+	float: left;
+	margin: 0px;
+}
+.alignright {
+	float: right;
+	margin: 0px;
+}
+
+.header-seperator {
+	border-bottom: 1px dotted #eee;
+	width: 100%;
+	margin-top: 5px;
+	margin-bottom: 12px;
+}
+
+.bs-callout-success {
+	border-left-color: #4CAF50;
+	border-left-width: 3px;
+}
+.bs-callout-failure {
+	border-left-color: #ff0000;
+	border-left-width: 3px;
+}
+
 /* fixed logo */
 
 #hippod-logo {
