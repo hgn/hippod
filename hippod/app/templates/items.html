@@ -1,24 +1,67 @@
 <div class="mainbar">Items
 </div>
 
-<div class="row">
+<div class="main-content-container">
+	<div class="controll-container">
 
-    <div class="col-sm-8">
+    <div ng-switch on="condensed">
+        <div class="btn-group" role="group" aria-label="Basic example">
+        <button type="button" class="btn btn-default" ng-switch-when='true' ng-click='button1()'>condensed</button>
+        <button type="button" class="btn btn-default" ng-switch-when='false' ng-click='button2()'>verbose</button>
+        </div>
+    </div>
 
 
-<div ng-repeat="items in data">
-        <button type="button" class="btn btn-default"
-					ng-click='open(items["object-item-id"])'>{{
-					items["object-item-id"] }}</button><br>
-        {{items}}
-        <br>
-        <br>
-</div>
+	</div>
+	<div class="row">
+		<div class="col-sm-8" ng-switch on="condensed">
 
-    </div> <!-- col-sm-6 -->
-    
-    <div class="col-sm-4">
-    </div> <!-- col-sm-6 -->
 
-</div>    
+			<!-- verbose version -->
+			<div ng-switch-when='false'>
+					<div ng-repeat="items in data">
+            <a href="#" ng-click='open(items["object-item-id"])'>
+							<div class="item-container">
+								<div class="status-area"></div>
+								<div class="item-main">
+									<div class="header">
+										{{ items["object-item"]['title'] }}
+									</div>
+									<div class="content">
+										<div class="achievements">
+											achievementssdfsfsfsdfsdfsdfs dsd sd sd sd sd dss
+										</div>
+										<div class="attachments">
+											attachments
+										</div>
+										<div class="item-data">
+											item-data<br />
+											item-data<br />
+											item-data<br />
+										</div>
+									</div>
+								</div>
+							</div>
+            </a>
+					</div>
+			</div>
+
+			<!-- condensed version -->
+			<div ng-switch-when='true'>
+				<div class="list-group">
+					<div ng-repeat="items in data">
+						<a href="#" ng-click='open(items["object-item-id"])' class="list-group-item">
+							<br>xx {{items}} <br> <br>
+						</a>
+					</div>
+				</div>
+			</div>
+
+
+		</div> <!-- col-sm-6 -->
+
+		<div class="col-sm-4">
+		</div> <!-- col-sm-6 -->
+	</div>    
+</div> <!-- main-content-container -->
 

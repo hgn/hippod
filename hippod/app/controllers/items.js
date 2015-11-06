@@ -2,6 +2,15 @@
 
 hippoD.controller("ItemsCtrl", function ($scope, ItemService, $uibModal, $log) {
 
+	  $scope.condensed = true;
+    $scope.button1 = function () {
+        $scope.condensed = !$scope.condensed;
+    }
+
+    $scope.button2 = function () {
+        $scope.condensed = !$scope.condensed;
+    }
+
 	// if called we fill the data
 	ItemService.getItemList().then(function(res) {
     $scope.data = res.data;
