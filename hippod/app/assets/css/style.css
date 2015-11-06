@@ -254,3 +254,7 @@ btn:visited {background-color:#03A9F4}
 	background-position: bottom 50px center;
 }
 
+#hippod-logo:hover {
+	background-image:url("../images/hippod-logo-ear-100.png");
+}
+
