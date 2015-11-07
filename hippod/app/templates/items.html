@@ -168,7 +168,7 @@
 				<li class="list-group-item">
 					<h4 class="list-group-item-heading">Overall Statistics</h4>
 					<p class="list-group-item-text">
-					Number of tests:
+					Number of tests: {{ numberItems }}
 					</p>
 					<p class="list-group-item-text">
 					Last test in selection:
@@ -186,6 +186,10 @@
 
 				<li class="list-group-item">
 					<h4 class="list-group-item-heading">Results</h4>
+					Passed: {{ passedAchievements }}<br>
+					Failed: {{ failedAchievements }}<br>
+					Non Applicable: {{ nonApplicableAchievements }}<br>
+					Never tested: {{ noAchievements }}<br>
 				</li>
 
 				<li class="list-group-item">

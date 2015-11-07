@@ -11,13 +11,48 @@ hippoD.controller("ItemsCtrl", function ($scope, ItemService, $uibModal, $log) {
         $scope.condensed = !$scope.condensed;
     }
 
-	// if called we fill the data
-	ItemService.getItemList().then(function(res) {
-    $scope.data = res.data;
-		console.log(res.data);
-	}, function(error) {
-		console.log(res);
-	});
+		// if called we fill the data
+		ItemService.getItemList().then(function(res) {
+		  var number = 0;
+			var passed_achievement = 0;
+			var failed_achievement = 0;
+			var nonapplicable_achievement = 0;
+			var no_achievements = 0;
+
+			$scope.passedAchievements = 0;
+			$scope.noAchievements = 0;
+
+			$scope.data = res.data;
+			angular.forEach(res.data, function(value, key) {
+				number++;
+				if ("object-achievements" in value) {
+					var result = value['object-achievements']['test-result'];
+					if (result == "passed") {
+						passed_achievement++;
+					} else if (result == "failed") {
+						failed_achievement++;
+					} else if (result == "nonapplicable") {
+						nonapplicable_achievement++;
+					} else {
+						console.log("corrupt achievement!");
+						console.log(value);
+					}
+				} else {
+					no_achievements++;
+				}
+			});
+
+		  $scope.numberItems = number;
+			$scope.passedAchievements = passed_achievement;
+			$scope.failedAchievements = failed_achievement;
+			$scope.nonApplicableAchievements = nonapplicable_achievement;
+			$scope.noAchievements = no_achievements;
+
+		}, function(error) {
+			console.log(res);
+			$scope.data = null;
+		});
+
 
 
   $scope.items = ['item1', 'item2', 'item3'];
