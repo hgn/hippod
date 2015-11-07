@@ -2,6 +2,7 @@ import sys
 import json
 import hashlib
 import base64
+import collections
 
 from hippod.api_err_obj import *
 
@@ -10,6 +11,12 @@ def __sum_list(o):
         if type(o) is not list:
                 msg = "object data currupt - must be list: {}".format(str(o))
                 raise ApiError(msg, 404)
+        
+        # a list can be - surprise - a list of dicts, sorting dict lists
+        # is not that easy. Sorting by memory address is jabberwocky and
+        # will not lead to an consistent view. Therefore we leave list entries
+        # unsorted. This reflects the submitter/test order. Leading to a new
+        # ID if things are sorted, but normally this should be an exception.
         for i in o:
                 if type(i) is dict:
                         buf += __sum_dict(i)
@@ -24,7 +31,9 @@ def __sum_dict(o):
         if type(o) is not dict:
                 msg = "object data currupt - must be dict: {}".format(str(o))
                 raise ApiError(msg, 404)
-        for key in o:
+
+        od = collections.OrderedDict(sorted(o.items()))
+        for key in od:
                 if type(o[key]) is dict:
                         buf += "{}{}".format(key, __sum_dict(o[key]))
                 elif type(o[key]) is list:
@@ -51,6 +60,7 @@ def check_sum_object_issue(o):
             msg = "object data currupt - version missing: {}".format(str(o))
             raise ApiError(msg, 404)
 
+        # Use a sorted dictionary
         buf = __sum_dict(o)
         return hashlib.sha1(buf.encode('utf-8')).hexdigest()
 
