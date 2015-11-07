@@ -284,3 +284,10 @@ btn:visited {background-color:#03A9F4}
 	background-image:url("../images/hippod-logo-ear-100.png");
 }
 
+.inline {
+	display:inline;
+}
+
+.fooo {
+	padding: 20px;
+}

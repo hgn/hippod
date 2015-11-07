@@ -4,15 +4,112 @@
 <div class="main-content-container">
 	<div class="controll-container">
 
-    <div ng-switch on="condensed">
-        <div class="btn-group" role="group" aria-label="Basic example">
+		<div class="btn-group">
+			<button type="button" class="btn btn-default dropdown-toggle"
+												 data-toggle="dropdown" aria-haspopup="true"
+																		aria-expanded="false">
+				Maturity Level: stable <span class="caret"></span>
+			</button>
+			<ul class="dropdown-menu">
+				<li><a href="#">All</a></li>
+				<li><a href="#">Testing</a></li>
+				<li><a href="#">Stable</a></li>
+				<li role="separator"
+				class="divider"></li>
+				<li><a href="#">Outdated</a></li>
+			</ul>
+		</div>
+
+		<!-- Single button -->
+		<div class="btn-group">
+			<button type="button" class="btn btn-default dropdown-toggle"
+												 data-toggle="dropdown" aria-haspopup="true"
+																		aria-expanded="false">
+				Result: all <span class="caret"></span>
+			</button>
+			<ul class="dropdown-menu">
+				<li><a href="#">All</a></li>
+				<li><a href="#">Passed</a></li>
+				<li><a href="#">Failed here</a></li>
+				<li><a href="#">Non Applicable</a></li>
+			</ul>
+		</div>
+
+		<!-- Single button -->
+		<div class="btn-group">
+			<button type="button" class="btn btn-default dropdown-toggle"
+												 data-toggle="dropdown" aria-haspopup="true"
+																		aria-expanded="false">
+				Submitter: all <span class="caret"></span>
+			</button>
+			<ul class="dropdown-menu">
+				<li><a href="#">All</a></li>
+				<li><a href="#">Passed</a></li>
+				<li><a href="#">Failed here</a></li>
+				<li><a href="#">Non Applicable</a></li>
+			</ul>
+		</div>
+
+		<!-- Single button -->
+		<div class="btn-group">
+			<button type="button" class="btn btn-default dropdown-toggle"
+												 data-toggle="dropdown" aria-haspopup="true"
+																		aria-expanded="false">
+				Responsible: all <span class="caret"></span>
+			</button>
+			<ul class="dropdown-menu">
+				<li><a href="#">All</a></li>
+				<li><a href="#">Passed</a></li>
+				<li><a href="#">Failed here</a></li>
+				<li><a href="#">Non Applicable</a></li>
+			</ul>
+		</div>
+
+		<!-- Single button -->
+		<div class="btn-group">
+			<button type="button" class="btn btn-default dropdown-toggle"
+												 data-toggle="dropdown" aria-haspopup="true"
+																		aria-expanded="false">
+				Anchor <span class="caret"></span>
+			</button>
+			<ul class="dropdown-menu">
+				<li><a href="#">All</a></li>
+				<li><a href="#">Passed</a></li>
+				<li><a href="#">Failed here</a></li>
+				<li><a href="#">Non Applicable</a></li>
+			</ul>
+		</div>
+
+		<div class="btn-group">
+			<button type="button" class="btn btn-default dropdown-toggle"
+												 data-toggle="dropdown" aria-haspopup="true"
+																		aria-expanded="false">
+				Sorting: last tested <span class="caret"></span>
+			</button>
+			<ul class="dropdown-menu">
+				<li><a href="#">Last Tested</a></li>
+				<li><a href="#">Last Untested</a></li>
+				<li><a href="#">Newest Tests</a></li>
+			</ul>
+		</div>
+
+
+
+
+    <span ng-switch on="condensed">
+        <span class="btn-group" role="group" aria-label="Basic example">
         <button type="button" class="btn btn-default" ng-switch-when='true' ng-click='button1()'>condensed</button>
         <button type="button" class="btn btn-default" ng-switch-when='false' ng-click='button2()'>verbose</button>
-        </div>
-    </div>
+        </span>
+    </span>
 
 
-	</div>
+
+
+
+
+
+	</div> <!-- controll-container -->
 	<div class="row">
 		<div class="col-sm-8" ng-switch on="condensed">
 
@@ -66,6 +163,37 @@
 		</div> <!-- col-sm-6 -->
 
 		<div class="col-sm-4">
+
+			<div class="list-group">
+				<li class="list-group-item">
+					<h4 class="list-group-item-heading">Overall Statistics</h4>
+					<p class="list-group-item-text">
+					Number of tests:
+					</p>
+					<p class="list-group-item-text">
+					Last test in selection:
+					</p>
+					<p class="list-group-item-text">
+					First test in selection:
+					</p>
+					<p class="list-group-item-text">
+					Number of Submitter:
+					</p>
+					<p class="list-group-item-text">
+					Number of Responsibility:
+					</p>
+				</li>
+
+				<li class="list-group-item">
+					<h4 class="list-group-item-heading">Results</h4>
+				</li>
+
+				<li class="list-group-item">
+					<h4 class="list-group-item-heading">Category Statistics</h4>
+				</li>
+
+			</div>
+
 		</div> <!-- col-sm-6 -->
 	</div>    
 </div> <!-- main-content-container -->
