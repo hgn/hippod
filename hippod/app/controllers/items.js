@@ -22,10 +22,18 @@ hippoD.controller("ItemsCtrl", function ($scope, ItemService, $uibModal, $log) {
 			$scope.passedAchievements = 0;
 			$scope.noAchievements = 0;
 
+			var test_date_found_once = false;
+			var test_date_oldest;
+			var test_date_youngest;
+
+			$scope.testDateOldest = "";
+			$scope.testDateYoungest = "";
+
 			$scope.data = res.data;
 			angular.forEach(res.data, function(value, key) {
 				number++;
 				if ("object-achievements" in value) {
+
 					var result = value['object-achievements']['test-result'];
 					if (result == "passed") {
 						passed_achievement++;
@@ -37,6 +45,21 @@ hippoD.controller("ItemsCtrl", function ($scope, ItemService, $uibModal, $log) {
 						console.log("corrupt achievement!");
 						console.log(value);
 					}
+
+					var test_date = new Date(value['object-achievements']['test-date']);
+					if (!test_date_found_once) {
+						test_date_oldest = test_date;
+						test_date_youngest = test_date;
+						test_date_found_once = true;
+					}
+
+					if (test_date.getTime() > test_date_youngest.getTime()) {
+						test_date_youngest = test_date;
+					}
+					if (test_date.getTime() < test_date_oldest.getTime()) {
+						test_date_oldest = test_date;
+					}
+
 				} else {
 					no_achievements++;
 				}
@@ -47,6 +70,9 @@ hippoD.controller("ItemsCtrl", function ($scope, ItemService, $uibModal, $log) {
 			$scope.failedAchievements = failed_achievement;
 			$scope.nonApplicableAchievements = nonapplicable_achievement;
 			$scope.noAchievements = no_achievements;
+
+			$scope.testDateOldest = formatDateYYYYMMDD(test_date_oldest);
+			$scope.testDateYoungest = formatDateYYYYMMDD(test_date_youngest);
 
 		}, function(error) {
 			console.log(res);
