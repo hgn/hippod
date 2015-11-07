@@ -1,4 +1,4 @@
-var hippoD = angular.module('hippoDApp', ['ui.router', 'ui.bootstrap']);
+var hippoD = angular.module('hippoDApp', ['ui.router', 'ui.bootstrap', 'nvd3ChartDirectives']);
 
 hippoD.config(function($stateProvider, $urlRouterProvider) {
 
@@ -7,7 +7,8 @@ hippoD.config(function($stateProvider, $urlRouterProvider) {
 	$stateProvider
         .state('dashboard', {
             url: '/',
-            templateUrl: 'templates/home.html'
+            templateUrl: 'templates/home.html',
+            controller: 'DashboardCtrl'
         })
 
         .state('items', {

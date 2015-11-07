@@ -3,9 +3,30 @@
 
 <div class="main-content-container">
 
-	Write some text in textbox:
-	<input type="text" ng-model="sometext" />
-	<h1>{{ sometext }}</h1>
+	<div class="row">
+		<div class="col-sm-4">
+			<h4>Database Disk Consumption</h4> <hr>
+			Current Usage: {{ overall_data_byte_human }} ({{ overall_data_byte_vanilla }} byte)
+
+			<div ng-controller="DashboardCtrl">
+				<nvd3-stacked-area-chart data="diskConsumptionData" id="exampleId"
+	                               showYAxis="true"  showXAxis="false"
+																 yAxisTickFormat="yAxisTickFormatFunction()"
+																 showValues="true"
+																 width="500" height="350">
+					<svg></svg>
+				</nvd3-stacked-area-chart>
+			</div>
+
+		</div> <!-- col-sm-6 -->
+
+		<div class="col-sm-4">
+		</div>
+		<div class="col-sm-4">
+			Write some text in textbox:
+			<input type="text" ng-model="sometext" />
+			<h1>{{ sometext }}</h1>
+		</div>
 
 </div>
 
