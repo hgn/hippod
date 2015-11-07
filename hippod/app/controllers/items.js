@@ -2,6 +2,8 @@
 
 hippoD.controller("ItemsCtrl", function ($scope, ItemService, $uibModal, $log) {
 
+
+
 	  $scope.condensed = true;
     $scope.button1 = function () {
         $scope.condensed = !$scope.condensed;
@@ -71,13 +73,38 @@ hippoD.controller("ItemsCtrl", function ($scope, ItemService, $uibModal, $log) {
 			$scope.nonApplicableAchievements = nonapplicable_achievement;
 			$scope.noAchievements = no_achievements;
 
+			$scope.exampleData2 = [
+				{ key: "Passed", y: passed_achievement },
+				{ key: "Failed", y: failed_achievement },
+				{ key: "Non Applicable", y: nonapplicable_achievement },
+				{ key: "Never Tested", y: no_achievements }
+			];
+
 			$scope.testDateOldest = humanRelativeDate(test_date_oldest);
 			$scope.testDateYoungest = humanRelativeDate(test_date_youngest);
+  
 
 		}, function(error) {
 			console.log(res);
 			$scope.data = null;
 		});
+
+		$scope.xFunction = function(){
+			return function(d) {
+				return d.key;
+			};
+		}
+		$scope.yFunction = function(){
+			return function(d){
+				return d.y;
+			};
+		}
+		var colorArray = [ '#4CAF50', '#F44336', '#2196F3', '#0091EA' ];
+		$scope.colorFunction = function() {
+			return function(d, i) {
+				return colorArray[i];
+			};
+		}
 
 
 

@@ -190,7 +190,27 @@
 					Failed: {{ failedAchievements }}<br>
 					Non Applicable: {{ nonApplicableAchievements }}<br>
 					Never tested: {{ noAchievements }}<br>
+
+					<div ng-controller="ItemsCtrl"> 
+						<nvd3-pie-chart
+					  		data="exampleData2"
+		 						id="exampleId"
+				 			  width="350"
+		            height="350"
+	              color="colorFunction()"
+	              x="xFunction()"
+                y="yFunction()"
+                showLabels="true"
+								donutLabelsOutside="true"
+								donut="true" donutRatio=".45">
+							<svg width="350"></svg>
+						</nvd3-pie-chart>
+					</div>
+
+
+
 				</li>
+
 
 				<li class="list-group-item">
 					<h4 class="list-group-item-heading">Category Statistics</h4>
