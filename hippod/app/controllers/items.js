@@ -71,8 +71,8 @@ hippoD.controller("ItemsCtrl", function ($scope, ItemService, $uibModal, $log) {
 			$scope.nonApplicableAchievements = nonapplicable_achievement;
 			$scope.noAchievements = no_achievements;
 
-			$scope.testDateOldest = formatDateYYYYMMDD(test_date_oldest);
-			$scope.testDateYoungest = formatDateYYYYMMDD(test_date_youngest);
+			$scope.testDateOldest = humanRelativeDate(test_date_oldest);
+			$scope.testDateYoungest = humanRelativeDate(test_date_youngest);
 
 		}, function(error) {
 			console.log(res);
