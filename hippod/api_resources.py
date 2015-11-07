@@ -5,6 +5,7 @@ import json
 import os
 import datetime
 import time
+import sys
 
 import hippod.object_hasher
 import hippod.api_comm
@@ -17,36 +18,29 @@ from flask import jsonify
 from flask import request
 
 
-def folder_size(folder):
-    total_size = os.path.getsize(folder)
-    for item in os.listdir(folder):
-        itempath = os.path.join(folder, item)
-        if os.path.isfile(itempath):
-            total_size += os.path.getsize(itempath)
-        elif os.path.isdir(itempath):
-            total_size += folder_size(itempath)
-    return total_size
-
-
-def calc_ressource():
-    db_path = app.config['DB_OBJECT_PATH']
-    if not os.path.isdir(db_path):
-        raise ApiError("internal error - db path do not exist", 404)
-    ret_data = dict()
-    ret_data['overall'] = folder_size(db_path)
-    return ret_data
+def get_statistics():
+    path = app.config['DB_STATISTICS_FILEPATH']
+    with open(path) as data_file:
+        data = json.load(data_file)
+        if not len(data['item-bytes-overtime']) > 0:
+            # ok, if no data was ever written we fake it
+            # here and a zero today entry
+            today = datetime.datetime.now().strftime('%Y-%m-%d')
+            data['item-bytes-overtime'].append(list())
+            data['item-bytes-overtime'][0] = (today, 0, 0)
+    return data
 
 
 @app.route('/api/v1.0/resources', methods=['GET'])
 def get_resources():
     try:
         start = time.clock()
-        data = calc_ressource()
+        data = get_statistics()
         end = time.clock()
-    except apierror as e:
+    except ApiError as e:
         return e.transform()
-    except exception as e:
-        return apierror(str(e), 200).transform()
+    except Exception as e:
+        return ApiError(str(e), 200).transform()
 
     o = hippod.api_comm.Dict3000()
     o['data'] = data

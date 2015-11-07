@@ -2,12 +2,26 @@
 # coding: utf-8
 
 from flask import Flask
+from flask import jsonify
+
 import os
 import sys
+import datetime
+import json
 
+
+def create_initial_statistics_db(path):
+    sys.stderr.write("create DB statistics file: {}\n".format(path))
+    today = datetime.datetime.now().strftime('%Y-%m-%d')
+    d = dict()
+    d['item-bytes-overtime'] = list()
+    #d['item-bytes-overtime'].append(list())
+    #d['item-bytes-overtime'][0] = (today, 0, 0)
+    d_jsonfied =  json.dumps(d, sort_keys=True,indent=4, separators=(',', ': '))
+    with open(path,"w+") as f:
+        f.write(d_jsonfied)
 
 def check_db_environmet(path):
-    #sys.stderr.write("relative DB path: {}\n".format(path))
     if not os.path.isdir(path):
         os.makedirs(path)
     obj_path = os.path.join(path, 'objects')
@@ -24,6 +38,11 @@ def check_db_environmet(path):
     app.config['DB_COMPRESSED_PATH'] = obj_path
     if not os.path.isdir(obj_path):
         os.makedirs(obj_path)
+
+    obj_path = os.path.join(path, 'statistics.db')
+    app.config['DB_STATISTICS_FILEPATH'] = obj_path
+    if not os.path.isfile(obj_path):
+        create_initial_statistics_db(obj_path)
 
 
 app = Flask(__name__, static_folder='app', static_url_path='')

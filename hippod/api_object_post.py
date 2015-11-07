@@ -12,6 +12,7 @@ import sys
 import hippod.object_hasher
 import hippod.api_comm
 import hippod.api_shared
+import hippod.statistic
 
 from hippod.api_err_obj import *
 
@@ -415,6 +416,7 @@ def object_post():
         start = time.clock()
         xobj = request.get_json(force=False)
         data = try_adding_xobject(xobj)
+        hippod.statistic.update_global_db_stats()
         end = time.clock()
     except ApiError as e:
         return e.transform()
