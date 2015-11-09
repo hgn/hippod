@@ -11,6 +11,7 @@ import random
 import os
 import json
 import time
+import datetime
 
 pp = pprint.PrettyPrinter(depth=6)
 
@@ -20,7 +21,8 @@ def random_title(words):
     return s
 
 def random_result():
-    return ['passed', 'failed'][random.randint(0,1)]
+    d = ['passed', 'failed', 'nonapplicable' ]
+    return d[random.randint(0, len(d) - 1)]
 
 def random_submitter():
     d = ['Albert Einstein', 'Isaac Newton', 'Nikola Tesla', 'Marie Curie', 'Charles Darwin']
@@ -28,34 +30,47 @@ def random_submitter():
 
 def add_n(n):
     url = 'http://localhost:5000/api/v1/object'
-    data = dict()
-    data["submitter"] = random_submitter()
-    data["object-item"] = dict()
-    data["object-item"]['categories'] = [ "team:orange", "topic:ip", "subtopic:route-cache" ]
-    data["object-item"]['version'] = 0
-    data["attachment"] = dict()
-    data["achievements"] = list()
-
     headers = {'Content-type': 'application/json', 'Accept': 'application/json'}
+
     for i in range(n):
+        data = dict()
+        data["submitter"] = random_submitter()
+        data["object-item"] = dict()
+        data["object-item"]['categories'] = [ "team:orange", "topic:ip", "subtopic:route-cache" ]
+        data["object-item"]['version'] = 0
         data['object-item']['title'] = "{}".format(random_title(80))
+
+        data["attachment"] = dict()
+        data["attachment"]['references'] = [ "doors:234236", "your-tool:4391843" ]
+        data["attachment"]['tags'] = [ "ip", "route", "cache", "performance" ]
+        data["attachment"]['categories'] = [ "team:orange", "topic:ip", "subtopic:route-cache" ]
+        data["attachment"]['responsible'] = data["submitter"]
+
+        achievement = dict()
+        achievement["test-date"] = datetime.datetime.now().isoformat('T')
+        achievement["result"] = random_result()
+        data["achievements"] = list()
+        data["achievements"].append(achievement)
+
         os.system('cls' if os.name == 'nt' else 'clear')
         print("New Data:\n-----------\n")
         print(json.dumps(data, sort_keys=True, separators=(',', ': '), indent=4))
         print("\n-----------\n")
         print("Submit Data in 5 Seconds ...\n")
-        time.sleep(5)
+        time.sleep(2)
+
         dj = json.dumps(data, sort_keys=True, separators=(',', ': '))
         r = requests.post(url, data=dj, headers=headers)
-        #print("\nStatus Code:")
-        #print(r.status_code)
-        #print("\nRet Data:")
+        print("Return Data:\n-----------\n")
         ret_data = r.json()
-        #pp.pprint(ret_data)
+        print(json.dumps(ret_data, sort_keys=True, separators=(',', ': '), indent=4))
         assert len(ret_data['data']['id']) > 0
         processing_time = ret_data['processing-time']
-        sys.stderr.write("\rEntry: {}, HTTPStatusCode: {} ServerProcTime {}s".format(i, r.status_code, processing_time))
+        sys.stderr.write("\nHTTPStatusCode: {} ServerProcTime {}s\n".format(r.status_code, processing_time))
+        time.sleep(3)
 
+    print("\r\n\n")
+    sys.exit(0)
     print("\r\n\n")
 
     url = 'http://localhost:5000/api/v1/objects'
@@ -77,4 +92,4 @@ def add_n(n):
 
 
 if __name__ == '__main__':
-    add_n(1)
+    add_n(100)
