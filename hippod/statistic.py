@@ -42,7 +42,8 @@ def update_global_db_stats():
     new_size = folder_size(db_path)
 
     # XXX: this assumes that the DB *only* can grow
-    if new_size <= data['item-bytes-overtime'][-1][1] + 1000:
+    if len(data['item-bytes-overtime']) > 0 and \
+       new_size <= data['item-bytes-overtime'][-1][1] + 1000:
         # the size do not differ greatly (1K) from the last one
         # we do *not* write tiny changes here to keep bookkepping
         # information smaller. Sammler writtes are usually from new

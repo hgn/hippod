@@ -53,9 +53,6 @@ def check_sum_object_issue(o):
         if "title" not in o:
             msg = "object data currupt - title missing: {}".format(str(o))
             raise ApiError(msg, 404)
-        if "categories" not in o:
-            msg = "object data currupt - categories missing: {}".format(str(o))
-            raise ApiError(msg, 404)
         if "version" not in o:
             msg = "object data currupt - version missing: {}".format(str(o))
             raise ApiError(msg, 404)

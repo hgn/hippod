@@ -159,7 +159,7 @@ def create_container_data_merge_issue_new(sha_sum, object_item, submitter):
     d['attachment-last-modified'] = date
     d['achievements'] = []
 
-    add_initial_maturity_level(object_item)
+    add_initial_maturity_level(d)
 
     # the object is a little bit special. We iterate over the
     # data section as always and compress or not compress
