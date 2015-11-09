@@ -12,7 +12,7 @@ import random
 pp = pprint.PrettyPrinter(depth=6)
 
 def random_title(length):
-    words = ['Foo', 'Bar', 'Linux', 'Something', 'Yeah', 'Nope', 'Random']
+    words = ['Foo', 'Bar', 'Linux', 'Something', 'Yeah', 'Nope', 'Random', "REST", "IPv6"]
     s = ' '.join(random.choice(words) for _ in range(5))
     return s
 
