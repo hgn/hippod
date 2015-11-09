@@ -147,14 +147,47 @@
 			<div ng-switch-when='true'>
 				<div class="list-group">
 					<div ng-repeat="items in data">
-						<a href="#" ng-click='open(items["object-item-id"])' class="list-group-item bs-callout-success">
-							<p class="alignleft">{{ items["object-item"]['title'] }}</p>
-							<p class="alignright">{{ items["object-item-id"] }}</p>
-								<div style="clear: both;"></div>
-								<div class="header-seperator"></div>
 
-							{{items}}
-						</a>
+						<div ng-switch on='items["object-achievements"]["test-result"]'>
+							<div ng-switch-when="passed">
+								<a href="#" ng-click='open(items["object-item-id"])' class="list-group-item test-success-indicator">
+									<p class="alignleft">{{ items["object-item"]['title'] }}</p>
+									<p class="alignright">{{ items["object-item-id"] }}</p>
+									<div style="clear: both;"></div>
+									<div class="header-seperator"></div>
+									{{items}}
+								</a>
+							</div>
+							<div ng-switch-when="failed">
+								<a href="#" ng-click='open(items["object-item-id"])' class="list-group-item test-failure-indicator">
+									<p class="alignleft">{{ items["object-item"]['title'] }}</p>
+									<p class="alignright">{{ items["object-item-id"] }}</p>
+									<div style="clear: both;"></div>
+									<div class="header-seperator"></div>
+									{{items}}
+								</a>
+							</div>
+							<div ng-switch-when="nonapplicable">
+								<a href="#" ng-click='open(items["object-item-id"])' class="list-group-item test-nonapplicable-indicator">
+									<p class="alignleft">{{ items["object-item"]['title'] }}</p>
+									<p class="alignright">{{ items["object-item-id"] }}</p>
+									<div style="clear: both;"></div>
+									<div class="header-seperator"></div>
+									{{items}}
+								</a>
+							</div>
+							<div ng-switch-default>
+								<a href="#" ng-click='open(items["object-item-id"])' class="list-group-item test-nontest-indicator">
+									<p class="alignleft">{{ items["object-item"]['title'] }}</p>
+									<p class="alignright">{{ items["object-item-id"] }}</p>
+									<div style="clear: both;"></div>
+									<div class="header-seperator"></div>
+									{{items}}
+								</a>
+							</div>
+						</div>
+
+
 					</div>
 				</div>
 			</div>

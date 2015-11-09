@@ -274,12 +274,21 @@ btn:visited {background-color:#03A9F4}
 	margin-bottom: 12px;
 }
 
-.bs-callout-success {
+.test-success-indicator {
 	border-left-color: #4CAF50;
 	border-left-width: 3px;
 }
-.bs-callout-failure {
+
+.test-failure-indicator {
 	border-left-color: #ff0000;
+	border-left-width: 3px;
+}
+.test-nonapplicable-indicator {
+	border-left-color: #2196F3;
+	border-left-width: 3px;
+}
+.test-nontest-indicator {
+	border-left-color: #A1887F;
 	border-left-width: 3px;
 }
 
