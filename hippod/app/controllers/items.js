@@ -99,7 +99,7 @@ hippoD.controller("ItemsCtrl", function ($scope, ItemService, $uibModal, $log) {
 				return d.y;
 			};
 		}
-		var colorArray = [ '#4CAF50', '#F44336', '#2196F3', '#0091EA' ];
+		var colorArray = [ '#4CAF50', '#F44336', '#2196F3', '#A1887F' ];
 		$scope.colorFunction = function() {
 			return function(d, i) {
 				return colorArray[i];
