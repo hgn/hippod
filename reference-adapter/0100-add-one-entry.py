@@ -38,11 +38,6 @@ def add_one():
                     "data": "iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg=="
                 }
             ],
-            "categories": [
-                "team:orange",
-                "topic:ip",
-                "subtopic:route-cache"
-            ],
             "version": 0
         },
 
@@ -51,6 +46,7 @@ def add_one():
             "references":  [ "doors:234236", "your-tool:4391843" ],
             "replaces":    [ "14d348a14934a02034b", "43348a234434934f0203421" ],
             "tags":        [ "ip", "route", "cache", "performance" ],
+            "categories":  [ "team:orange", "topic:ip", "subtopic:route-cache" ],
             "responsible": "John Doe <john.doe@example.com>"
             },
 

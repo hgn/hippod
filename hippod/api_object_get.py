@@ -117,10 +117,10 @@ def container_obj_to_ret_obj(request_data, sha_sum, cont_obj):
 
     # add some object items
     ret_obj['object-item'] = dict()
-    ret_obj['object-item']['categories'] = cont_obj['object-item']['categories']
-    ret_obj['object-item']['maturity-level'] = cont_obj['maturity-level'][-1]
     ret_obj['object-item']['title'] = cont_obj['object-item']['title'] 
     ret_obj['object-item']['version'] = cont_obj['object-item']['version'] 
+
+    ret_obj['maturity-level'] = cont_obj['maturity-level'][-1]
 
     # add last attachment
     data = get_last_attachment_data(sha_sum, cont_obj)
