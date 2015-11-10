@@ -92,19 +92,24 @@ def get_last_attachment_data(sha_sum, cont_obj):
     if len(cont_obj['attachments']) <= 0:
         return None
 
-    last_date_added = cont_obj['attachments'][-1]["date-added"]
     last_element_id = cont_obj['attachments'][-1]["id"]
+    last_date_added = cont_obj['attachments'][-1]["date-added"]
+    last_submitter  = cont_obj['attachments'][-1]["submitter"]
 
     data = hippod.api_shared.get_attachment_data_by_sha_id(sha_sum, last_element_id)
 
     r = dict()
+    for key, value in data.items():
+        r[key] = data[key]
+
     for i in ('references', 'responsible', 'tags'):
         if i not in data:
             continue
         r[i] = data[i]
 
-    r['id']= last_element_id
-    r['date-added']= last_date_added
+    r['id'] = last_element_id
+    r['date-added'] = last_date_added
+    r['last-submitter'] = last_submitter
 
     return r
 
