@@ -389,8 +389,11 @@ def try_adding_xobject(xobj):
                 msg = "object data corrupt - object item " \
                       "sha_sum missmatch to object-item-id"
                 raise ApiError(msg, 400)
-    else:
+    elif 'object-item-id' in xobj:
         sha_sum = xobj['object-item-id']
+    else:
+        msg = "Need at least a Full Object Item or Object Item ID"
+        raise ApiError(msg, 400)
 
     # FIXME: in the remaining paragraph there is a race condition
     # leads to data corruption. Problem is that data is writen
