@@ -20,9 +20,10 @@ def dir_size(path):
 
 
 def folder_size(db_path):
-    root_size = os.path.getsize(db_path)
-    data_size = dir_size(os.path.join(db_path, "data_compressed"))
-    object_db_size = dir_size(os.path.join(db_path, "objects"))
+    root_size      = os.path.getsize(db_path)
+    data_size      = dir_size(app.config['DB_DATA_PATH'])
+    object_db_size = dir_size(app.config['DB_OBJECT_PATH'])
+
     cumulative = root_size + data_size + object_db_size
     return cumulative, object_db_size, data_size
 

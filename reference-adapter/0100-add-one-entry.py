@@ -19,21 +19,17 @@ def add_one():
             "title": "Check that the route cache is flushed after NIC change",
             "data": [
                 {
-                    "type": "main",
+                    "type": "description",
                     "mime-type": "text/markdown",
                     "data": "a mardown formatted long text encoded in base64"
                 },
                 {
-                    "description": "image of the routing architecture and test setup",
-                    "name": "image-foo",
-                    "type": "png",
+                    "name": "image-foo.png",
                     "mime-type": "media/png",
                     "data": "iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg=="
                 },
                 {
-                    "description": "network configuration script",
-                    "name": "network-config",
-                    "type": "sh",
+                    "name": "network-config.png",
                     "mime-type": "text/plain",
                     "data": "iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg=="
                 }
@@ -57,9 +53,7 @@ def add_one():
                 "result": "passed",
                 "data" : [
                             {
-                                "description": "foo-bar pcap file",
-                                "name":   "network-config",
-                                "type": "pcap",
+                                "name":   "network-config.pcap",
                                 "mime-type":   "binary/octet-stream",
                                 "data": "iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg=="
                             }

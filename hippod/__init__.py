@@ -29,13 +29,8 @@ def check_db_environmet(path):
     if not os.path.isdir(obj_path):
         os.makedirs(obj_path)
 
-    obj_path = os.path.join(path, 'data_uncompressed')
-    app.config['DB_UNCOMPRESSED_PATH'] = obj_path
-    if not os.path.isdir(obj_path):
-        os.makedirs(obj_path)
-
-    obj_path = os.path.join(path, 'data_compressed')
-    app.config['DB_COMPRESSED_PATH'] = obj_path
+    obj_path = os.path.join(path, 'data')
+    app.config['DB_DATA_PATH'] = obj_path
     if not os.path.isdir(obj_path):
         os.makedirs(obj_path)
 
