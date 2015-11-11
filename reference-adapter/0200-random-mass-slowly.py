@@ -28,6 +28,17 @@ def random_submitter():
     d = ['Albert Einstein', 'Isaac Newton', 'Nikola Tesla', 'Marie Curie', 'Charles Darwin']
     return d[random.randint(0, len(d) - 1)]
 
+def query_full(id):
+    url = 'http://localhost:5000/api/v1/object/{}'.format(id)
+    data = ''' '''
+    headers = {'Content-type': 'application/json', 'Accept': 'application/json'}
+    r = requests.get(url, data=data, headers=headers)
+    print("\nStatus Code:")
+    print(r.status_code)
+    print("\nRet Data:")
+    data = r.json()
+    pp.pprint(data)
+
 def add_n(n):
     url = 'http://localhost:5000/api/v1/object'
     headers = {'Content-type': 'application/json', 'Accept': 'application/json'}
@@ -68,6 +79,8 @@ def add_n(n):
         processing_time = ret_data['processing-time']
         sys.stderr.write("\nHTTPStatusCode: {} ServerProcTime {}s\n".format(r.status_code, processing_time))
         time.sleep(3)
+
+        query_full(ret_data['data']['id'])
 
     print("\r\n\n")
     sys.exit(0)
