@@ -14,6 +14,7 @@ import hippod.api_comm
 import hippod.api_shared
 import hippod.statistic
 import hippod.mime_data_db
+import hippod.utils
 
 from hippod.api_err_obj import *
 
@@ -188,16 +189,29 @@ def update_attachment_achievement(sha_sum, xobj):
 
         current_attachments = data['attachments']
         current_attachments_no = len(current_attachments)
+        if current_attachments_no <= 0:
+            new_attachment_meta = dict()
+            new_attachment_meta['id'] = current_attachments_no
+            new_attachment_meta['date-added'] = date
+            new_attachment_meta['submitter'] = xobj['submitter']
 
-        new_attachment_meta = dict()
-        new_attachment_meta['id'] = current_attachments_no
-        new_attachment_meta['date-added'] = date
-        new_attachment_meta['submitter'] = xobj['submitter']
+            current_attachments.append(new_attachment_meta)
+            write_attachment_file(sha_sum, current_attachments_no, xobj['attachment'])
+            data['attachments'] = current_attachments
+            rewrite_required = True
+        else:
+            last_attachment = hippod.api_shared.get_attachment_data_by_sha_id(sha_sum, current_attachments_no - 1)
+            equal = hippod.utils.deep_eq(xobj['attachment'], last_attachment)
+            if not equal:
+                new_attachment_meta = dict()
+                new_attachment_meta['id'] = current_attachments_no
+                new_attachment_meta['date-added'] = date
+                new_attachment_meta['submitter'] = xobj['submitter']
 
-        current_attachments.append(new_attachment_meta)
-        write_attachment_file(sha_sum, current_attachments_no, xobj['attachment'])
-        data['attachments'] = current_attachments
-        rewrite_required = True
+                current_attachments.append(new_attachment_meta)
+                write_attachment_file(sha_sum, current_attachments_no, xobj['attachment'])
+                data['attachments'] = current_attachments
+                rewrite_required = True
 
     if 'achievements' in xobj:
         if type(xobj['achievements']) is not list:
