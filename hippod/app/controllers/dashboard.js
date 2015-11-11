@@ -12,10 +12,12 @@ hippoD.controller("DashboardCtrl", function ($scope, ResourcesService) {
 
 		var new_array = new Array();
 		var new_array2 = new Array();
+		var new_array3 = new Array();
 		angular.forEach(data_array, function(value, key) {
 			var unix_tm = new Date(value[0]).getTime() / 1000;
 			new_array.push([unix_tm, value[1]]);
 			new_array2.push([unix_tm, value[2]]);
+			new_array3.push([unix_tm, value[3]]);
 		});
 
     $scope.diskConsumptionData = [
@@ -26,6 +28,10 @@ hippoD.controller("DashboardCtrl", function ($scope, ResourcesService) {
 			{
 				"key": "Series 2",
 				"values": new_array2
+			},
+			{
+				"key": "Series 3",
+				"values": new_array3
 			}
     ];
 

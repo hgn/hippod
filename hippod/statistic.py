@@ -47,7 +47,7 @@ def update_global_db_stats():
         return
 
     db_path = app.config['DB_ROOT_PATH']
-    cumulative, object_db_size, data_size = folder_size(db_path)
+    cumulative, object_db_size, data_db_size = folder_size(db_path)
 
     # XXX: this assumes that the DB can grow *only*
     if len(data['item-bytes-overtime']) > 0 and \
@@ -58,7 +58,7 @@ def update_global_db_stats():
         # tests results, but no new data objects.
         return
 
-    data['item-bytes-overtime'].append([today, cumulative, object_db_size, data_size])
+    data['item-bytes-overtime'].append([today, cumulative, data_db_size, object_db_size])
     d_jsonfied =  json.dumps(data, sort_keys=True, indent=4, separators=(',', ': '))
     with open(stat_path, "w+") as f:
         f.write(d_jsonfied)
