@@ -77,4 +77,5 @@ import hippod.gui_app
 
 import hippod.api_object_post
 import hippod.api_object_get
+import hippod.api_object_get_full
 import hippod.api_resources
