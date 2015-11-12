@@ -79,7 +79,7 @@ def add_n(n):
         data["achievements"] = list()
         data["achievements"].append(achievement)
 
-        os.system('cls' if os.name == 'nt' else 'clear')
+        #os.system('cls' if os.name == 'nt' else 'clear')
         print("New Data:\n-----------\n")
         print(json.dumps(data, sort_keys=True, separators=(',', ': '), indent=4))
         print("\n-----------\n")
