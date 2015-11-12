@@ -12,6 +12,7 @@ import os
 import json
 import time
 import datetime
+import base64
 
 pp = pprint.PrettyPrinter(depth=6)
 
@@ -50,6 +51,21 @@ def add_n(n):
         data["object-item"]['categories'] = [ "team:orange", "topic:ip", "subtopic:route-cache" ]
         data["object-item"]['version'] = 0
         data['object-item']['title'] = "{}".format(random_title(80))
+
+        data['object-item']['data'] = list()
+        desc_data = dict()
+        desc_data['type'] = 'description'
+        desc_data['mime-type'] = 'text/markdown'
+        # base64 requires a byte array for encoding -> .encode('utf-8')
+        # json requires a string -> convert to UTF-8
+        desc_data['data'] = base64.b64encode('This is simple *markdown*'.encode('utf-8')).decode("utf-8") 
+        data['object-item']['data'].append(desc_data)
+
+        img_data = dict()
+        img_data['name'] = 'image.gif'
+        img_data['mime-type'] = 'image/gif'
+        img_data['data'] = "R0lGODlhDwAPAKECAAAAzMzM/////wAAACwAAAAADwAPAAACIISPeQHsrZ5ModrLlN48CXF8m2iQ3YmmKqVlRtW4MLwWACH+H09wdGltaXplZCBieSBVbGVhZCBTbWFydFNhdmVyIQAAOw=="
+        data['object-item']['data'].append(img_data)
 
         data["attachment"] = dict()
         data["attachment"]['references'] = [ "doors:234236", "your-tool:4391843" ]
