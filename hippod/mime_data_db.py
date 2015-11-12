@@ -21,6 +21,44 @@ from flask import jsonify
 from flask import request
 
 
+def obj_available(sha_sum):
+    path = app.config['DB_DATA_PATH']
+    obj_path  = os.path.join(path, sha_sum, "blob.bin")
+    attr_path = os.path.join(path, sha_sum, "attr.db")
+
+    if not os.path.isfile(obj_path) or not os.path.isfile(attr_path):
+        return False
+    return True
+
+
+def get_attr_obj(sha_sum):
+    path = app.config['DB_DATA_PATH']
+    attr_path = os.path.join(path, sha_sum, "attr.db")
+    with open(attr_path) as data_file:
+        return json.load(data_file)
+
+
+def is_attr_compressed(obj):
+    return obj['compressed'] == True
+
+
+def get_data(sha_sum, decompress=None, encode_base64=False):
+    if decompress == None:
+        msg = "decompres True or False required"
+        raise ApiError(msg, 404)
+
+    path = app.config['DB_DATA_PATH']
+    obj_path  = os.path.join(path, sha_sum, "blob.bin")
+    with open(obj_path, 'rb') as f:
+        data = f.read()
+        if decompress == True:
+            data = zlib.decompress(data)
+        return data
+    msg = "failed to open {}".format(obj_path)
+    raise ApiError(msg, 404)
+
+
+
 def is_compressable_size(data):
     # smaller files will not benefit from
     # compression. The CPU overhead is not
@@ -45,7 +83,8 @@ def is_compressable(d):
 
 def decode_and_compress(data):
     uncompressed_len = len(data)
-    decoded = hippod.object_hasher.decode_base64_data(data)
+    byte_array = data.encode(encoding='UTF-8')
+    decoded = hippod.object_hasher.decode_base64_data(byte_array)
     compressed_data = zlib.compress(data)
     compressed_len = len(compressed_data)
     return compressed_data
@@ -68,7 +107,8 @@ def decode_and_write_file(sha_sum, data, compress=False):
     if compress:
         bin_data = decode_and_compress(data['data'])
     else:
-        bin_data = hippod.object_hasher.decode_base64_data(data['data'])
+        byte_array = data['data'].encode(encoding='UTF-8')
+        bin_data = hippod.object_hasher.decode_base64_data(byte_array)
 
     size_stats['stored'] = len(bin_data)
 
