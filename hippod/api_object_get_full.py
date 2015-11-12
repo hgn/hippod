@@ -202,7 +202,7 @@ def object_get_id(object_id):
     try:
         start = time.clock()
         #xobj = request.get_json(force=False)
-        data = object_get_int(object_id)
+        #data = object_get_int(object_id)
         end = time.clock()
     except ApiError as e:
         return e.transform()
