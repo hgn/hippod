@@ -201,8 +201,9 @@ def update_attachment_achievement(sha_sum, xobj):
             rewrite_required = True
         else:
             last_attachment = hippod.api_shared.get_attachment_data_by_sha_id(sha_sum, current_attachments_no - 1)
-            equal = hippod.utils.deep_eq(xobj['attachment'], last_attachment)
-            if not equal:
+            sha_sum_last = hippod.object_hasher.check_sum_attachment(last_attachment)
+            sha_sum_new  = hippod.object_hasher.check_sum_attachment(xobj['attachment'])
+            if sha_sum_last != sha_sum_new:
                 new_attachment_meta = dict()
                 new_attachment_meta['id'] = current_attachments_no
                 new_attachment_meta['date-added'] = date

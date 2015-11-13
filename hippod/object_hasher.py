@@ -62,6 +62,16 @@ def check_sum_object_issue(o):
         return hashlib.sha1(buf.encode('utf-8')).hexdigest()
 
 
+def check_sum_attachment(o):
+        buf = ''
+        if type(o) is not dict:
+            msg = "attachment currupt - must be dict: {}".format(str(o))
+            raise ApiError(msg, 404)
+
+        buf = __sum_dict(o)
+        return hashlib.sha1(buf.encode('utf-8')).hexdigest()
+
+
 def hash_data(data):
     return hashlib.sha1(data.encode('utf-8')).hexdigest()
 
