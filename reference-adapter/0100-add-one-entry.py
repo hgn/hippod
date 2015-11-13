@@ -40,7 +40,6 @@ def add_one():
 
         "attachment": {
             "references":  [ "doors:234236", "your-tool:4391843" ],
-            "replaces":    [ "14d348a14934a02034b", "43348a234434934f0203421" ],
             "tags":        [ "ip", "route", "cache", "performance" ],
             "categories":  [ "team:orange", "topic:ip", "subtopic:route-cache" ],
             "responsible": "John Doe <john.doe@example.com>"
@@ -95,4 +94,5 @@ def query_one():
 
 if __name__ == '__main__':
     add_one()
-    query_one()
+
+    #query_one()
