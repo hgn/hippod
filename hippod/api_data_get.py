@@ -14,7 +14,7 @@ import hippod.api_comm
 import hippod.api_shared
 import hippod.api_err_obj
 import hippod.mime_data_db
-
+import hippod.mime_renderer
 
 
 def object_data_get_int(sha_sum, req_data):
@@ -24,6 +24,9 @@ def object_data_get_int(sha_sum, req_data):
     attr_obj = hippod.mime_data_db.get_attr_obj(sha_sum)
     decompressed = hippod.mime_data_db.is_attr_compressed(attr_obj)
     data = hippod.mime_data_db.get_data(sha_sum, decompress=decompressed, encode_base64=False)
+    if attr_obj['mime-type'] == 'text/markdown':
+        data = hippod.mime_renderer.mime_markdown(data)
+
     return attr_obj['mime-type'], data
     
 
