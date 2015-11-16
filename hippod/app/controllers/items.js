@@ -1,6 +1,6 @@
 "use strict";
 
-hippoD.controller("ItemsCtrl", function ($scope, ItemService, $uibModal, $log) {
+hippoD.controller("ItemsCtrl", function ($scope, ItemService, $uibModal, $log, $interval) {
 
 
 
@@ -123,7 +123,7 @@ hippoD.controller("ItemsCtrl", function ($scope, ItemService, $uibModal, $log) {
         },
         id: function () {
           return sha_id;
-        }
+        },
       }
     });
 
@@ -141,6 +141,8 @@ hippoD.controller('ModalInstanceCtrl', function ($scope, $uibModalInstance, item
 
 	$scope.id = id;
   $scope.items = items;
+
+
 
   $scope.selected = {
     item: $scope.items[0]
