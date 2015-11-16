@@ -51,10 +51,32 @@ hippoD.factory('DBService', function($http) {
 					 method: 'POST',
 					 data: obj,
 					 headers: { "Content-Type": "application/json" }
-			   }
-				 )
+			   })
 				 .then(function (response) {
-					 console.log(response);
+					 console.log(response.data.data);
+					 var achievements = response.data.data['object-achievements'];
+					 for (var i = 0; i < achievements.length; i++) {
+						 console.log(achievements[i]);
+					 }
+
+					 var item_data = response.data.data['object-item']['data'];
+					 for (var i = 0; i < item_data.length; i++) {
+						 if (item_data[i]['type'] == 'description') {
+							 return $http(
+									 {
+										 url: '/api/v1/data/' + item_data[i]['data-id'],
+										 dataType: 'json',
+										 method: 'POST',
+										 data: obj,
+										 headers: { "Content-Type": "application/json" }
+									 })
+							     .then(function (response_enc) {
+										 item_data[i]['data'] = response_enc.data
+										 return response.data.data;
+									 });
+						 }
+					 }
+
 					 return response.data;
 				 });
 		 return promise;
