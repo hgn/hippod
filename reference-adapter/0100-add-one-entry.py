@@ -48,6 +48,7 @@ def add_one():
 
         "achievements": [
             {
+		"anchor-id": "unique-release-string.2.4.0",
                 "test-date": "2015-09-15T22:24:29.158759",
                 "result": "passed",
                 "data" : [
