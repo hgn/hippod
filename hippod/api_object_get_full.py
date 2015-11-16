@@ -95,7 +95,7 @@ def container_obj_to_ret_obj(sha_sum, cont_obj):
     if data:
         ret_obj['object-achievements'] = data
 
-    return True, ret_obj
+    return ret_obj
 
 
 

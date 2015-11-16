@@ -40,3 +40,24 @@ hippoD.factory('ItemService', function($http) {
 });
 
 
+hippoD.factory('DBService', function($http) {
+   return {
+     getFoo: function(id) {
+			 var obj = {};
+			 var promise = $http(
+				 {
+					 url: '/api/v1/object/' + id,
+					 dataType: 'json',
+					 method: 'POST',
+					 data: obj,
+					 headers: { "Content-Type": "application/json" }
+			   }
+				 )
+				 .then(function (response) {
+					 console.log(response);
+					 return response.data;
+				 });
+		 return promise;
+   }
+	 }
+});

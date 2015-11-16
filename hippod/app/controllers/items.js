@@ -118,17 +118,14 @@ hippoD.controller("ItemsCtrl", function ($scope, ItemService, $uibModal, $log, $
       controller: 'ModalInstanceCtrl',
       size: 'lg',
       resolve: {
-        items: function () {
-          return $scope.items;
-        },
         id: function () {
           return sha_id;
-        },
+        }
       }
     });
 
-    modalInstance.result.then(function (selectedItem) {
-      $scope.selected = selectedItem;
+    modalInstance.result.then(function (id) {
+      $scope.selected = id;
     }, function () {
       $log.info('Modal dismissed at: ' + new Date());
     });
@@ -137,19 +134,16 @@ hippoD.controller("ItemsCtrl", function ($scope, ItemService, $uibModal, $log, $
 });
 
 
-hippoD.controller('ModalInstanceCtrl', function ($scope, $uibModalInstance, items, id) {
+hippoD.controller('ModalInstanceCtrl', function ($scope, $uibModalInstance, DBService, id) {
 
 	$scope.id = id;
-  $scope.items = items;
 
-
-
-  $scope.selected = {
-    item: $scope.items[0]
-  };
+	DBService.getFoo(id).then(function(res) {
+		$scope.data = res;
+	});
 
   $scope.ok = function () {
-    $uibModalInstance.close($scope.selected.item);
+    $uibModalInstance.close($scope.id);
   };
 
   $scope.cancel = function () {
