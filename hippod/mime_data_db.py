@@ -60,10 +60,12 @@ def get_data(sha_sum, decompress=None, encode_base64=False):
 
 
 def is_compressable_size(data):
-    # smaller files will not benefit from
-    # compression. The CPU overhead is not
-    # justified
-    if len(data['data']) > 100:
+    # smaller files will not benefit from compression. The CPU overhead is not
+    # justified. Additionally, standard file systems will at least consume one
+    # block anyway, so there is no gain to compress these small files. (yes
+    # there are FS exceptions where file system may store tiny files more
+    # efficiently). Assume blocksize of 4096 for now. 
+    if len(data['data']) > 4096:
         return True
     return False
 

@@ -22,10 +22,7 @@ def object_data_get_int(sha_sum, req_data):
         msg = "Data ({}) not available".format(sha_sum)
         raise hippod.api_err_obj.ApiError(msg, 400)
     attr_obj = hippod.mime_data_db.get_attr_obj(sha_sum)
-    sys.stderr.write(str(attr_obj))
     decompressed = hippod.mime_data_db.is_attr_compressed(attr_obj)
-    sys.stderr.write(str(decompressed))
-    sys.stderr.write('\n')
     data = hippod.mime_data_db.get_data(sha_sum, decompress=decompressed, encode_base64=False)
     if attr_obj['mime-type'] == 'text/markdown':
         data = hippod.mime_renderer.mime_markdown(data)
