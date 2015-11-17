@@ -22,6 +22,7 @@ Python version.
 
 ```
 sudo apt-get install python-flask
+sudo apt-get install python3-markdown
 ```
 
 #### Arch ####
