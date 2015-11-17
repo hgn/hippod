@@ -39,7 +39,7 @@ def get_attr_obj(sha_sum):
 
 
 def is_attr_compressed(obj):
-    return obj['compressed'] == True
+    return obj['compressed'] == 'true'
 
 
 def get_data(sha_sum, decompress=None, encode_base64=False):
@@ -63,7 +63,7 @@ def is_compressable_size(data):
     # smaller files will not benefit from
     # compression. The CPU overhead is not
     # justified
-    if len(data['data']) > 100000:
+    if len(data['data']) > 100:
         return True
     return False
 
@@ -85,7 +85,7 @@ def decode_and_compress(data):
     uncompressed_len = len(data)
     byte_array = data.encode(encoding='UTF-8')
     decoded = hippod.object_hasher.decode_base64_data(byte_array)
-    compressed_data = zlib.compress(data)
+    compressed_data = zlib.compress(decoded)
     compressed_len = len(compressed_data)
     return compressed_data
 
