@@ -125,7 +125,6 @@ hippoD.controller("ItemsCtrl", function ($scope, ItemService, $uibModal, $log, $
 
     modalInstance.result.then(function (id) {
       $scope.selected = id;
-			$location.path('/items')
     }, function () {
       $log.info('Modal dismissed at: ' + new Date());
     });

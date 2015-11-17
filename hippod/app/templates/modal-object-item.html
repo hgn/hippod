@@ -1,16 +1,30 @@
 <div class="modal-header">
-	<h3 class="modal-title">{{ id }}</h3>
+	<h3 class="modal-title">{{ data['object-item']['title'] }}</h3>
 </div>
 <div class="modal-body">
-        <ul>
-                <li ng-repeat="item in items">
-                <a href="#" ng-click="$event.preventDefault(); selected.item = item">{{ item }}</a>
-                </li>
-        </ul>
-				{{ data }}
-				<hr>
+	<div class="row">
+		<div class="col-xs-2">
+			<ul class="list-group">
+				<li class="list-group-item list-group-item-success">Dapibus ac facilisis in</li>
+				<li class="list-group-item list-group-item-info">Cras sit amet nibh libero</li>
+				<li class="list-group-item list-group-item-warning">Porta ac consectetur ac</li>
+				<li class="list-group-item list-group-item-danger">Vestibulum at eros</li>
+			</ul>
+		</div>
+		<div class="col-xs-10">
+			<span class="label label-primary">Maturity: Testing</span>
+			<span class="label label-info">Category: team:orange / topic:ip / subtopic:route-cache</span>
+			<span class="label label-warning">Last Submitter: Charles Darwin</span>
+			<hr >
+
+			<div ng-bind-html="data['__description'] | unsafe"></div>
+
+			<hr >
+			{{ data }}
+		</div>
+	</div> <!-- row -->
 </div>
 <div class="modal-footer">
-            <button class="btn btn-primary" type="button" ng-click="ok()">OK</button>
-            <button class="btn btn-warning" type="button" ng-click="cancel()">Cancel</button>
+	<button class="btn btn-primary" type="button" ng-click="ok()">OK</button>
+	<button class="btn btn-warning" type="button" ng-click="cancel()">Edit</button>
 </div>

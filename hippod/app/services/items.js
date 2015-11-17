@@ -72,6 +72,8 @@ hippoD.factory('DBService', function($http) {
 									 })
 							     .then(function (response_enc) {
 										 item_data[i]['data'] = response_enc.data
+										 response.data.data['__description'] = response_enc.data
+
 										 return response.data.data;
 									 });
 						 }
@@ -83,3 +85,5 @@ hippoD.factory('DBService', function($http) {
    }
 	 }
 });
+
+hippoD.filter('unsafe', function($sce) { return $sce.trustAsHtml; });

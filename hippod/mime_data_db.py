@@ -63,7 +63,7 @@ def is_compressable_size(data):
     # smaller files will not benefit from
     # compression. The CPU overhead is not
     # justified
-    if len(data['data']) > 1000:
+    if len(data['data']) > 100000:
         return True
     return False
 

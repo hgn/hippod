@@ -338,3 +338,7 @@ a.list-group-item:focus, a.list-group-item:hover, button.list-group-item:focus, 
     text-decoration: none;
     background-color: #f6f6f6;
 }
+
+.modal-lg {
+	    width: 95%;
+}

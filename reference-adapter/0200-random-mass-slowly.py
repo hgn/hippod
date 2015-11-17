@@ -58,7 +58,75 @@ def add_n(n):
         desc_data['mime-type'] = 'text/markdown'
         # base64 requires a byte array for encoding -> .encode('utf-8')
         # json requires a string -> convert to UTF-8
-        desc_data['data'] = base64.b64encode('This is simple *markdown*'.encode('utf-8')).decode("utf-8") 
+        desc_data['data'] = base64.b64encode(
+                """
+# This is the Description Header #
+
+Collaboratively administrate empowered **markets** via plug-and-play networks.
+Dynamically procrastinate __B2C users__ after installed base benefits. Dramatically
+visualize customer directed convergence without **revolutionary ROI**.
+
+    int foo(void) {
+	    abort(0);
+    }
+
+Proctively envisioned multimedia based expertise and cross-media growth
+strategies. Seamlessly visualize quality intellectual capital without superior
+collaboration and idea-sharing. Holistically pontificate installed base portals
+after maintainable products.
+
+## Shizzle Dizzle Header Second Order ##
+
+Efficiently unleash cross-media information without cross-media value. Quickly
+maximize **timely deliverables** for real-time schemas. Dramatically maintain
+clicks-and-mortar __solutions__ without functional solutions.
+
+* Item1
+* Item2
+* Item3
+
+Completely synergize resource taxing relationships via premier niche markets.
+Professionally cultivate one-to-one customer service with robust ideas.
+Dynamically innovate resource-leveling customer service for state of the art
+customer service.
+
+    +---------+
+    |         |                        +--------------+
+    |   NFS   |--+                     |              |
+    |         |  |                 +-->|   CacheFS    |
+    +---------+  |   +----------+  |   |  /dev/hda5   |
+                 |   |          |  |   +--------------+
+    +---------+  +-->|          |  |
+    |         |      |          |--+
+    |   AFS   |----->| FS-Cache |
+    |         |      |          |--+
+    +---------+  +-->|          |  |
+                 |   |          |  |   +--------------+
+    +---------+  |   +----------+  |   |              |
+    |         |  |                 +-->|  CacheFiles  |
+    |  ISOFS  |--+                     |  /var/cache  |
+    |         |                        +--------------+
+    +---------+
+
+Proctively envisioned multimedia based expertise and cross-media growth
+strategies. Seamlessly visualize quality intellectual capital without superior
+collaboration and idea-sharing. Holistically pontificate installed base portals
+after maintainable products.
+## Shizzle Dizzle Header Second Order ##
+
+[I'm a relative reference to a repository file](../blob/master/LICENSE)
+
+[I'm an inline-style link with title](https://www.google.com "Google's Homepage")
+
+[I'm an inline-style link](https://www.google.com)
+
+![alt text](https://github.com/adam-p/markdown-here/raw/master/src/common/images/icon48.png "Logo Title Text 1")
+
+
+
+
+
+                """.encode('utf-8')).decode("utf-8") 
         data['object-item']['data'].append(desc_data)
 
         img_data = dict()
