@@ -83,8 +83,6 @@ def add_n(n):
         print("New Data:\n-----------\n")
         print(json.dumps(data, sort_keys=True, separators=(',', ': '), indent=4))
         print("\n-----------\n")
-        print("Submit Data in 5 Seconds ...\n")
-        time.sleep(2)
 
         dj = json.dumps(data, sort_keys=True, separators=(',', ': '))
         r = requests.post(url, data=dj, headers=headers)
@@ -94,9 +92,9 @@ def add_n(n):
         assert len(ret_data['data']['id']) > 0
         processing_time = ret_data['processing-time']
         sys.stderr.write("\nHTTPStatusCode: {} ServerProcTime {}s\n".format(r.status_code, processing_time))
-        time.sleep(3)
 
         query_full(ret_data['data']['id'])
+        time.sleep(1)
 
     print("\r\n\n")
     sys.exit(0)
@@ -121,4 +119,4 @@ def add_n(n):
 
 
 if __name__ == '__main__':
-    add_n(100)
+    add_n(10000)
