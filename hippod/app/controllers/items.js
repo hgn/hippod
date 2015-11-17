@@ -111,7 +111,6 @@ hippoD.controller("ItemsCtrl", function ($scope, ItemService, $uibModal, $log, $
   $scope.items = ['item1', 'item2', 'item3'];
 
   $scope.open = function (sha_id) {
-
     var modalInstance = $uibModal.open({
       animation: false,
       templateUrl: 'templates/modal-object-item.html',
@@ -126,6 +125,7 @@ hippoD.controller("ItemsCtrl", function ($scope, ItemService, $uibModal, $log, $
 
     modalInstance.result.then(function (id) {
       $scope.selected = id;
+			$location.path('/items')
     }, function () {
       $log.info('Modal dismissed at: ' + new Date());
     });

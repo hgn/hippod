@@ -117,6 +117,7 @@
 			<!-- verbose version -->
 			<div ng-switch-when='false'>
 					<div ng-repeat="items in data">
+						<button ng-click='open(items["object-item-id"])'>OPEN MODAL</button>
             <a href="#" ng-click='open(items["object-item-id"])'>
 							<div class="item-container">
 								<div class="status-area"></div>
@@ -150,40 +151,40 @@
 
 						<div ng-switch on='items["object-achievements"]["test-result"]'>
 							<div ng-switch-when="passed">
-								<a href="#" ng-click='open(items["object-item-id"])' class="list-group-item test-success-indicator">
+								<div ng-click='open(items["object-item-id"])' class="list-group-item test-success-indicator">
 									<p class="alignleft">{{ items["object-item"]['title'] }}</p>
 									<p class="alignright">{{ items["object-item-id"] }}</p>
 									<div style="clear: both;"></div>
 									<div class="header-seperator"></div>
 									{{items}}
-								</a>
+								</div>
 							</div>
 							<div ng-switch-when="failed">
-								<a href="#" ng-click='open(items["object-item-id"])' class="list-group-item test-failure-indicator">
+								<div ng-click='open(items["object-item-id"])' class="list-group-item test-failure-indicator">
 									<p class="alignleft">{{ items["object-item"]['title'] }}</p>
 									<p class="alignright">{{ items["object-item-id"] }}</p>
 									<div style="clear: both;"></div>
 									<div class="header-seperator"></div>
 									{{items}}
-								</a>
+								</div>
 							</div>
 							<div ng-switch-when="nonapplicable">
-								<a href="#" ng-click='open(items["object-item-id"])' class="list-group-item test-nonapplicable-indicator">
+								<div ng-click='open(items["object-item-id"])' class="list-group-item test-nonapplicable-indicator">
 									<p class="alignleft">{{ items["object-item"]['title'] }}</p>
 									<p class="alignright">{{ items["object-item-id"] }}</p>
 									<div style="clear: both;"></div>
 									<div class="header-seperator"></div>
 									{{items}}
-								</a>
+								</div>
 							</div>
 							<div ng-switch-default>
-								<a href="#" ng-click='open(items["object-item-id"])' class="list-group-item test-nontest-indicator">
+								<div ng-click='open(items["object-item-id"])' class="list-group-item test-nontest-indicator">
 									<p class="alignleft">{{ items["object-item"]['title'] }}</p>
 									<p class="alignright">{{ items["object-item-id"] }}</p>
 									<div style="clear: both;"></div>
 									<div class="header-seperator"></div>
 									{{items}}
-								</a>
+								</div>
 							</div>
 						</div>
 

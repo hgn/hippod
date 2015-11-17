@@ -277,19 +277,35 @@ btn:visited {background-color:#03A9F4}
 .test-success-indicator {
 	border-left-color: #4CAF50;
 	border-left-width: 3px;
+	cursor: pointer;
+	cursor: -webkit-zoom-in;
+	cursor:    -moz-zoom-in;
+	cursor:         zoom-in;
 }
 
 .test-failure-indicator {
 	border-left-color: #ff0000;
 	border-left-width: 3px;
+	cursor: pointer;
+	cursor: -webkit-zoom-in;
+	cursor:    -moz-zoom-in;
+	cursor:         zoom-in;
 }
 .test-nonapplicable-indicator {
 	border-left-color: #2196F3;
 	border-left-width: 3px;
+	cursor: pointer;
+	cursor: -webkit-zoom-in;
+	cursor:    -moz-zoom-in;
+	cursor:         zoom-in;
 }
 .test-nontest-indicator {
 	border-left-color: #A1887F;
 	border-left-width: 3px;
+	cursor: pointer;
+	cursor: -webkit-zoom-in;
+	cursor:    -moz-zoom-in;
+	cursor:         zoom-in;
 }
 
 /* fixed logo */
