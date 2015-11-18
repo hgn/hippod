@@ -3,18 +3,59 @@
 </div>
 <div class="modal-body">
 	<div class="row">
-		<div class="col-xs-2">
-			<ul class="list-group">
-				<li class="list-group-item list-group-item-success">Dapibus ac facilisis in</li>
-				<li class="list-group-item list-group-item-info">Cras sit amet nibh libero</li>
-				<li class="list-group-item list-group-item-warning">Porta ac consectetur ac</li>
-				<li class="list-group-item list-group-item-danger">Vestibulum at eros</li>
-			</ul>
+		<div class="col-sm-4">
+			<div class="list-group">
+				<div class="list-group-item">
+					<h4 class="list-group-item-heading">Achievements:</h4>
+					<p class="list-group-item-text">
+					Number of Achievements: 104<br>
+					Number of Varieties: 1<br>
+				  </p>
+				</div>
+				<div class="list-group-item">
+					<h5 class="list-group-item-heading">Submitter FooBar</h5>
+					<ul class="list-group">
+						<li class="list-group-item list-group-item-success">Dapibus ac facilisis in</li>
+						<li class="list-group-item list-group-item-danger">Vestibulum at eros</li>
+						<li class="list-group-item list-group-item-danger">Vestibulum at eros</li>
+					</ul>
+				</div>
+				<div class="list-group-item">
+					<h5 class="list-group-item-heading">Submitter Bar</h5>
+					<ul class="list-group">
+						<li class="list-group-item list-group-item-success">Dapibus ac facilisis in</li>
+						<li class="list-group-item list-group-item-success">Dapibus ac facilisis in</li>
+						<li class="list-group-item list-group-item-danger">Vestibulum at eros</li>
+					</ul>
+				</div>
+			</div>
+
+			<div class="list-group">
+				<div class="list-group-item">
+					<h4 class="list-group-item-heading">Attachments:</h4>
+					<p class="list-group-item-text">
+					Responsible: 1<br>
+					Tags: foo, foo<br>
+					References: doors:39292<br>
+				  </p>
+				</div>
+			</div>
 		</div>
-		<div class="col-xs-10">
-			<span class="label label-primary">Maturity: Testing</span>
-			<span class="label label-info">Category: team:orange / topic:ip / subtopic:route-cache</span>
-			<span class="label label-warning">Last Submitter: Charles Darwin</span>
+		<div class="col-sm-8">
+			<div class="row">
+				<div class="col-md-6">
+					<span class="label label-primary">Maturity: Testing</span>
+				</div> <!-- col -->
+				<div class="col-md-6">
+					<span class="label label-info">Category: team:orange / topic:ip / subtopic:route-cache</span>
+				</div> <!-- col -->
+				<div class="col-md-6">
+					<span class="label label-warning">Last Submitter: Charles Darwin</span>
+				</div> <!-- col -->
+				<div class="col-md-6">
+					<span class="label label-warning">Last Submitter: Charles Darwin</span>
+				</div> <!-- col -->
+			</div> <!-- row -->
 			<hr >
 
 			<div ng-bind-html="data['__description'] | unsafe"></div>
