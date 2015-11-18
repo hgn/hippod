@@ -34,6 +34,7 @@ def object_data_get_int(sha_sum, req_data):
 def object_data_get(sha_id):
     try:
         start = time.clock()
+        requested_encoding = flask.request.args.get('encoding')
         req_obj = flask.request.get_json(force=False)
         mime_type, data = object_data_get_int(sha_id, req_obj)
         end = time.clock()
