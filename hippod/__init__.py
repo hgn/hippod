@@ -39,9 +39,13 @@ def check_db_environmet(path):
     if not os.path.isfile(obj_path):
         create_initial_statistics_db(obj_path)
 
+def set_config_defaults():
+    app.config['MAX_REQUEST_SIZE'] = 5000000
+
 
 app = Flask(__name__, static_folder='app', static_url_path='')
 
+set_config_defaults()
 app.config.from_pyfile('testcolld.cfg', silent=False)
 app.config.from_envvar('APP_CONFIG_FILE', silent=True)
 
