@@ -317,11 +317,20 @@ def try_adding_xobject(xobj):
     ret_data['id'] = sha_sum
     return ret_data
 
+def check_request_size_limit(request):
+    cl = request.content_length
+    if cl is not None and cl > app.config['MAX_REQUEST_SIZE']:
+        msg = "Request data size {} > limit ({})".format(
+                cl, app.config['MAX_REQUEST_SIZE'])
+        raise ApiError(msg, 400)
+
+
 
 @app.route('/api/v1/object', methods=['POST'])
 def object_post():
     try:
         start = time.clock()
+        check_request_size_limit(request)
         xobj = request.get_json(force=False)
         data = try_adding_xobject(xobj)
         hippod.statistic.update_global_db_stats()
