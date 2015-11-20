@@ -179,10 +179,9 @@ btn:visited {background-color:#03A9F4}
     align-items: stretch;
     overflow: auto;
 
-    margin-bottom: 20px;
-
-    border-radius: 5px;
-    background-color:#ddd;
+    margin-bottom: 10px;
+    border-radius: 3px;
+		border: 1px solid #ddd;
 }
 
 .container > a:link, a:hover, a:active , a:visited   {
@@ -191,8 +190,20 @@ btn:visited {background-color:#03A9F4}
 }
 
 .item-container > .status-area {
-  flex-basis: 10px;
-  background-color: #4CAF50; /* #F44336 */
+  flex-basis: 4px;
+}
+
+.status-area-success {
+  background-color: #4CAF50;
+}
+.status-area-failure {
+  background-color: #ff0000;
+}
+.status-area-nonapplicable {
+  background-color: #2196F3;
+}
+.status-area-nontest {
+  background-color: #A1887F;
 }
 
 .item-container > .item-main {
@@ -207,10 +218,8 @@ btn:visited {background-color:#03A9F4}
 }
 
 .item-container > .item-main > .header {
-  text-align: center;
-
-  color: #fff;
-  background-color: #2196F3;
+	font-size: 90%;
+	margin: 5px;
 }
 
 .item-container > .item-main > .content {
@@ -220,32 +229,23 @@ btn:visited {background-color:#03A9F4}
     justify-content: space-around;
     align-content: flex-start;
     align-items: stretch;
-
-    background-color: #BBDEFB;
+		font-size: 90%;
 }
 
 .item-container > .item-main > .content > .achievements  {
-    min-width: 170px;
     flex: 1;
-    padding: 3px;
-
-    border-right: 2px solid #2196F3;
+    padding: 5px;
+		display: inline-block;
 }
 
 .item-container > .item-main > .content > .attachments  {
-    min-width: 170px;
     flex: 1;
-    padding: 3px;
-
-    border-right: 1px;
-
-    border-right: 2px solid #2196F3;
+    padding: 5px;
 }
 
 .item-container > .item-main > .content > .item-data  {
-    min-width: 170px;
     flex: 1;
-    padding: 3px;
+    padding: 5px;
 }
 
 .list-group-item {
@@ -276,7 +276,7 @@ btn:visited {background-color:#03A9F4}
 
 .test-success-indicator {
 	border-left-color: #4CAF50;
-	border-left-width: 3px;
+	border-left-width: 4px;
 	cursor: pointer;
 	cursor: -webkit-zoom-in;
 	cursor:    -moz-zoom-in;
@@ -285,7 +285,7 @@ btn:visited {background-color:#03A9F4}
 
 .test-failure-indicator {
 	border-left-color: #ff0000;
-	border-left-width: 3px;
+	border-left-width: 4px;
 	cursor: pointer;
 	cursor: -webkit-zoom-in;
 	cursor:    -moz-zoom-in;
@@ -293,7 +293,7 @@ btn:visited {background-color:#03A9F4}
 }
 .test-nonapplicable-indicator {
 	border-left-color: #2196F3;
-	border-left-width: 3px;
+	border-left-width: 4px;
 	cursor: pointer;
 	cursor: -webkit-zoom-in;
 	cursor:    -moz-zoom-in;
@@ -301,7 +301,7 @@ btn:visited {background-color:#03A9F4}
 }
 .test-nontest-indicator {
 	border-left-color: #A1887F;
-	border-left-width: 3px;
+	border-left-width: 4px;
 	cursor: pointer;
 	cursor: -webkit-zoom-in;
 	cursor:    -moz-zoom-in;

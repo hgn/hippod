@@ -116,33 +116,141 @@
 
 			<!-- verbose version -->
 			<div ng-switch-when='false'>
+
 					<div ng-repeat="items in data">
-						<button ng-click='open(items["object-item-id"])'>OPEN MODAL</button>
-            <a href="#" ng-click='open(items["object-item-id"])'>
-							<div class="item-container">
-								<div class="status-area"></div>
-								<div class="item-main">
-									<div class="header">
-										{{ items["object-item"]['title'] }}
-									</div>
-									<div class="content">
-										<div class="achievements">
-											achievementssdfsfsfsdfsdfsdfs dsd sd sd sd sd dss
-										</div>
-										<div class="attachments">
-											attachments
-										</div>
-										<div class="item-data">
-											item-data<br />
-											item-data<br />
-											item-data<br />
+
+						<div ng-switch on='items["object-achievements"]["test-result"]'>
+							<div ng-switch-when="passed">
+								<div ng-click='open(items["object-item-id"])'>
+
+									<div class="item-container">
+										<div class="status-area status-area-success"></div>
+										<div class="item-main">
+											<div class="header">
+												<p class="alignleft">{{ items["object-item"]['title'] }}</p>
+												<p class="alignright">{{ items["object-item-id"] }}</p>
+												<div style="clear: both;"></div>
+											</div>
+											<div class="content">
+												<div class="achievements">
+													<b>Last Submitter:</b> {{ items['object-achievements']['submitter'] }}<br>
+													<b>Submitter Date:</b> {{ items['object-achievements']['date-added'] }}<br>
+													<b>Test Date:</b> {{ items['object-achievements']['test-date'] }}<br>
+													<b>Result:</b> {{ items['object-achievements']['test-result'] }}<br>
+												</div>
+												<div class="attachments">
+													<b>Category:</b> {{ items['object-attachment']['categories'] }}<br>
+													<b>References:</b> {{ items['object-attachment']['references'] }}<br>
+													<b>Responsible:</b> {{ items['object-attachment']['responsible'] }}<br>
+													<b>Tags:</b> {{ items['object-attachment']['tags'] }}<br>
+													<b>Maturity Level:</b> {{ items['maturity-level']['level'] }}<br>
+												</div>
+											</div>
 										</div>
 									</div>
 								</div>
+
 							</div>
-            </a>
-					</div>
-			</div>
+							<div ng-switch-when="failed">
+								<div ng-click='open(items["object-item-id"])'>
+
+									<div class="item-container">
+										<div class="status-area status-area-failure"></div>
+										<div class="item-main">
+											<div class="header">
+												<p class="alignleft">{{ items["object-item"]['title'] }}</p>
+												<p class="alignright">{{ items["object-item-id"] }}</p>
+												<div style="clear: both;"></div>
+											</div>
+											<div class="content">
+												<div class="achievements">
+													<b>Last Submitter:</b> {{ items['object-achievements']['submitter'] }}<br>
+													<b>Submitter Date:</b> {{ items['object-achievements']['date-added'] }}<br>
+													<b>Test Date:</b> {{ items['object-achievements']['test-date'] }}<br>
+													<b>Result:</b> {{ items['object-achievements']['test-result'] }}<br>
+												</div>
+												<div class="attachments">
+													<b>Category:</b> {{ items['object-attachment']['categories'] }}<br>
+													<b>References:</b> {{ items['object-attachment']['references'] }}<br>
+													<b>Responsible:</b> {{ items['object-attachment']['responsible'] }}<br>
+													<b>Tags:</b> {{ items['object-attachment']['tags'] }}<br>
+													<b>Maturity Level:</b> {{ items['maturity-level']['level'] }}<br>
+												</div>
+											</div>
+										</div>
+									</div>
+
+								</div>
+							</div>
+							<div ng-switch-when="nonapplicable">
+								<div ng-click='open(items["object-item-id"])'>
+
+									<div class="item-container">
+										<div class="status-area status-area-nonapplicable"></div>
+										<div class="item-main">
+											<div class="header">
+												<p class="alignleft">{{ items["object-item"]['title'] }}</p>
+												<p class="alignright">{{ items["object-item-id"] }}</p>
+												<div style="clear: both;"></div>
+											</div>
+											<div class="content">
+												<div class="achievements">
+													<b>Last Submitter:</b> {{ items['object-achievements']['submitter'] }}<br>
+													<b>Submitter Date:</b> {{ items['object-achievements']['date-added'] }}<br>
+													<b>Test Date:</b> {{ items['object-achievements']['test-date'] }}<br>
+													<b>Result:</b> {{ items['object-achievements']['test-result'] }}<br>
+												</div>
+												<div class="attachments">
+													<b>Category:</b> {{ items['object-attachment']['categories'] }}<br>
+													<b>References:</b> {{ items['object-attachment']['references'] }}<br>
+													<b>Responsible:</b> {{ items['object-attachment']['responsible'] }}<br>
+													<b>Tags:</b> {{ items['object-attachment']['tags'] }}<br>
+													<b>Maturity Level:</b> {{ items['maturity-level']['level'] }}<br>
+												</div>
+											</div>
+										</div>
+									</div>
+
+								</div>
+							</div>
+							<div ng-switch-default>
+								<div ng-click='open(items["object-item-id"])'>
+
+									<div class="item-container">
+										<div class="status-area status-area-nontest"></div>
+										<div class="item-main">
+											<div class="header">
+												<p class="alignleft">{{ items["object-item"]['title'] }}</p>
+												<p class="alignright">{{ items["object-item-id"] }}</p>
+												<div style="clear: both;"></div>
+											</div>
+											<div class="content">
+												<div class="achievements">
+													<b>Last Submitter:</b> {{ items['object-achievements']['submitter'] }}<br>
+													<b>Submitter Date:</b> {{ items['object-achievements']['date-added'] }}<br>
+													<b>Test Date:</b> {{ items['object-achievements']['test-date'] }}<br>
+													<b>Result:</b> {{ items['object-achievements']['test-result'] }}<br>
+												</div>
+												<div class="attachments">
+													<b>Category:</b> {{ items['object-attachment']['categories'] }}<br>
+													<b>References:</b> {{ items['object-attachment']['references'] }}<br>
+													<b>Responsible:</b> {{ items['object-attachment']['responsible'] }}<br>
+													<b>Tags:</b> {{ items['object-attachment']['tags'] }}<br>
+													<b>Maturity Level:</b> {{ items['maturity-level']['level'] }}<br>
+												</div>
+											</div>
+										</div>
+									</div>
+
+								</div>
+							</div>
+						</div>
+
+				</div>
+
+
+
+			</div> <!-- ng-switch-when='false' -->
 
 			<!-- condensed version -->
 			<div ng-switch-when='true'>
@@ -156,7 +264,9 @@
 									<p class="alignright">{{ items["object-item-id"] }}</p>
 									<div style="clear: both;"></div>
 									<div class="header-seperator"></div>
-									{{items}}
+									<b>Last Submitter:</b> {{ items['object-achievements']['submitter'] }}<br>
+									<b>Date:</b> {{ items['object-achievements']['date-added'] }}<br>
+									<b>Result:</b> {{ items['object-achievements']['test-result'] }}<br>
 								</div>
 							</div>
 							<div ng-switch-when="failed">
@@ -165,7 +275,9 @@
 									<p class="alignright">{{ items["object-item-id"] }}</p>
 									<div style="clear: both;"></div>
 									<div class="header-seperator"></div>
-									{{items}}
+									<b>Last Submitter:</b> {{ items['object-achievements']['submitter'] }}<br>
+									<b>Date:</b> {{ items['object-achievements']['date-added'] }}<br>
+									<b>Result:</b> {{ items['object-achievements']['test-result'] }}<br>
 								</div>
 							</div>
 							<div ng-switch-when="nonapplicable">
@@ -174,7 +286,9 @@
 									<p class="alignright">{{ items["object-item-id"] }}</p>
 									<div style="clear: both;"></div>
 									<div class="header-seperator"></div>
-									{{items}}
+									<b>Last Submitter:</b> {{ items['object-achievements']['submitter'] }}<br>
+									<b>Date:</b> {{ items['object-achievements']['date-added'] }}<br>
+									<b>Result:</b> {{ items['object-achievements']['test-result'] }}<br>
 								</div>
 							</div>
 							<div ng-switch-default>
@@ -183,7 +297,9 @@
 									<p class="alignright">{{ items["object-item-id"] }}</p>
 									<div style="clear: both;"></div>
 									<div class="header-seperator"></div>
-									{{items}}
+									<b>Last Submitter:</b> {{ items['object-achievements']['submitter'] }}<br>
+									<b>Date:</b> {{ items['object-achievements']['date-added'] }}<br>
+									<b>Result:</b> {{ items['object-achievements']['test-result'] }}<br>
 								</div>
 							</div>
 						</div>
