@@ -4,10 +4,10 @@ hippoD.controller("ItemsCtrl", function ($scope, ItemService, $uibModal, $log, $
 
 		// buttons
 	  $scope.condensed = true;
-    $scope.button1 = function () {
+    $scope.verbose_button = function () {
         $scope.condensed = !$scope.condensed;
     }
-    $scope.button2 = function () {
+    $scope.condensed_button = function () {
         $scope.condensed = !$scope.condensed;
     }
 
