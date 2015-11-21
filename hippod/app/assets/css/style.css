@@ -342,3 +342,13 @@ a.list-group-item:focus, a.list-group-item:hover, button.list-group-item:focus, 
 .modal-lg {
 	    width: 95%;
 }
+
+.filter-display-box {
+	border-radius: 5px;
+	background-color: #EEEEEE;
+	padding: 10px;
+}
+
+.inner-filter-display-box {
+  font-size: 90%;
+}

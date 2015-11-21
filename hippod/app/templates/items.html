@@ -4,104 +4,131 @@
 <div class="main-content-container">
 	<div class="controll-container">
 
-		<div class="btn-group">
-			<button type="button" class="btn btn-default dropdown-toggle"
-												 data-toggle="dropdown" aria-haspopup="true"
-																		aria-expanded="false">
-				Maturity Level: stable <span class="caret"></span>
-			</button>
-			<ul class="dropdown-menu">
-				<li><a href="#">All</a></li>
-				<li><a href="#">Testing</a></li>
-				<li><a href="#">Stable</a></li>
-				<li role="separator"
-				class="divider"></li>
-				<li><a href="#">Outdated</a></li>
-			</ul>
-		</div>
+		<div class="row">
+      <div class="col-xs-8 filter-display-box">
+        <b>Filter</b><br><br>
+        <div class="row inner-filter-display-box text-center">
+					<div class="col-sm-3">
+            Result<br>
 
-		<!-- Single button -->
-		<div class="btn-group">
-			<button type="button" class="btn btn-default dropdown-toggle"
-												 data-toggle="dropdown" aria-haspopup="true"
-																		aria-expanded="false">
-				Result: all <span class="caret"></span>
-			</button>
-			<ul class="dropdown-menu">
-				<li><a href="#">All</a></li>
-				<li><a href="#">Passed</a></li>
-				<li><a href="#">Failed here</a></li>
-				<li><a href="#">Non Applicable</a></li>
-			</ul>
-		</div>
+						<div class="btn-group" uib-dropdown>
+							<button id="single-button" type="button"
+																	class="btn btn-default" uib-dropdown-toggle
+								 ng-disabled="disabled">
+								{{result_button}} <span class="caret"></span>
+							</button>
+							<ul class="uib-dropdown-menu" role="menu" aria-labelledby="single-button">
+								<li role="menuitem">
+									<a href="#" ng-click="result_change(action)" ng-repeat="action in result_actions">{{action}}</a>
+								</li>
+							</ul>
+						</div>
 
-		<!-- Single button -->
-		<div class="btn-group">
-			<button type="button" class="btn btn-default dropdown-toggle"
-												 data-toggle="dropdown" aria-haspopup="true"
-																		aria-expanded="false">
-				Submitter: all <span class="caret"></span>
-			</button>
-			<ul class="dropdown-menu">
-				<li><a href="#">All</a></li>
-				<li><a href="#">Passed</a></li>
-				<li><a href="#">Failed here</a></li>
-				<li><a href="#">Non Applicable</a></li>
-			</ul>
-		</div>
+          </div> <!-- col-sm-3 -->
+					<div class="col-sm-3">
+            Maturity Level<br>
 
-		<!-- Single button -->
-		<div class="btn-group">
-			<button type="button" class="btn btn-default dropdown-toggle"
-												 data-toggle="dropdown" aria-haspopup="true"
-																		aria-expanded="false">
-				Responsible: all <span class="caret"></span>
-			</button>
-			<ul class="dropdown-menu">
-				<li><a href="#">All</a></li>
-				<li><a href="#">Passed</a></li>
-				<li><a href="#">Failed here</a></li>
-				<li><a href="#">Non Applicable</a></li>
-			</ul>
-		</div>
+						<div class="btn-group" uib-dropdown>
+							<button id="single-button" type="button"
+																	class="btn btn-default" uib-dropdown-toggle
+								 ng-disabled="disabled">
+								{{maturity_button}} <span class="caret"></span>
+							</button>
+							<ul class="uib-dropdown-menu" role="menu" aria-labelledby="single-button">
+								<li role="menuitem">
+									<a href="#" ng-click="maturity_change(action)" ng-repeat="action in maturity_actions">{{action}}</a>
+								</li>
+							</ul>
+						</div>
 
-		<!-- Single button -->
-		<div class="btn-group">
-			<button type="button" class="btn btn-default dropdown-toggle"
-												 data-toggle="dropdown" aria-haspopup="true"
-																		aria-expanded="false">
-				Anchor <span class="caret"></span>
-			</button>
-			<ul class="dropdown-menu">
-				<li><a href="#">All</a></li>
-				<li><a href="#">Passed</a></li>
-				<li><a href="#">Failed here</a></li>
-				<li><a href="#">Non Applicable</a></li>
-			</ul>
-		</div>
 
-		<div class="btn-group">
-			<button type="button" class="btn btn-default dropdown-toggle"
-												 data-toggle="dropdown" aria-haspopup="true"
-																		aria-expanded="false">
-				Sorting: last tested <span class="caret"></span>
-			</button>
-			<ul class="dropdown-menu">
-				<li><a href="#">Last Tested</a></li>
-				<li><a href="#">Last Untested</a></li>
-				<li><a href="#">Newest Tests</a></li>
-			</ul>
-		</div>
+          </div> <!-- col-sm-3 -->
+					<div class="col-sm-3">
+            Submitter<br>
+
+						<div class="btn-group" uib-dropdown>
+							<button id="single-button" type="button"
+																	class="btn btn-default" uib-dropdown-toggle
+								 ng-disabled="disabled">
+								{{submitter_button}} <span class="caret"></span>
+							</button>
+							<ul class="uib-dropdown-menu" role="menu" aria-labelledby="single-button">
+								<li role="menuitem">
+									<a href="#" ng-click="submitter_change(action)"
+                   ng-repeat="action in submitter_actions">{{action}}</a>
+								</li>
+							</ul>
+						</div>
+
+          </div> <!-- col-sm-3 -->
+					<div class="col-sm-3">
+            Responsible<br>
+
+						<div class="btn-group" uib-dropdown>
+							<button id="single-button" type="button"
+																	class="btn btn-default" uib-dropdown-toggle
+								 ng-disabled="disabled">
+								{{responsible_button}} <span class="caret"></span>
+							</button>
+							<ul class="uib-dropdown-menu" role="menu" aria-labelledby="single-button">
+								<li role="menuitem">
+									<a href="#" ng-click="responsible_change(action)"
+                   ng-repeat="action in responsible_actions">{{action}}</a>
+								</li>
+							</ul>
+						</div>
 
 
 
+          </div> <!-- col-sm-3 -->
+		    </div> <!-- row -->
+      </div>
+      <div class="col-xs-3 col-sm-offset-1 filter-display-box">
+        <b>Display</b><br><br>
+        <div class="row inner-filter-display-box text-center">
+          <div class="col-sm-6">
+            Sorting<br>
 
-    <span ng-switch on="condensed">
-        <span class="btn-group" role="group" aria-label="Basic example">
-        <button type="button" class="btn btn-default" ng-switch-when='true' ng-click='button1()'>verbose</button>
-        <button type="button" class="btn btn-default" ng-switch-when='false' ng-click='button2()'>condensed</button>
-        </span>
-    </span>
+						<div class="btn-group" uib-dropdown>
+							<button id="single-button" type="button"
+																	class="btn btn-default" uib-dropdown-toggle
+								 ng-disabled="disabled">
+								{{sort_button}} <span class="caret"></span>
+							</button>
+							<ul class="uib-dropdown-menu" role="menu" aria-labelledby="single-button">
+								<li role="menuitem">
+									<a href="#" ng-click="sort_change(action)"
+                   ng-repeat="action in sort_actions">{{action}}</a>
+								</li>
+							</ul>
+						</div>
+
+
+          </div> <!-- col-sm-6 -->
+          <div class="col-sm-6">
+            Detail<br>
+
+						<span ng-switch on="condensed">
+							<span class="btn-group" role="group" aria-label="">
+								<button type="button" class="btn btn-default"
+															ng-switch-when='true' ng-click='button1()'>verbose</button>
+								<button type="button" class="btn btn-default"
+															ng-switch-when='false' ng-click='button2()'>condensed</button>
+							</span>
+						</span>
+
+
+
+          </div> <!-- col-sm-6 -->
+		    </div> <!-- row -->
+      </div>
+
+
+		</div> <!-- row -->
+
+
+
+
 
 
 

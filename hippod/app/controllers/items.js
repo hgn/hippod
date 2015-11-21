@@ -2,16 +2,64 @@
 
 hippoD.controller("ItemsCtrl", function ($scope, ItemService, $uibModal, $log, $interval) {
 
-
-
+		// buttons
 	  $scope.condensed = true;
     $scope.button1 = function () {
         $scope.condensed = !$scope.condensed;
     }
-
     $scope.button2 = function () {
         $scope.condensed = !$scope.condensed;
     }
+
+	  // Maturity Level Buttons
+		$scope.maturity_button = "All";
+		$scope.maturity_actions = [
+			"All", "Testing", "Stable", "Outdated"
+		];
+		$scope.maturity_change = function(name){
+			$scope.maturity_button = name;
+		}
+
+
+	  // Limit Result Buttons
+		$scope.result_button = "All";
+		$scope.result_actions = [
+			"All", "Passed", "Failed", "Non Applicable", "Never tested"
+		];
+		$scope.result_change = function(name){
+			$scope.result_button = name;
+		}
+
+	  // Submiter Buttons
+		$scope.submitter_button = "All";
+		$scope.submitter_actions = [
+			"All", "Foo", "Bar"
+		];
+		$scope.submitter_change = function(name){
+			$scope.submitter_button = name;
+		}
+
+
+	  // Resonsible Buttons
+		$scope.responsible_button = "All";
+		$scope.responsible_actions = [
+			"All", "Foo", "Bar"
+		];
+		$scope.responsible_change = function(name){
+			$scope.responsible_button = name;
+		}
+
+
+	  // Sorting Buttons
+		$scope.sort_button = "Tested";
+		$scope.sort_actions = [
+			"Tested", "Untested", "New"
+		];
+		$scope.sort_change = function(name){
+			$scope.sort_button = name;
+		}
+
+
 
 		// if called we fill the data
 		ItemService.getItemList().then(function(res) {
