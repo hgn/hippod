@@ -352,3 +352,8 @@ a.list-group-item:focus, a.list-group-item:hover, button.list-group-item:focus, 
 .inner-filter-display-box {
   font-size: 90%;
 }
+
+/* progress bar do not look good in tables */
+.progress {
+	margin-bottom: 0px;
+}
