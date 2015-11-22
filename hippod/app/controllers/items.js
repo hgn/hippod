@@ -2,15 +2,6 @@
 
 hippoD.controller("ItemsCtrl", function ($scope, ItemService, $uibModal, $log, $interval) {
 
-		// buttons
-	  $scope.condensed = true;
-    $scope.verbose_button = function () {
-        $scope.condensed = !$scope.condensed;
-    }
-    $scope.condensed_button = function () {
-        $scope.condensed = !$scope.condensed;
-    }
-
 	  // Maturity Level Buttons
 		$scope.maturity_button = "All";
 		$scope.maturity_actions = [
@@ -24,7 +15,7 @@ hippoD.controller("ItemsCtrl", function ($scope, ItemService, $uibModal, $log, $
 	  // Limit Result Buttons
 		$scope.result_button = "All";
 		$scope.result_actions = [
-			"All", "Passed", "Failed", "Non Applicable", "Never tested"
+			"All", "Passed", "Failed", "Non Applicable"
 		];
 		$scope.result_change = function(name){
 			$scope.result_button = name;
@@ -49,6 +40,45 @@ hippoD.controller("ItemsCtrl", function ($scope, ItemService, $uibModal, $log, $
 			$scope.responsible_button = name;
 		}
 
+		function resultNameMapper(button_name) {
+			switch (button_name) {
+				case "Passed": return "passed";
+				case "Failed": return "failed";
+				case "Non Applicable": return "nonapplicable";
+				default: console.log("result name not supported");
+			}
+		};
+
+		$scope.filterSelection = function () {
+			return function (item) {
+
+				if ($scope.result_button !== $scope.result_actions[0]) {
+					var match = resultNameMapper($scope.result_button);
+					if (match !== item['object-achievements']['test-result'])
+						return false;
+				}
+
+				if ($scope.maturity_button !== $scope.maturity_actions[0]) {
+					var match = $scope.maturity_button.toLowerCase();
+					if (match !== item['maturity-level']['level'])
+						return false;
+				}
+
+				if ($scope.submitter_button !== $scope.submitter_actions[0]) {
+					if ($scope.submitter_button !== item['object-achievements']['submitter'])
+						return false;
+				}
+
+				if ($scope.responsible_button !== $scope.responsible_actions[0]) {
+					if ($scope.responsible_button !== item['object-attachment']['responsible'])
+						return false;
+				}
+
+				return true;
+			}
+		}
+
+
 
 	  // Sorting Buttons
 		$scope.sort_button = "Tested";
@@ -58,6 +88,16 @@ hippoD.controller("ItemsCtrl", function ($scope, ItemService, $uibModal, $log, $
 		$scope.sort_change = function(name){
 			$scope.sort_button = name;
 		}
+
+		// Verbose/Condensed Button
+	  $scope.condensed = true;
+    $scope.verbose_button = function () {
+        $scope.condensed = !$scope.condensed;
+    }
+    $scope.condensed_button = function () {
+        $scope.condensed = !$scope.condensed;
+    }
+
 
 
 

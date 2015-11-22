@@ -65,7 +65,7 @@
             Responsible<br>
 
 						<div class="btn-group" uib-dropdown>
-							<button id="single-button" type="button"
+							<button id="single-button" type="submit"
 																	class="btn btn-default" uib-dropdown-toggle
 								 ng-disabled="disabled">
 								{{responsible_button}} <span class="caret"></span>
@@ -144,7 +144,7 @@
 			<!-- verbose version -->
 			<div ng-switch-when='false'>
 
-					<div ng-repeat="items in data">
+					<div ng-repeat="items in data | filter:filterSelection()">
 
 						<div ng-switch on='items["object-achievements"]["test-result"]'>
 							<div ng-switch-when="passed">
@@ -282,7 +282,7 @@
 			<!-- condensed version -->
 			<div ng-switch-when='true'>
 				<div class="list-group">
-					<div ng-repeat="items in data">
+					<div ng-repeat="items in data | filter:filterSelection()">
 
 						<div ng-switch on='items["object-achievements"]["test-result"]'>
 							<div ng-switch-when="passed">
