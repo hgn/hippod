@@ -87,9 +87,10 @@ def decode_and_compress(data):
     uncompressed_len = len(data)
     byte_array = data.encode(encoding='UTF-8')
     decoded = hippod.object_hasher.decode_base64_data(byte_array)
+    size_real = len(decoded)
     compressed_data = zlib.compress(decoded)
     compressed_len = len(compressed_data)
-    return compressed_data
+    return compressed_data, size_real
 
 
 def decode_and_write_file(sha_sum, data, compress=False):
@@ -102,17 +103,19 @@ def decode_and_write_file(sha_sum, data, compress=False):
     blob_path = os.path.join(obj_path, "blob.bin")
     if os.path.isfile(blob_path):
         # great, file already in the database
-        # do nothing
-        return
+        # return original attr.db
+        return get_attr_obj(sha_sum)
 
     size_stats['base64-encoded'] = len(data['data'])
     if compress:
-        bin_data = decode_and_compress(data['data'])
+        bin_data, size_real = decode_and_compress(data['data'])
     else:
         byte_array = data['data'].encode(encoding='UTF-8')
         bin_data = hippod.object_hasher.decode_base64_data(byte_array)
+        size_real = len(bin_data)
 
-    size_stats['stored'] = len(bin_data)
+    size_stats['size-stored'] = len(bin_data)
+    size_stats['size-real'] = size_real
 
     fd = open(blob_path, 'wb')
     fd.write(bin_data)
@@ -127,6 +130,8 @@ def decode_and_write_file(sha_sum, data, compress=False):
     fd = open(attr_path, 'w')
     fd.write(d_json)
     fd.close()
+
+    return d
 
 
 def save_object_item_data(data):
@@ -151,12 +156,13 @@ def save_object_item_data(data):
     compressable = False
     if is_compressable(data):
         compressable = True
-    decode_and_write_file(sha, data, compress=compressable)
+    attr_data = decode_and_write_file(sha, data, compress=compressable)
 
     # update data entry
     del data['data']
     del data['mime-type']
     data['data-id'] = sha
+    data['size-real'] = attr_data['statistics']['size-real']
 
 
 def save_object_item_data_list(object_item):
