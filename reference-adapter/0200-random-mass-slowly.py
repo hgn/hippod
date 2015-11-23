@@ -137,6 +137,12 @@ after maintainable products.
         img_data['data'] = "R0lGODlhDwAPAKECAAAAzMzM/////wAAACwAAAAADwAPAAACIISPeQHsrZ5ModrLlN48CXF8m2iQ3YmmKqVlRtW4MLwWACH+H09wdGltaXplZCBieSBVbGVhZCBTbWFydFNhdmVyIQAAOw=="
         data['object-item']['data'].append(img_data)
 
+        img_data = dict()
+        img_data['name'] = 'trace.pcap'
+        img_data['mime-type'] = 'application/vnd.tcpdump.pcap'
+        img_data['data'] = "R0lGODlhDwAPAKECAAAAzxzM/////wAAACwAAAAADwAPAAACIISPeQHsrZ5ModrLlN48CXF8m2iQ3YmmKqVlRtW4MLwWACH+H09wdGltaXplZCBieSBVbGVhZCBTbWFydFNhdmVyIQAAOw=="
+        data['object-item']['data'].append(img_data)
+
         data["attachment"] = dict()
         data["attachment"]['references'] = [ "doors:234236", "your-tool:4391843" ]
         data["attachment"]['tags'] = [ "ip", "route", "cache", "performance" ]
