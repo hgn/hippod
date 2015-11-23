@@ -53,13 +53,26 @@ hippoD.factory('DBService', function($http) {
 					 headers: { "Content-Type": "application/json" }
 			   })
 				 .then(function (response) {
-					 console.log(response.data.data);
+					 //console.log(response.data.data);
 					 var achievements = response.data.data['object-achievements'];
 					 for (var i = 0; i < achievements.length; i++) {
 						 console.log(achievements[i]);
 					 }
 
 					 var item_data = response.data.data['object-item']['data'];
+					 var attachments = new Array();
+					 for (var i = 0; i < item_data.length; i++) {
+						 if (item_data[i]['type'] !== 'description') {
+							 var entry = {};
+							 entry['name'] = item_data[i]['name'];
+							 entry['size-real'] = item_data[i]['size-real'];
+							 entry['data-id'] = item_data[i]['data-id'];
+							 attachments.push(entry);
+						 }
+					 }
+					response.data.data['__attachments'] = attachments;
+
+					 // fetch description
 					 for (var i = 0; i < item_data.length; i++) {
 						 if (item_data[i]['type'] == 'description') {
 							 return $http(
