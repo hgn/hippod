@@ -177,7 +177,7 @@ btn:visited {background-color:#03A9F4}
     justify-content: flex-start;
     align-content: flex-start;
     align-items: stretch;
-    overflow: auto;
+    overflow: hidden;
 
     margin-bottom: 10px;
     border-radius: 3px;
@@ -214,7 +214,7 @@ btn:visited {background-color:#03A9F4}
     align-content: flex-start;
     align-items: stretch;
     flex: 1;
-    overflow: auto;
+    overflow: visible;
 }
 
 .item-container > .item-main > .header {
@@ -235,7 +235,6 @@ btn:visited {background-color:#03A9F4}
 .item-container > .item-main > .content > .achievements  {
     flex: 1;
     padding: 5px;
-		display: inline-block;
 }
 
 .item-container > .item-main > .content > .attachments  {
