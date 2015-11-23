@@ -112,17 +112,11 @@ Proctively envisioned multimedia based expertise and cross-media growth
 strategies. Seamlessly visualize quality intellectual capital without superior
 collaboration and idea-sharing. Holistically pontificate installed base portals
 after maintainable products.
+
 ## Shizzle Dizzle Header Second Order ##
 
-[I'm a relative reference to a repository file](../blob/master/LICENSE)
 
-[I'm an inline-style link with title](https://www.google.com "Google's Homepage")
-
-[I'm an inline-style link](https://www.google.com)
-
-![alt text](https://github.com/adam-p/markdown-here/raw/master/src/common/images/icon48.png "Logo Title Text 1")
-
-![image.png](api/v1/data/1102e55d428abf3cafadf83e58ea39cee02f53ae)
+![Description](image.gif)
 
 
 

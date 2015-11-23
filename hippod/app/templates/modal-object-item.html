@@ -84,7 +84,7 @@
 			</div> <!-- row -->
 			<hr >
 
-			<div ng-bind-html="data['__description'] | unsafe"></div>
+			<div ng-bind-html="data['__description'] | toHtmlSave : data['__attachments']"></div>
 
 			<hr >
 			<h4>Attachments:</h4>

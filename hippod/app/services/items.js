@@ -84,8 +84,9 @@ hippoD.factory('DBService', function($http) {
 										 headers: { "Content-Type": "application/json" }
 									 })
 							     .then(function (response_enc) {
-										 item_data[i]['data'] = response_enc.data
-										 response.data.data['__description'] = response_enc.data
+										 var text = response_enc.data;
+										 item_data[i]['data'] = text;
+										 response.data.data['__description'] = text;
 
 										 return response.data.data;
 									 });
@@ -99,4 +100,18 @@ hippoD.factory('DBService', function($http) {
 	 }
 });
 
-hippoD.filter('unsafe', function($sce) { return $sce.trustAsHtml; });
+hippoD.filter('toHtmlSave', function($sce) {
+
+	function replaceAll(str, find, replace) {
+		return str.replace(new RegExp(find, 'g'), replace);
+	}
+
+	return function(text, argument) {
+		// we correct the link from username (tomato.png) to
+		// link: api/v1/data/34994393434934
+		angular.forEach(argument, function(value, key) {
+			text = replaceAll(text, value['name'],'api/v1/data/' + value['data-id']);
+		});
+		return $sce.trustAsHtml(text);
+	};
+});
