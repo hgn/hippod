@@ -76,12 +76,6 @@ db_path_root = os.path.join(app.instance_path, app.config['RELATIVE_DB_PATH'])
 app.config['DB_ROOT_PATH'] = db_path_root
 check_db_environmet(db_path_root)
 
-
-# application wide global variables and config parameters must be defined here
-# (not in `run.py`) for being able to import them in the beginning of the
-# views files but we can perfectly imagine a smarter config procedure
-app.config['HELLO_WORLD'] = 'Hello Flask!'
-
 # The views modules that contain the application's routes are imported here
 # Importing views modules MUST BE in the end of the file to avoid problems
 # related to circular imports http://flask.pocoo.org/docs/patterns/packages
