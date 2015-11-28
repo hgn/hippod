@@ -226,6 +226,7 @@ def update_attachment_achievement(sha_sum, xobj):
             new_data = dict()
             new_data['id'] = current_achievements_no
             new_data['date-added'] =  date
+            new_data['variety-id'] = hippod.object_hasher.calc_variety_id(a)
             current_achievements.append(new_data)
 
             # additionally, we add the submitter to the achievement
