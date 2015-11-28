@@ -11,15 +11,22 @@ import json
 
 
 def create_initial_statistics_db(path):
-    sys.stderr.write("create DB statistics file: {}\n".format(path))
+    sys.stderr.write("create statistics db: {}\n".format(path))
     today = datetime.datetime.now().strftime('%Y-%m-%d')
     d = dict()
     d['item-bytes-overtime'] = list()
-    #d['item-bytes-overtime'].append(list())
-    #d['item-bytes-overtime'][0] = (today, 0, 0)
     d_jsonfied =  json.dumps(d, sort_keys=True,indent=4, separators=(',', ': '))
     with open(path,"w+") as f:
         f.write(d_jsonfied)
+
+def create_user_statistics_db(path):
+    sys.stderr.write("create user db: {}\n".format(path))
+    d = dict()
+    d['users'] = list()
+    d_jsonfied =  json.dumps(d, sort_keys=True,indent=4, separators=(',', ': '))
+    with open(path,"w+") as f:
+        f.write(d_jsonfied)
+
 
 def check_db_environmet(path):
     if not os.path.isdir(path):
@@ -38,6 +45,12 @@ def check_db_environmet(path):
     app.config['DB_STATISTICS_FILEPATH'] = obj_path
     if not os.path.isfile(obj_path):
         create_initial_statistics_db(obj_path)
+
+    obj_path = os.path.join(path, 'user.db')
+    app.config['DB_USER_FILEPATH'] = obj_path
+    if not os.path.isfile(obj_path):
+        create_user_statistics_db(obj_path)
+
 
 def set_config_defaults():
     app.config['MAX_REQUEST_SIZE'] = 5000000
