@@ -29,15 +29,18 @@ def folder_size(db_path):
 
 
 def stats_written_today(path, today):
-    with open(path) as data_file:
-        data = json.load(data_file)
-        if not len(data['item-bytes-overtime']) > 0:
-            return False, data
-        last_written_date = data['item-bytes-overtime'][-1][0]
-        if last_written_date == today:
-            return True, data
+    data = load_data(path)
+    if not len(data['item-bytes-overtime']) > 0:
         return False, data
+    last_written_date = data['item-bytes-overtime'][-1][0]
+    if last_written_date == today:
+        return True, data
+    return False, data
 
+
+def load_data(path):
+    with open(path) as data_file:
+        return json.load(data_file)
 
 def update_global_db_stats():
     stat_path = app.config['DB_STATISTICS_FILEPATH']
@@ -63,3 +66,28 @@ def update_global_db_stats():
     with open(stat_path, "w+") as f:
         f.write(d_jsonfied)
 
+def data_write(path, data):
+    d =  json.dumps(data, sort_keys=True, indent=4, separators=(',', ': '))
+    with open(path, "w+") as f:
+        f.write(d)
+
+def update_mimetype_data_store(mimetype, size_raw, size_compressed, compressed):
+    stat_path = app.config['DB_STATISTICS_FILEPATH']
+    data = load_data(stat_path)
+    ptr = data['data-compression']
+    if mimetype not in ptr:
+        ptr[mimetype] = list()
+        entry = dict()
+        entry['compressed'] = compressed
+        entry['size-raw'] = size_raw
+        entry['size-compressed'] = size_compressed
+        ptr[mimetype].append(entry)
+        data_write(stat_path, data)
+        return
+
+    entry = dict()
+    entry['compressed'] = compressed
+    entry['size-raw'] = size_raw
+    entry['size-compressed'] = size_compressed
+    ptr[mimetype].append(entry)
+    data_write(stat_path, data)

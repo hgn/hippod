@@ -15,6 +15,7 @@ def create_initial_statistics_db(path):
     today = datetime.datetime.now().strftime('%Y-%m-%d')
     d = dict()
     d['item-bytes-overtime'] = list()
+    d['data-compression'] = dict()
     d_jsonfied =  json.dumps(d, sort_keys=True,indent=4, separators=(',', ': '))
     with open(path,"w+") as f:
         f.write(d_jsonfied)

@@ -116,6 +116,10 @@ def decode_and_write_file(sha_sum, data, compress=False):
 
     size_stats['size-stored'] = len(bin_data)
     size_stats['size-real'] = size_real
+    hippod.statistic.update_mimetype_data_store(data['mime-type'],
+                                                size_real,
+                                                len(bin_data),
+                                                compress)
 
     fd = open(blob_path, 'wb')
     fd.write(bin_data)
