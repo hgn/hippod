@@ -277,35 +277,19 @@ btn:visited {background-color:#03A9F4}
 .test-success-indicator {
 	border-left-color: #4CAF50;
 	border-left-width: 4px;
-	cursor: pointer;
-	cursor: -webkit-zoom-in;
-	cursor:    -moz-zoom-in;
-	cursor:         zoom-in;
 }
 
 .test-failure-indicator {
 	border-left-color: #ff0000;
 	border-left-width: 4px;
-	cursor: pointer;
-	cursor: -webkit-zoom-in;
-	cursor:    -moz-zoom-in;
-	cursor:         zoom-in;
 }
 .test-nonapplicable-indicator {
 	border-left-color: #2196F3;
 	border-left-width: 4px;
-	cursor: pointer;
-	cursor: -webkit-zoom-in;
-	cursor:    -moz-zoom-in;
-	cursor:         zoom-in;
 }
 .test-nontest-indicator {
 	border-left-color: #A1887F;
 	border-left-width: 4px;
-	cursor: pointer;
-	cursor: -webkit-zoom-in;
-	cursor:    -moz-zoom-in;
-	cursor:         zoom-in;
 }
 
 /* fixed logo */
@@ -337,10 +321,6 @@ a.list-group-item:focus, a.list-group-item:hover, button.list-group-item:focus, 
     color: #000;
     text-decoration: none;
     background-color: #f6f6f6;
-}
-
-.modal-lg {
-	    width: 95%;
 }
 
 .filter-display-box {
