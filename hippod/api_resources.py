@@ -7,7 +7,7 @@ import datetime
 import time
 import sys
 
-import hippod.object_hasher
+import hippod.hasher
 import hippod.api_comm
 
 from hippod.api_err_obj import *

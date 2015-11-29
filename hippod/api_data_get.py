@@ -9,7 +9,7 @@ import sys
 import flask
 
 import hippod
-import hippod.object_hasher
+import hippod.hasher
 import hippod.api_comm
 import hippod.api_shared
 import hippod.api_err_obj

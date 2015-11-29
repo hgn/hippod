@@ -9,12 +9,11 @@ import time
 import zlib
 import sys
 
-import hippod.object_hasher
+import hippod.hasher
 import hippod.api_comm
 import hippod.api_shared
 import hippod.statistic
 import hippod.mime_data_db
-import hippod.utils
 
 from hippod.api_err_obj import *
 
@@ -201,8 +200,8 @@ def update_attachment_achievement(sha_sum, xobj):
             rewrite_required = True
         else:
             last_attachment = hippod.api_shared.get_attachment_data_by_sha_id(sha_sum, current_attachments_no - 1)
-            sha_sum_last = hippod.object_hasher.check_sum_attachment(last_attachment)
-            sha_sum_new  = hippod.object_hasher.check_sum_attachment(xobj['attachment'])
+            sha_sum_last = hippod.hasher.check_sum_attachment(last_attachment)
+            sha_sum_new  = hippod.hasher.check_sum_attachment(xobj['attachment'])
             if sha_sum_last != sha_sum_new:
                 new_attachment_meta = dict()
                 new_attachment_meta['id'] = current_attachments_no
@@ -226,7 +225,7 @@ def update_attachment_achievement(sha_sum, xobj):
             new_data = dict()
             new_data['id'] = current_achievements_no
             new_data['date-added'] =  date
-            new_data['variety-id'] = hippod.object_hasher.calc_variety_id(a)
+            new_data['variety-id'] = hippod.hasher.calc_variety_id(a)
             current_achievements.append(new_data)
 
             # additionally, we add the submitter to the achievement
@@ -287,7 +286,7 @@ def try_adding_xobject(xobj):
     sha_sum=""
     if 'object-item' in xobj:
         # calculate the ID now
-        sha_sum = hippod.object_hasher.check_sum_object_issue(xobj['object-item'])
+        sha_sum = hippod.hasher.check_sum_object_issue(xobj['object-item'])
         if 'object-item-id' in xobj:
             # this is an additional check - both should be
             # identical

@@ -1,6 +1,3 @@
-#!/usr/bin/python
-# coding: utf-8
-
 import json
 import os
 import datetime
@@ -9,7 +6,7 @@ import time
 import zlib
 import sys
 
-import hippod.object_hasher
+import hippod.hasher
 import hippod.api_comm
 import hippod.api_shared
 
@@ -86,7 +83,7 @@ def is_compressable(d):
 def decode_and_compress(data):
     uncompressed_len = len(data)
     byte_array = data.encode(encoding='UTF-8')
-    decoded = hippod.object_hasher.decode_base64_data(byte_array)
+    decoded = hippod.hasher.decode_base64_data(byte_array)
     size_real = len(decoded)
     compressed_data = zlib.compress(decoded)
     compressed_len = len(compressed_data)
@@ -111,7 +108,7 @@ def decode_and_write_file(sha_sum, data, compress=False):
         bin_data, size_real = decode_and_compress(data['data'])
     else:
         byte_array = data['data'].encode(encoding='UTF-8')
-        bin_data = hippod.object_hasher.decode_base64_data(byte_array)
+        bin_data = hippod.hasher.decode_base64_data(byte_array)
         size_real = len(bin_data)
 
     size_stats['size-stored'] = len(bin_data)
@@ -156,7 +153,7 @@ def save_object_item_data(data):
 
 
     # ok, data stuff
-    sha = hippod.object_hasher.hash_data(data['data'])
+    sha = hippod.hasher.hash_data(data['data'])
     compressable = False
     if is_compressable(data):
         compressable = True

@@ -9,7 +9,7 @@ import time
 import zlib
 import sys
 
-import hippod.object_hasher
+import hippod.hasher
 import hippod.api_comm
 import hippod.api_shared
 
