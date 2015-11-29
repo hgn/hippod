@@ -239,7 +239,6 @@ def update_attachment_achievement(sha_sum, xobj):
         rewrite_required = True
 
     if rewrite_required:
-        app.logger.info("rewrite object DB container file")
         write_cont_obj_by_id(sha_sum, data)
 
 
