@@ -37,7 +37,7 @@ def get_all_achievement_data(sha_sum, cont_obj):
             if opt_attr in data:
                 r[opt_attr] = data[opt_attr]
 
-        for additional_meta_data in ("id", "date-added"):
+        for additional_meta_data in ("id", "date-added", "variety-id"):
             r[additional_meta_data] = achievement[additional_meta_data]
 
         ret_list.append(r)
