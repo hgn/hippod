@@ -66,6 +66,18 @@ def update_global_db_stats():
     with open(stat_path, "w+") as f:
         f.write(d_jsonfied)
 
+def get():
+    path = app.config['DB_STATISTICS_FILEPATH']
+    with open(path) as data_file:
+        data = json.load(data_file)
+        if not len(data['item-bytes-overtime']) > 0:
+            # ok, if no data was ever written we fake it
+            # here and a zero today entry
+            today = datetime.datetime.now().strftime('%Y-%m-%d')
+            data['item-bytes-overtime'].append(list())
+            data['item-bytes-overtime'][0] = (today, 0, 0)
+    return data
+
 def data_write(path, data):
     d =  json.dumps(data, sort_keys=True, indent=4, separators=(',', ': '))
     with open(path, "w+") as f:
