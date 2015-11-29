@@ -276,35 +276,19 @@ btn:visited {background-color:#03A9F4}
 .test-success-indicator {
 	border-left-color: #4CAF50;
 	border-left-width: 4px;
-	cursor: pointer;
-	cursor: -webkit-zoom-in;
-	cursor:    -moz-zoom-in;
-	cursor:         zoom-in;
 }
 
 .test-failure-indicator {
 	border-left-color: #ff0000;
 	border-left-width: 4px;
-	cursor: pointer;
-	cursor: -webkit-zoom-in;
-	cursor:    -moz-zoom-in;
-	cursor:         zoom-in;
 }
 .test-nonapplicable-indicator {
 	border-left-color: #2196F3;
 	border-left-width: 4px;
-	cursor: pointer;
-	cursor: -webkit-zoom-in;
-	cursor:    -moz-zoom-in;
-	cursor:         zoom-in;
 }
 .test-nontest-indicator {
 	border-left-color: #A1887F;
 	border-left-width: 4px;
-	cursor: pointer;
-	cursor: -webkit-zoom-in;
-	cursor:    -moz-zoom-in;
-	cursor:         zoom-in;
 }
 
 /* fixed logo */
@@ -338,10 +322,6 @@ a.list-group-item:focus, a.list-group-item:hover, button.list-group-item:focus, 
     background-color: #f6f6f6;
 }
 
-.modal-lg {
-	    width: 95%;
-}
-
 .filter-display-box {
 	border-radius: 5px;
 	background-color: #EEEEEE;
@@ -355,4 +335,21 @@ a.list-group-item:focus, a.list-group-item:hover, button.list-group-item:focus, 
 /* progress bar do not look good in tables */
 .progress {
 	margin-bottom: 0px;
+}
+
+.markdown-env h1 {
+	font-size: 160%;
+}
+
+.markdown-env h2 {
+	font-size: 130%;
+}
+.markdown-env h3 {
+	font-size: 130%;
+}
+.markdown-env h4 {
+	font-size: 130%;
+}
+.markdown-env h5 {
+	font-size: 130%;
 }

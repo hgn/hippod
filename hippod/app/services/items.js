@@ -53,11 +53,11 @@ hippoD.factory('DBService', function($http) {
 					 headers: { "Content-Type": "application/json" }
 			   })
 				 .then(function (response) {
-					 //console.log(response.data.data);
 					 var achievements = response.data.data['object-achievements'];
 					 for (var i = 0; i < achievements.length; i++) {
-						 console.log(achievements[i]);
+						//console.log(achievements[i]);
 					 }
+					 response.data.data['__attachments'] = attachments;
 
 					 var item_data = response.data.data['object-item']['data'];
 					 var attachments = new Array();
@@ -71,6 +71,7 @@ hippoD.factory('DBService', function($http) {
 						 }
 					 }
 					response.data.data['__attachments'] = attachments;
+										 console.log(response.data);
 
 					 // fetch description
 					 for (var i = 0; i < item_data.length; i++) {

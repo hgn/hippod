@@ -147,8 +147,9 @@
 					<div ng-repeat="items in data | filter:filterSelection()">
 
 						<div ng-switch on='items["object-achievements"]["test-result"]'>
+
 							<div ng-switch-when="passed">
-								<div ng-click='open(items["object-item-id"])'>
+								<a ng-href="#/item/{{items['object-item-id']}}">
 
 									<div class="item-container">
 										<div class="status-area status-area-success"></div>
@@ -175,11 +176,11 @@
 											</div>
 										</div>
 									</div>
-								</div>
-
+								</a>
 							</div>
+
 							<div ng-switch-when="failed">
-								<div ng-click='open(items["object-item-id"])'>
+								<a ng-href="#/item/{{items['object-item-id']}}">
 
 									<div class="item-container">
 										<div class="status-area status-area-failure"></div>
@@ -206,12 +207,11 @@
 											</div>
 										</div>
 									</div>
-
-								</div>
+								</a>
 							</div>
-							<div ng-switch-when="nonapplicable">
-								<div ng-click='open(items["object-item-id"])'>
 
+							<div ng-switch-when="nonapplicable">
+								<a ng-href="#/item/{{items['object-item-id']}}">
 									<div class="item-container">
 										<div class="status-area status-area-nonapplicable"></div>
 										<div class="item-main">
@@ -237,11 +237,11 @@
 											</div>
 										</div>
 									</div>
-
-								</div>
+								</a>
 							</div>
+
 							<div ng-switch-default>
-								<div ng-click='open(items["object-item-id"])'>
+								<a ng-href="#/item/{{items['object-item-id']}}">
 
 									<div class="item-container">
 										<div class="status-area status-area-nontest"></div>
@@ -267,13 +267,12 @@
 												</div>
 											</div>
 										</div>
-									</div>
-
-								</div>
+									</a>
 							</div>
 						</div>
+					</div>
 
-				</div>
+			</div>
 
 
 
@@ -286,51 +285,58 @@
 
 						<div ng-switch on='items["object-achievements"]["test-result"]'>
 							<div ng-switch-when="passed">
-								<div ng-click='open(items["object-item-id"])' class="list-group-item test-success-indicator">
-									<p class="alignleft">{{ items["object-item"]['title'] }}</p>
-									<p class="alignright">{{ items["object-item-id"] }}</p>
-									<div style="clear: both;"></div>
-									<div class="header-seperator"></div>
-									<b>Last Submitter:</b> {{ items['object-achievements']['submitter'] }}<br>
-									<b>Date:</b> {{ items['object-achievements']['date-added'] }}<br>
-									<b>Result:</b> {{ items['object-achievements']['test-result'] }}<br>
-								</div>
+								<a ng-href="#/item/{{items['object-item-id']}}">
+									<div class="list-group-item test-success-indicator">
+										<p class="alignleft">{{ items["object-item"]['title'] }}</p>
+										<p class="alignright">{{ items["object-item-id"] }}</p>
+										<div style="clear: both;"></div>
+										<div class="header-seperator"></div>
+										<b>Last Submitter:</b> {{ items['object-achievements']['submitter'] }}<br>
+										<b>Date:</b> {{ items['object-achievements']['date-added'] }}<br>
+										<b>Result:</b> {{ items['object-achievements']['test-result'] }}<br>
+									</div>
+								</a>
 							</div>
 							<div ng-switch-when="failed">
-								<div ng-click='open(items["object-item-id"])' class="list-group-item test-failure-indicator">
-									<p class="alignleft">{{ items["object-item"]['title'] }}</p>
-									<p class="alignright">{{ items["object-item-id"] }}</p>
-									<div style="clear: both;"></div>
-									<div class="header-seperator"></div>
-									<b>Last Submitter:</b> {{ items['object-achievements']['submitter'] }}<br>
-									<b>Date:</b> {{ items['object-achievements']['date-added'] }}<br>
-									<b>Result:</b> {{ items['object-achievements']['test-result'] }}<br>
-								</div>
+								<a ng-href="#/item/{{items['object-item-id']}}">
+									<div class="list-group-item test-failure-indicator">
+										<p class="alignleft">{{ items["object-item"]['title'] }}</p>
+										<p class="alignright">{{ items["object-item-id"] }}</p>
+										<div style="clear: both;"></div>
+										<div class="header-seperator"></div>
+										<b>Last Submitter:</b> {{ items['object-achievements']['submitter'] }}<br>
+										<b>Date:</b> {{ items['object-achievements']['date-added'] }}<br>
+										<b>Result:</b> {{ items['object-achievements']['test-result'] }}<br>
+									</div>
+								</a>
 							</div>
 							<div ng-switch-when="nonapplicable">
-								<div ng-click='open(items["object-item-id"])' class="list-group-item test-nonapplicable-indicator">
-									<p class="alignleft">{{ items["object-item"]['title'] }}</p>
-									<p class="alignright">{{ items["object-item-id"] }}</p>
-									<div style="clear: both;"></div>
-									<div class="header-seperator"></div>
-									<b>Last Submitter:</b> {{ items['object-achievements']['submitter'] }}<br>
-									<b>Date:</b> {{ items['object-achievements']['date-added'] }}<br>
-									<b>Result:</b> {{ items['object-achievements']['test-result'] }}<br>
-								</div>
+								<a ng-href="#/item/{{items['object-item-id']}}">
+									<div class="list-group-item test-nonapplicable-indicator">
+										<p class="alignleft">{{ items["object-item"]['title'] }}</p>
+										<p class="alignright">{{ items["object-item-id"] }}</p>
+										<div style="clear: both;"></div>
+										<div class="header-seperator"></div>
+										<b>Last Submitter:</b> {{ items['object-achievements']['submitter'] }}<br>
+										<b>Date:</b> {{ items['object-achievements']['date-added'] }}<br>
+										<b>Result:</b> {{ items['object-achievements']['test-result'] }}<br>
+									</div>
+								</a>
 							</div>
 							<div ng-switch-default>
-								<div ng-click='open(items["object-item-id"])' class="list-group-item test-nontest-indicator">
-									<p class="alignleft">{{ items["object-item"]['title'] }}</p>
-									<p class="alignright">{{ items["object-item-id"] }}</p>
-									<div style="clear: both;"></div>
-									<div class="header-seperator"></div>
-									<b>Last Submitter:</b> {{ items['object-achievements']['submitter'] }}<br>
-									<b>Date:</b> {{ items['object-achievements']['date-added'] }}<br>
-									<b>Result:</b> {{ items['object-achievements']['test-result'] }}<br>
-								</div>
+								<a ng-href="#/item/{{items['object-item-id']}}">
+									<div class="list-group-item test-nontest-indicator">
+										<p class="alignleft">{{ items["object-item"]['title'] }}</p>
+										<p class="alignright">{{ items["object-item-id"] }}</p>
+										<div style="clear: both;"></div>
+										<div class="header-seperator"></div>
+										<b>Last Submitter:</b> {{ items['object-achievements']['submitter'] }}<br>
+										<b>Date:</b> {{ items['object-achievements']['date-added'] }}<br>
+										<b>Result:</b> {{ items['object-achievements']['test-result'] }}<br>
+									</div>
+								</a>
 							</div>
 						</div>
-
 
 					</div>
 				</div>

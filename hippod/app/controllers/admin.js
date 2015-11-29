@@ -3,6 +3,7 @@
 hippoD.controller("AdminCtrl", function ($scope, ResourcesService) {
 
 	ResourcesService.getRessource().then(function(res) {
+		$scope.mimetype_compression = res['data']['data']['__compression'];
 		var data_array = res['data']['data']['item-bytes-overtime']
 		var bytes_actual = data_array[data_array.length - 1][1]
 		$scope.overall_data_byte_human = prettyNumber(bytes_actual, 'iec');

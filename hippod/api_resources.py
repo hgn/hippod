@@ -7,7 +7,7 @@ import datetime
 import time
 import sys
 
-import hippod.object_hasher
+import hippod.hasher
 import hippod.api_comm
 
 from hippod.api_err_obj import *
@@ -19,17 +19,7 @@ from flask import request
 
 
 def get_statistics():
-    path = app.config['DB_STATISTICS_FILEPATH']
-    with open(path) as data_file:
-        data = json.load(data_file)
-        if not len(data['item-bytes-overtime']) > 0:
-            # ok, if no data was ever written we fake it
-            # here and a zero today entry
-            today = datetime.datetime.now().strftime('%Y-%m-%d')
-            data['item-bytes-overtime'].append(list())
-            data['item-bytes-overtime'][0] = (today, 0, 0)
-    return data
-
+    return hippod.statistic.get()
 
 @app.route('/api/v1.0/resources', methods=['GET'])
 def get_resources():
@@ -39,8 +29,8 @@ def get_resources():
         end = time.clock()
     except ApiError as e:
         return e.transform()
-    except Exception as e:
-        return ApiError(str(e), 200).transform()
+    #except Exception as e:
+    #    return ApiError(str(e), 200).transform()
 
     o = hippod.api_comm.Dict3000()
     o['data'] = data

@@ -17,6 +17,19 @@ hippoD.config(function($stateProvider, $urlRouterProvider) {
             controller: 'ItemsCtrl'
         })
 
+        .state('achievement', {
+					url: '/item/:id/:achievement_id',
+            templateUrl: 'templates/achievement.html',
+            controller: 'AchievementCtrl'
+        })
+
+        .state('item', {
+					url: '/item/:id',
+            templateUrl: 'templates/item.html',
+            controller: 'ItemCtrl'
+        })
+
+
         .state('admin', {
             url: '/admin',
             templateUrl: 'templates/admin.html',
