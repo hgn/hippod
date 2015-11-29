@@ -1,0 +1,98 @@
+<div class="mainbar">Item
+</div>
+
+<div class="main-content-container">
+
+	<div class="row">
+		<div class="col-md-6">
+			<h3 class="modal-title">{{ data['object-item']['title'] }}</h3>
+			<b>{{ data['object-item-id'] }}</b>
+		</div>
+		<div class="col-md-6">
+			<span class="label label-primary">Maturity: Testing</span>
+			<div class="clearfix"></div>
+			<span class="label label-info">Category: team:orange / topic:ip / subtopic:route-cache</span>
+			<div class="clearfix"></div>
+			<span class="label label-warning">Last Submitter: Charles Darwin</span>
+			<div class="clearfix"></div>
+		</div>
+	</div> <!-- row -->
+
+  <uib-tabset>
+    <uib-tab heading="Description">
+			<br>
+			<div class="row">
+				<div class="col-md-8">
+					<div class="markdown-env">
+						<div ng-bind-html="data['__description'] | toHtmlSave : data['__attachments']"></div>
+					</div>
+					<hr >
+					<h2>Attachments:</h2>
+					<br>
+					<ul class="list-group">
+						<div ng-repeat="attachments in data['__attachments']">
+							<li class="list-group-item clearfix">
+								<span class="glyphicon glyphicon-file"></span>
+								{{ attachments['name'] }} ({{ attachments['size-real'] }} byte)
+								<span class="pull-right">
+									<a ng-href="api/v1/data/{{ attachments['data-id'] }}" class="btn btn-xs" role="button">
+										<span class="glyphicon glyphicon-download"></span>
+									</a>
+								</span>
+							</li>
+							</a>
+						</div>
+					</ul>
+				</div> <!-- col8 -->
+				<div class="col-md-4">
+
+					<div class="list-group">
+						<div class="list-group-item">
+							<h5 class="list-group-item-heading">Responsible: Albert Einstein</h5>
+						</div>
+					</div>
+
+					<div class="list-group">
+						<div class="list-group-item">
+							<h5 class="list-group-item-heading">Tags: TCP, IP, IGMP</h5>
+						</div>
+					</div>
+
+					<div class="list-group">
+						<div class="list-group-item">
+							<h5 class="list-group-item-heading">References: doors:329329, doors:23832823</h5>
+						</div>
+					</div>
+
+					<div class="list-group">
+						<div class="list-group-item">
+							<h5 class="list-group-item-heading">Added: 2015-11-18T22:34:27.560953</h5>
+						</div>
+					</div>
+
+				</div> <!-- col-md-4 -->
+			</div> <!-- row -->
+
+
+    </uib-tab>
+    <uib-tab heading="Achievements">
+			<ul class="list-group">
+				<div ng-repeat="achievement in data['object-achievements']">
+					<a ng-href="#/item/{{data['object-item-id']}}/{{achievement.id}}" class="list-group-item">
+						 <b>Result:</b> {{achievement['result']}}<br >
+						 <b>Id:</b> {{achievement['id']}}<br >
+						 <b>Varity Id:</b> {{achievement['variety-id']}}<br >
+						 <b>Submitter:</b> {{achievement['submitter']}}<br>
+						 <b>Test Date:</b> {{achievement['test-date']}}<br>
+						 <b>Test Uploaded:</b> {{achievement['date-added']}}<br>
+					 </a>
+				</div>
+			</ul>
+    </uib-tab>
+  </uib-tabset>
+
+
+
+
+</div> <!-- main-content-container -->
+

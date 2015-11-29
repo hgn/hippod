@@ -357,3 +357,20 @@ a.list-group-item:focus, a.list-group-item:hover, button.list-group-item:focus, 
 .progress {
 	margin-bottom: 0px;
 }
+
+.markdown-env h1 {
+	font-size: 160%;
+}
+
+.markdown-env h2 {
+	font-size: 130%;
+}
+.markdown-env h3 {
+	font-size: 130%;
+}
+.markdown-env h4 {
+	font-size: 130%;
+}
+.markdown-env h5 {
+	font-size: 130%;
+}
