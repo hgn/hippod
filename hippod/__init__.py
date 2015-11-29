@@ -5,6 +5,7 @@ import os
 import sys
 import datetime
 import json
+import random
 
 
 def create_initial_statistics_db(path):
@@ -21,6 +22,12 @@ def create_user_statistics_db(path):
     sys.stderr.write("create user db: {}\n".format(path))
     d = dict()
     d['users'] = list()
+    entry = dict()
+    entry['abbr'] = "john_doe"
+    entry['full'] = "John Doe"
+    entry['email'] = "john@example.coa"
+    entry['color'] = '#{:02X}'.format(random.randint(0, 0xFFFFFF))
+    d['users'].append(entry)
     d_jsonfied =  json.dumps(d, sort_keys=True,indent=4, separators=(',', ': '))
     with open(path,"w+") as f:
         f.write(d_jsonfied)
