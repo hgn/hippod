@@ -22,6 +22,7 @@ from flask import request
 def get_user_data():
     return hippod.users.get()
 
+
 @app.route('/api/v1/users', methods=['GET'])
 def get_users():
     try:

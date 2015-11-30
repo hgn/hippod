@@ -147,9 +147,9 @@ after maintainable products.
         achievement["test-date"] = datetime.datetime.now().isoformat('T')
         achievement["result"] = random_result()
         if random.randint(0, 3) == 0:
-            variety = list()
-            variety.append(['os-version', 'rhel23'])
-            variety.append(['platform', 'xeon-foo'])
+            variety = dict()
+            variety['os-version'] = 'rhel23'
+            variety['platform']   = 'xeon-foo'
             achievement["variety"] = variety
 
         data["achievements"] = list()

@@ -94,12 +94,15 @@ def check_xobject(o):
         return True
 
 
-def __calc_variety_id(variety_list):
-    if type(variety_list) is not list:
-        msg = "variety data currupt - must be list: {}".format(str(o))
+def __calc_variety_id(variety_dict):
+    if type(variety_dict) is not dict:
+        msg = "variety data currupt - must be dict: {}".format(str(o))
         raise ApiError(msg, 404)
     buf = ''
-    for entry_array in variety_list:
+    for entry_array in sorted(variety_dict.items()):
+        if type(entry_array[0]) is not str or type(entry_array[1]) is not str:
+            msg = "variety data currupt - must be dict: {}".format(str(o))
+            raise ApiError(msg, 404)
         buf += "{}{}".format(entry_array[0], entry_array[1])
     return hashlib.sha1(buf.encode('utf-8')).hexdigest()
 
