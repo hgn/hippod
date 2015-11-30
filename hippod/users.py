@@ -26,6 +26,6 @@ def x_ray_safety_check(data):
 
 
 def get(limit=None):
-    path = app.config['DB_USER_FILEPATH']
+    path = app.config['CONF_USER_FILEPATH']
     return x_ray_safety_check(load_data(path))
 

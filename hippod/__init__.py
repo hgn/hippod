@@ -8,7 +8,7 @@ import json
 import random
 
 
-def create_initial_statistics_db(path):
+def db_create_initial_statistics(path):
     sys.stderr.write("create statistics db: {}\n".format(path))
     today = datetime.datetime.now().strftime('%Y-%m-%d')
     d = dict()
@@ -18,7 +18,7 @@ def create_initial_statistics_db(path):
     with open(path,"w+") as f:
         f.write(d_jsonfied)
 
-def create_user_statistics_db(path):
+def conf_create_user_statistics(path):
     sys.stderr.write("create user db: {}\n".format(path))
     d = dict()
     d['users'] = list()
@@ -49,12 +49,16 @@ def check_db_environmet(path):
     obj_path = os.path.join(path, 'statistics.db')
     app.config['DB_STATISTICS_FILEPATH'] = obj_path
     if not os.path.isfile(obj_path):
-        create_initial_statistics_db(obj_path)
+        db_create_initial_statistics(obj_path)
 
-    obj_path = os.path.join(path, 'user.db')
-    app.config['DB_USER_FILEPATH'] = obj_path
+
+def check_conf_environmet(path):
+    if not os.path.isdir(path):
+        os.makedirs(path)
+    obj_path = os.path.join(path, 'user.conf')
+    app.config['CONF_USER_FILEPATH'] = obj_path
     if not os.path.isfile(obj_path):
-        create_user_statistics_db(obj_path)
+        conf_create_user_statistics(obj_path)
 
 
 def set_config_defaults():
@@ -77,9 +81,13 @@ formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(messag
 file_handler.setFormatter(formatter)
 app.logger.addHandler(file_handler)
 
-db_path_root = os.path.join(app.instance_path, app.config['RELATIVE_DB_PATH'])
+db_path_root = os.path.join(app.instance_path, "db")
 app.config['DB_ROOT_PATH'] = db_path_root
 check_db_environmet(db_path_root)
+
+conf_path_root = os.path.join(app.instance_path, "conf")
+app.config['CONF_ROOT_PATH'] = conf_path_root
+check_conf_environmet(conf_path_root)
 
 # The views modules that contain the application's routes are imported here
 # Importing views modules MUST BE in the end of the file to avoid problems
