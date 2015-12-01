@@ -22,14 +22,13 @@ def db_create_initial_statistics(path):
 
 def conf_create_user_statistics(path):
     sys.stderr.write("create user db: {}\n".format(path))
-    d = dict()
-    d['users'] = list()
+    d = list()
     entry = dict()
-    entry['abbr'] = "john_doe"
-    entry['full'] = "John Doe"
-    entry['email'] = "john@example.coa"
-    entry['color'] = '#{:02X}'.format(random.randint(0, 0xFFFFFF))
-    d['users'].append(entry)
+    entry['username'] = "john_doe"
+    entry['fullname'] = "John Doe"
+    entry['email']    = "john@example.coa"
+    entry['color']    = '#{:02X}'.format(random.randint(0, 0xFFFFFF))
+    d.append(entry)
     d_jsonfied =  json.dumps(d, sort_keys=True,indent=4, separators=(',', ': '))
     with open(path,"w+") as f:
         f.write(d_jsonfied)

@@ -19,23 +19,27 @@ from flask import jsonify
 from flask import request
 
 
-def get_user_data():
-    return hippod.users.get()
+def get_user_data(req_obj):
+    if not 'filter' in req_obj:
+        msg = "user data MUST contain a filter"
+        raise ApiError(msg, 400)
+    user_filter = req_obj['filter']
+    return hippod.users.get(user_filter=user_filter)
 
 
-@app.route('/api/v1/users', methods=['GET'])
+@app.route('/api/v1/users', methods=['GET', 'POST'])
 def get_users():
     try:
         start = time.clock()
-        data = get_user_data()
+        req_obj = request.get_json(force=False)
+        data = get_user_data(req_obj)
         end = time.clock()
     except ApiError as e:
         return e.transform()
-    #except Exception as e:
-    #    return ApiError(str(e), 200).transform()
 
     o = hippod.api_comm.Dict3000()
     o['data'] = data
+    o['processing-time'] = "{0:.4f}".format(end - start)
     o.http_code(202)
     return o.transform()
 

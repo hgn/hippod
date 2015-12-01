@@ -13,19 +13,37 @@ def load_data(path):
         return json.load(data_file)
 
 
-def x_ray_safety_check(data):
-    """ in user.db we store sensitive data, make sure
-        these data is never ever leave the system """
+def filter_data(data, user_filter):
+    if type(data) != list:
+        # empty list
+        return ret
+
     ret = list()
-    for item in data['users']:
+    for item in data:
+        skip_entry = False
+        if user_filter:
+            for key, value in user_filter.items():
+                if key not in item:
+                    skip_entry = True
+                    break
+                if key in item and item[key] != value:
+                    skip_entry = True
+                    break
+        if skip_entry:
+            continue
+
         entry = dict()
-        for i in ('abbr', 'color', 'email', 'full'):
-            entry[i] = item[i]
+        # probably sensitive data, we opt-in here explicetly
+        for i in ('username', 'color', 'email', 'fullname'):
+            if i in item:
+                entry[i] = item[i]
         ret.append(entry)
     return ret
 
 
-def get(limit=None):
+
+def get(user_filter=None):
     path = app.config['CONF_USER_FILEPATH']
-    return x_ray_safety_check(load_data(path))
+    data = load_data(path)
+    return filter_data(data, user_filter)
 
