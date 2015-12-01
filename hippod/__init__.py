@@ -7,6 +7,7 @@ import datetime
 import json
 import random
 
+APP_VERSION = "001"
 
 def db_create_initial_statistics(path):
     sys.stderr.write("create statistics db: {}\n".format(path))
@@ -67,6 +68,7 @@ def set_config_defaults():
 
 app = Flask(__name__, static_folder='app', static_url_path='')
 
+app.config['VERSION'] = APP_VERSION
 set_config_defaults()
 app.config.from_pyfile('testcolld.cfg', silent=False)
 app.config.from_envvar('APP_CONFIG_FILE', silent=True)
