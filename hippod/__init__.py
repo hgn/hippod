@@ -19,6 +19,7 @@ def db_create_initial_statistics(path):
     with open(path,"w+") as f:
         f.write(d_jsonfied)
 
+
 def conf_create_user_statistics(path):
     sys.stderr.write("create user db: {}\n".format(path))
     d = dict()
@@ -102,3 +103,4 @@ import hippod.api_object_get_full
 import hippod.api_resources
 import hippod.api_data_get
 import hippod.api_users
+import hippod.api_ping
