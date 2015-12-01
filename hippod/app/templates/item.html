@@ -78,16 +78,36 @@
     <uib-tab heading="Achievements">
 			<ul class="list-group">
 				<div ng-repeat="achievement in data['object-achievements']">
-					<a ng-href="#/item/{{data['object-item-id']}}/{{achievement.id}}" class="list-group-item">
-						 <b>Result:</b> {{achievement['result']}}<br >
-						 <b>Id:</b> {{achievement['id']}}<br >
-						 <b>Varity Id:</b> {{achievement['variety-id']}}<br >
-						 <b>Submitter:</b> {{achievement['submitter']}}<br>
-						 <b>Test Date:</b> {{achievement['test-date']}}<br>
-						 <b>Test Uploaded:</b> {{achievement['date-added']}}<br>
-					 </a>
+
+					<div class="variety-container">
+						<div class="variety-entry">
+							<div class="variety-header-box">
+								<div class="variety-header-title">
+									Variety ID: {{ achievement['variety-id'] }}
+								</div>
+								Key1: Value1<br>
+								Key2: Value2<br>
+							</div>
+
+							<div class="achievement-box">
+								ID: {{ achievement['id'] }}<br>
+								Status: {{ achievement['result'] }}<br>
+								Anchor: {{achievement['anchor'] }}<br>
+								Submitter: {{ achievement['submitter'] }} <br>
+								Date: {{ achievement['test-date'] }} <br>
+								Date Submitted: {{ achievement['date-added'] }}<br>
+							</div>
+
+
+						</div>
+					</div> <!-- variety container -->
+
 				</div>
 			</ul>
+    </uib-tab>
+
+		<uib-tab heading="Settings">
+			maturity level
     </uib-tab>
   </uib-tabset>
 

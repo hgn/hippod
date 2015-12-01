@@ -353,3 +353,48 @@ a.list-group-item:focus, a.list-group-item:hover, button.list-group-item:focus, 
 .markdown-env h5 {
 	font-size: 130%;
 }
+
+/* achievement box at item page */
+.variety-container {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    align-content: flex-start;
+    align-items: flex-start;
+    overflow: auto;
+    margin-bottom: 20px;
+}
+
+
+.variety-container > .variety-entry {
+  flex-grow: 1;
+  min-width: 150px;
+  max-width: 500px;
+  margin: 5px;
+  background-color: #F8FCFF;
+}
+
+.variety-header-box {
+    background-color: #E3F2FD;
+    text-align: center;
+    border-radius: 4px;
+    font-size: 80%;
+    border: thin solid #C0E4FF;
+    margin-bottom: 20px
+}
+
+.variety-header-title {
+    border-bottom: thin dotted #C0E4FF;
+    font-size: 110%;
+}
+
+
+.achievement-box {
+    background-color: #E3F2FD;
+    border-radius: 2px;
+    font-size: 80%;
+    border: thin solid #C0E4FF;
+    margin: 10px
+}
+
