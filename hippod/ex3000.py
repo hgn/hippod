@@ -4,12 +4,12 @@ import hippod.error_object
 
 from flask import jsonify
 
-class Dict3000(collections.MutableMapping):
+class Ex3000(collections.MutableMapping):
 
     def __init__(self, *args, **kwargs):
         self.store = dict()
         self.store['status'] = 'ok'
-        self.store['message'] = 'shizzle dizzle'
+        #self.store['message'] = 'shizzle dizzle'
         self._http_code = 200
         self.update(dict(*args, **kwargs))
 

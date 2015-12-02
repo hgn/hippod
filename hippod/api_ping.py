@@ -8,7 +8,7 @@ import time
 import sys
 
 import hippod.hasher
-import hippod.api_comm
+import hippod.ex3000
 import hippod.users
 
 from hippod.error_object import *
@@ -24,7 +24,7 @@ def handle_ping():
     data = dict()
     data['version'] = app.config['VERSION']
 
-    o = hippod.api_comm.Dict3000()
+    o = hippod.ex3000.Ex3000()
     o['data'] = data
     o.http_code(202)
     return o.transform()

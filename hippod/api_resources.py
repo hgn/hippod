@@ -8,7 +8,7 @@ import time
 import sys
 
 import hippod.hasher
-import hippod.api_comm
+import hippod.ex3000
 
 from hippod.error_object import *
 
@@ -32,7 +32,7 @@ def get_resources():
     #except Exception as e:
     #    return ApiError(str(e), 200).transform()
 
-    o = hippod.api_comm.Dict3000()
+    o = hippod.ex3000.Ex3000()
     o['data'] = data
     o.http_code(202)
     return o.transform()

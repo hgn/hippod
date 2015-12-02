@@ -10,7 +10,7 @@ import zlib
 import sys
 
 import hippod.hasher
-import hippod.api_comm
+import hippod.ex3000
 import hippod.api_shared
 
 from hippod.error_object import *
@@ -119,7 +119,7 @@ def object_get_id(sha_sum):
     #except Exception as e:
     #    return ApiError(str(e), 500).transform()
 
-    o = hippod.api_comm.Dict3000()
+    o = hippod.ex3000.Ex3000()
     o['data'] = data
     o['processing-time'] = "{0:.4f}".format(end - start)
     o.http_code(200)

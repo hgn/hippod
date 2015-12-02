@@ -7,7 +7,6 @@ import zlib
 import sys
 
 import hippod.hasher
-import hippod.api_comm
 import hippod.api_shared
 
 from hippod.error_object import *

@@ -10,7 +10,7 @@ import flask
 
 import hippod
 import hippod.hasher
-import hippod.api_comm
+import hippod.ex3000
 import hippod.api_shared
 import hippod.error_object
 import hippod.mime_data_db

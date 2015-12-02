@@ -2,7 +2,7 @@ import collections
 
 from flask import jsonify
 
-import hippod.api_comm
+import hippod.ex3000
 
 # HTTP REST (Error) Codes
 #
@@ -15,7 +15,7 @@ import hippod.api_comm
 class ApiError(Exception):
     def __init__(self, message, http_code):
         super(Exception, self).__init__(message)
-        self.dict3000 = hippod.api_comm.Dict3000()
+        self.dict3000 = hippod.ex3000.Ex3000()
         self.dict3000.http_code(http_code)
         self.dict3000['status'] = 'fail'
         self.dict3000['message'] = message
