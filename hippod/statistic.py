@@ -8,7 +8,6 @@ import os
 from hippod import app
 
 def dir_size(path):
-    sys.stderr.write("path {}\n".format(path))
     total_size = os.path.getsize(path)
     for item in os.listdir(path):
         itempath = os.path.join(path, item)
