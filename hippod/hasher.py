@@ -10,7 +10,7 @@ def __sum_list(o):
         buf = ''
         if type(o) is not list:
                 msg = "object data currupt - must be list: {}".format(str(o))
-                raise ApiError(msg, 404)
+                raise ApiError(msg)
         
         # a list can be - surprise - a list of dicts, sorting dict lists
         # is not that easy. Sorting by memory address is jabberwocky and
@@ -30,7 +30,7 @@ def __sum_dict(o):
         buf = ''
         if type(o) is not dict:
                 msg = "object data currupt - must be dict: {}".format(str(o))
-                raise ApiError(msg, 404)
+                raise ApiError(msg)
 
         od = collections.OrderedDict(sorted(o.items()))
         for key in od:
@@ -48,14 +48,14 @@ def check_sum_object_issue(o):
         buf = ''
         if type(o) is not dict:
             msg = "object data currupt - must be dict: {}".format(str(o))
-            raise ApiError(msg, 404)
+            raise ApiError(msg)
         # check if required attributes are all available
         if "title" not in o:
             msg = "object data currupt - title missing: {}".format(str(o))
-            raise ApiError(msg, 404)
+            raise ApiError(msg)
         if "version" not in o:
             msg = "object data currupt - version missing: {}".format(str(o))
-            raise ApiError(msg, 404)
+            raise ApiError(msg)
 
         # Use a sorted dictionary
         buf = __sum_dict(o)
@@ -66,7 +66,7 @@ def check_sum_attachment(o):
         buf = ''
         if type(o) is not dict:
             msg = "attachment currupt - must be dict: {}".format(str(o))
-            raise ApiError(msg, 404)
+            raise ApiError(msg)
 
         buf = __sum_dict(o)
         return hashlib.sha1(buf.encode('utf-8')).hexdigest()
@@ -97,12 +97,12 @@ def check_xobject(o):
 def __calc_variety_id(variety_dict):
     if type(variety_dict) is not dict:
         msg = "variety data currupt - must be dict: {}".format(str(o))
-        raise ApiError(msg, 404)
+        raise ApiError(msg)
     buf = ''
     for entry_array in sorted(variety_dict.items()):
         if type(entry_array[0]) is not str or type(entry_array[1]) is not str:
             msg = "variety data currupt - must be dict: {}".format(str(o))
-            raise ApiError(msg, 404)
+            raise ApiError(msg)
         buf += "{}{}".format(entry_array[0], entry_array[1])
     return hashlib.sha1(buf.encode('utf-8')).hexdigest()
 

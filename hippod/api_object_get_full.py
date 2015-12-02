@@ -103,7 +103,7 @@ def object_get_int(sha_sum):
     (ret, data) = hippod.api_shared.read_cont_obj_by_id(sha_sum)
     if not ret:
         msg = "cannot read object by id: {}".format(sha_sum)
-        raise ApiError(msg, 500)
+        raise ApiError(msg)
     return container_obj_to_ret_obj(sha_sum, data)
     
 
@@ -117,7 +117,7 @@ def object_get_id(sha_sum):
     except ApiError as e:
         return e.transform()
     #except Exception as e:
-    #    return ApiError(str(e), 500).transform()
+    #    return ApiError(str(e)).transform()
 
     o = hippod.ex3000.Ex3000()
     o['data'] = data

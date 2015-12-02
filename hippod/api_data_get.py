@@ -20,7 +20,7 @@ import hippod.mime_renderer
 def object_data_get_int(sha_sum, req_data):
     if not hippod.mime_data_db.obj_available(sha_sum):
         msg = "Data ({}) not available".format(sha_sum)
-        raise hippod.error_object.ApiError(msg, 400)
+        raise hippod.error_object.ApiError(msg)
     attr_obj = hippod.mime_data_db.get_attr_obj(sha_sum)
     decompressed = hippod.mime_data_db.is_attr_compressed(attr_obj)
     data = hippod.mime_data_db.get_data(sha_sum, decompress=decompressed, encode_base64=False)

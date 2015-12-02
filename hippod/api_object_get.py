@@ -41,17 +41,17 @@ def check_request_data(xobj):
         limit = int(xobj['limit'])
         if limit < 0 or limit > 1000000:
             msg = "limit must be between 0 and 1000000"
-            raise ApiError(msg, 400)
+            raise ApiError(msg)
     if 'filter-by-maturity-level' in xobj:
         maturity_level = xobj['filter-by-maturity-level']
         if maturity_level not in ("all", "testing", "stable", "outdated"):
             msg = "maturity_level must be all, testing, stable or outdated "
-            raise ApiError(msg, 400)
+            raise ApiError(msg)
     if 'filter-by-result' in xobj:
         filter_result = xobj['filter-by-result']
         if filter_result not in ("all", "passed", "failed", "inapplicable"):
             msg = "maturity_level must be all, passed, failed or inapplicable "
-            raise ApiError(msg, 400)
+            raise ApiError(msg)
 
     # fine, arguments are fime
     request_data = dict()
@@ -153,7 +153,7 @@ def object_data_by_id(request_data, sha_sum):
     (ret, data) = hippod.api_shared.read_cont_obj_by_id(sha_sum)
     if not ret:
         msg = "cannot read object by id: {}".format(sha_sum)
-        raise ApiError(msg, 500)
+        raise ApiError(msg)
     return container_obj_to_ret_obj(request_data, sha_sum, data)
 
 
@@ -186,7 +186,7 @@ def object_get_int(xobj):
         return object_get_by_sub_data_rev(request_data, reverse=False)
     else:
         msg = "ordering not supported"
-        raise ApiError(msg, 400)
+        raise ApiError(msg)
     
 
 

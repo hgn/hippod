@@ -22,7 +22,7 @@ from flask import request
 def get_user_data(req_obj):
     if not 'filter' in req_obj:
         msg = "user data MUST contain a filter"
-        raise ApiError(msg, 400)
+        raise ApiError(msg)
     user_filter = req_obj['filter']
     return hippod.users.get(user_filter=user_filter)
 
@@ -40,6 +40,5 @@ def get_users():
     o = hippod.ex3000.Dict3000()
     o['data'] = data
     o['processing-time'] = "{0:.4f}".format(end - start)
-    o.http_code(202)
     return o.transform()
 

@@ -41,7 +41,7 @@ def is_attr_compressed(obj):
 def get_data(sha_sum, decompress=None, encode_base64=False):
     if decompress == None:
         msg = "decompres True or False required"
-        raise ApiError(msg, 404)
+        raise ApiError(msg)
 
     path = app.config['DB_DATA_PATH']
     obj_path  = os.path.join(path, sha_sum, "blob.bin")
@@ -51,7 +51,7 @@ def get_data(sha_sum, decompress=None, encode_base64=False):
             data = zlib.decompress(data)
         return data
     msg = "failed to open {}".format(obj_path)
-    raise ApiError(msg, 404)
+    raise ApiError(msg)
 
 
 
@@ -141,14 +141,14 @@ def save_object_item_data(data):
     # - data
     if not 'mime-type' in data:
         msg = "mime type always required for data: {}".format(str(data))
-        raise ApiError(msg, 404)
+        raise ApiError(msg)
     if 'type' in data and data['type'] != 'description':
         if not 'name' in data:
             msg = "for data a name is required: {}".format(str(data))
-            raise ApiError(msg, 400)
+            raise ApiError(msg)
     if not 'data' in data:
         msg = "a data section is required at least: {}".format(str(data))
-        raise ApiError(msg, 400)
+        raise ApiError(msg)
 
 
     # ok, data stuff

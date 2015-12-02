@@ -10,10 +10,13 @@ import hippod.ex3000
 # 400 - Missing parameter, Invalid format, Invalid param
 # 404 - object not found (is object-id correct?)
 # 500 - internal error
+#
+# See
+# http://www.restapitutorial.com/httpstatuscodes.html
 
 
 class ApiError(Exception):
-    def __init__(self, message, http_code):
+    def __init__(self, message, http_code=400):
         super(Exception, self).__init__(message)
         self.dict3000 = hippod.ex3000.Ex3000()
         self.dict3000.http_code(http_code)

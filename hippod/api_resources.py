@@ -34,6 +34,5 @@ def get_resources():
 
     o = hippod.ex3000.Ex3000()
     o['data'] = data
-    o.http_code(202)
     return o.transform()
 

@@ -83,7 +83,7 @@ def save_new_object_container(sha_sum, object_item, submitter):
     file_path = os.path.join(obj_root_full_path, 'container.db')
     if os.path.isfile(file_path):
         msg = "internal error: {}".format(inspect.currentframe())
-        raise ApiError(msg, 404)
+        raise ApiError(msg)
     else:
         cd = create_container_data_merge_issue_new(sha_sum, object_item, submitter)
         fd = open(file_path, 'w')
@@ -151,21 +151,21 @@ def validate_date(formated_data):
     try:
         datetime.datetime.strptime(formated_data, "%Y-%m-%dT%H:%M:%S.%f")
     except ValueError as e:
-        return ApiError("date is not ISO8601 formatted", 400).transform()
+        return ApiError("date is not ISO8601 formatted").transform()
 
 
 def validate_achievement(achievement):
     if not "result" in achievement:
         msg = "achievements has no result!"
-        raise ApiError(msg, 400)
+        raise ApiError(msg)
 
     if achievement['result'] not in ['passed', 'failed', 'nonapplicable']:
         msg = "achievements result MUST be passed, failed, nonapplicable"
-        raise ApiError(msg, 400)
+        raise ApiError(msg)
 
     if not "test-date" in achievement:
         msg = "achievements has no test-date!"
-        raise ApiError(msg, 400)
+        raise ApiError(msg)
 
     validate_date(achievement['test-date'])
 
@@ -179,12 +179,12 @@ def update_attachment_achievement(sha_sum, xobj):
     (ret, data) = hippod.api_shared.read_cont_obj_by_id(sha_sum)
     if not ret:
         msg = "cannot read object although it is an update!?"
-        raise ApiError(msg, 500)
+        raise ApiError(msg)
 
     if 'attachment' in xobj:
         if type(xobj['attachment']) is not dict:
                 msg = "attachment data MUST be a dict - but isn't"
-                raise ApiError(msg, 400)
+                raise ApiError(msg)
 
         current_attachments = data['attachments']
         current_attachments_no = len(current_attachments)
@@ -216,7 +216,7 @@ def update_attachment_achievement(sha_sum, xobj):
     if 'achievements' in xobj:
         if type(xobj['achievements']) is not list:
                 msg = "achievements data MUST be a list - but isn't"
-                raise ApiError(msg, 400)
+                raise ApiError(msg)
         current_achievements = data["achievements"]
         current_achievements_no = len(current_achievements)
         # add new achievements in same order
@@ -275,12 +275,12 @@ def object_index_initial_add(sha_sum, xobj):
 def try_adding_xobject(xobj):
     if not 'submitter' in xobj:
         msg = "No submitter in xobject given!"
-        raise ApiError(msg, 400)
+        raise ApiError(msg)
 
     if not 'object-item' in xobj and not 'object-item-id' in xobj:
         msg = "object data corrupt - no object-item" \
               " or object-item-id given"
-        raise ApiError(msg, 400)
+        raise ApiError(msg)
 
     sha_sum=""
     if 'object-item' in xobj:
@@ -292,12 +292,12 @@ def try_adding_xobject(xobj):
             if sha_sum != xobj['object-item-id']:
                 msg = "object data corrupt - object item " \
                       "sha_sum missmatch to object-item-id"
-                raise ApiError(msg, 400)
+                raise ApiError(msg)
     elif 'object-item-id' in xobj:
         sha_sum = xobj['object-item-id']
     else:
         msg = "Need at least a Full Object Item or Object Item ID"
-        raise ApiError(msg, 400)
+        raise ApiError(msg)
 
     # FIXME: in the remaining paragraph there is a race condition
     # leads to data corruption. Problem is that data is writen
@@ -321,7 +321,7 @@ def check_request_size_limit(request):
     if cl is not None and cl > app.config['MAX_REQUEST_SIZE']:
         msg = "Request data size {} > limit ({})".format(
                 cl, app.config['MAX_REQUEST_SIZE'])
-        raise ApiError(msg, 400)
+        raise ApiError(msg)
 
 
 
@@ -337,7 +337,7 @@ def object_post():
     except ApiError as e:
         return e.transform()
     #except Exception as e:
-    #    return ApiError(str(e), 500).transform()
+    #    return ApiError(str(e)).transform()
 
     o = hippod.ex3000.Ex3000()
     o['data'] = data
