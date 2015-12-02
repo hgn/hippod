@@ -10,7 +10,7 @@ import sys
 import hippod.hasher
 import hippod.api_comm
 
-from hippod.api_err_obj import *
+from hippod.error_object import *
 
 from hippod import app
 

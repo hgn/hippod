@@ -1,6 +1,6 @@
 import collections
 
-import hippod.api_err_obj
+import hippod.error_object
 
 from flask import jsonify
 
@@ -37,7 +37,7 @@ class Dict3000(collections.MutableMapping):
     def http_code(self, code=None):
         if code != None:
             if code not in [ 200, 202, 400, 404, 500 ]:
-                raise hippod.api_err_obj.ApiError("internal error, http code not allowed: {}".format(code), 500)
+                raise hippod.error_object.ApiError("internal error, http code not allowed: {}".format(code), 500)
             self._http_code = code
         return self._http_code
         

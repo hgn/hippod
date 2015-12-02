@@ -15,7 +15,7 @@ import hippod.api_shared
 import hippod.statistic
 import hippod.mime_data_db
 
-from hippod.api_err_obj import *
+from hippod.error_object import *
 
 from hippod import app
 

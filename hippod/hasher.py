@@ -4,7 +4,7 @@ import hashlib
 import base64
 import collections
 
-from hippod.api_err_obj import *
+from hippod.error_object import *
 
 def __sum_list(o):
         buf = ''
