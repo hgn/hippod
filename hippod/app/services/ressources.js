@@ -40,10 +40,6 @@ hippoD.factory('ResourcesService', function($http) {
 		 return promise;
 		};
 
-    //srv.getRessource = function() {
-    //    return $http.get('/api/v1.0/resources', {});
-    //};
-
     // Public API
     return {
         getRessource: function() {

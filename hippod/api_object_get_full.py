@@ -30,15 +30,19 @@ def get_all_achievement_data(sha_sum, cont_obj):
         data = hippod.api_shared.get_achievement_data_by_sha_id(sha_sum, achievement["id"])
 
         r = dict()
+        r['id'] = achievement["id"]
+        r['variety-id'] = achievement["id"]
+        r['date-added'] = achievement["date-added"]
+        # we make sure these data is always in the database
+        # if not a python key exception is raised and the
+        # DB can be fixed
         for req_attr in ("test-date", "result", "submitter"):
             r[req_attr] = data[req_attr]
 
-        for opt_attr in ("data", "foo"):
+        # data is optional, make sure NO exception is raised
+        for opt_attr in ("data", "variety", "anchor"):
             if opt_attr in data:
                 r[opt_attr] = data[opt_attr]
-
-        for additional_meta_data in ("id", "date-added", "variety-id"):
-            r[additional_meta_data] = achievement[additional_meta_data]
 
         ret_list.append(r)
     return ret_list
