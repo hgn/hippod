@@ -13,12 +13,16 @@ import json
 import time
 import datetime
 import base64
+import uuid
 
 pp = pprint.PrettyPrinter(depth=6)
 
+def random_id():
+    return str(uuid.uuid4())[0:5]
+
 def random_title(words):
     words = ['Foo', 'Bar', 'Linux', 'Something', 'Yeah', 'Nope', 'Random', "REST", "IPv6"]
-    s = ' '.join(random.choice(words) for _ in range(11))
+    s = ' '.join(random.choice(words) for _ in range(1))
     return s
 
 def random_result():
@@ -50,7 +54,7 @@ def add_n(n):
         data["object-item"] = dict()
         data["object-item"]['categories'] = [ "team:orange", "topic:ip", "subtopic:route-cache" ]
         data["object-item"]['version'] = 0
-        data['object-item']['title'] = "{}".format(random_title(80))
+        data['object-item']['title'] = "{}".format(random_title(3))
 
         data['object-item']['data'] = list()
         desc_data = dict()
@@ -146,6 +150,10 @@ after maintainable products.
         achievement = dict()
         achievement["test-date"] = datetime.datetime.now().isoformat('T')
         achievement["result"] = random_result()
+
+        # 1/4 of all achievements are anchored
+        if random.randint(0, 3) == 0:
+            achievement["anchor"] = random_id()
 
         # add data entry to achievement, can be everything
         # starting from images, over log files to pcap files, ...
