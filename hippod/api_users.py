@@ -37,7 +37,7 @@ def get_users():
     except ApiError as e:
         return e.transform()
 
-    o = hippod.ex3000.Dict3000()
+    o = hippod.ex3000.Ex3000()
     o['data'] = data
     o['processing-time'] = "{0:.4f}".format(end - start)
     return o.transform()
