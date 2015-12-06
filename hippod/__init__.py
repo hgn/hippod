@@ -103,3 +103,4 @@ import hippod.api_resources
 import hippod.api_data_get
 import hippod.api_users
 import hippod.api_ping
+import hippod.api_achievement_get
