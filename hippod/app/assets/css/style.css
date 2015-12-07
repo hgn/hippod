@@ -378,29 +378,32 @@ a.list-group-item:focus, a.list-group-item:hover, button.list-group-item:focus, 
   min-width: 150px;
   max-width: 500px;
   margin: 5px;
-  background-color: #F8FCFF;
+  background-color: #CECECE;
+	box-shadow: 3px 3px 3px #888888;
 }
 
 .variety-header-box {
-    background-color: #E3F2FD;
+	  color: #FBFBFB;
+    background-color: #676767;
     text-align: center;
-    border-radius: 4px;
-    font-size: 80%;
-    border: thin solid #C0E4FF;
-    margin-bottom: 20px
+    border-radius: 2px;
+    font-size: 100%;
+    border: thin solid #5D5D5D;
+    margin-bottom: 20px;
 }
 
 .variety-header-title {
-    border-bottom: thin dotted #C0E4FF;
+    border-bottom: thin dotted #555;
     font-size: 110%;
 }
 
 
 .achievement-box {
-    background-color: #E3F2FD;
-    border-radius: 2px;
-    font-size: 80%;
-    border: thin solid #C0E4FF;
-    margin: 10px
+    background-color: #FFFFFF;
+    border-radius: 5px;
+    font-size: 90%;
+    border: thin solid #B7B7B7;
+    margin: 5px;
+    padding: 5px;
 }
 
