@@ -71,7 +71,6 @@ hippoD.factory('DBService', function($http) {
 						 }
 					 }
 					response.data.data['__attachments'] = attachments;
-										 console.log(response.data);
 
 					 // fetch description
 					 for (var i = 0; i < item_data.length; i++) {
@@ -99,6 +98,33 @@ hippoD.factory('DBService', function($http) {
 		 return promise;
    }
 	 }
+});
+
+
+hippoD.factory('HippodDataService', function($http) {
+
+	var getAchievements = function (core_id) {
+
+			 var obj = {};
+			 var promise = $http(
+				 {
+					 url: '/api/v1/object/' + core_id,
+					 dataType: 'json',
+					 method: 'POST',
+					 data: obj,
+					 headers: { "Content-Type": "application/json" }
+			   })
+				 .then(function (response) {
+					 return response.data.data['object-achievements'];
+				 })
+
+				 return promise;
+
+	};
+
+	return {
+		getAchievements: getAchievements
+	};
 });
 
 hippoD.filter('toHtmlSave', function($sce) {

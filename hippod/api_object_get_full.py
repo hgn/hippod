@@ -31,7 +31,7 @@ def get_all_achievement_data(sha_sum, cont_obj):
 
         r = dict()
         r['id'] = achievement["id"]
-        r['variety-id'] = achievement["id"]
+        r['variety-id'] = achievement["variety-id"]
         r['date-added'] = achievement["date-added"]
         # we make sure these data is always in the database
         # if not a python key exception is raised and the

@@ -77,33 +77,35 @@
     </uib-tab>
     <uib-tab heading="Achievements">
 			<ul class="list-group">
-				<div ng-repeat="achievement in data['object-achievements']">
-
+				<div ng-repeat="variety in varieties">
 					<div class="variety-container">
+
 						<div class="variety-entry">
 							<div class="variety-header-box">
 								<div class="variety-header-title">
-									Variety ID: {{ achievement['variety-id'] }}
+									Variety ID: {{variety['variety-id']}}
 								</div>
-								Key1: Value1<br>
-								Key2: Value2<br>
+				        <div ng-repeat="variety_data in variety['variety']">
+									{{variety_data[0]}} : {{variety_data[1]}}<br>
+								</div>
 							</div>
 
-							<div class="achievement-box">
-								ID: {{ achievement['id'] }}<br>
-								Status: {{ achievement['result'] }}<br>
-								Anchor: {{achievement['anchor'] }}<br>
-								Submitter: {{ achievement['submitter'] }} <br>
-								Date: {{ achievement['test-date'] }} <br>
-								Date Submitted: {{ achievement['date-added'] }}<br>
+							<div ng-repeat="achievement in variety['achievements']">
+								<div class="achievement-box">
+									ID: {{ achievement['id'] }}<br>
+									Anchor: {{achievement['anchor'] }}<br>
+									Status: {{ achievement['result'] }}<br>
+									Submitter: {{ achievement['submitter'] }} <br>
+									Date Tested: {{ achievement['test-date'] }} <br>
+									Date Submitted (uploaded): {{ achievement['date-added'] }}<br>
+								</div>
 							</div>
 
-
-						</div>
-					</div> <!-- variety container -->
-
+						</div> <!-- variety-entry -->
+					</div> <!-- variety-container -->
 				</div>
 			</ul>
+
     </uib-tab>
 
 		<uib-tab heading="Settings">
