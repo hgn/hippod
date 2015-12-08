@@ -76,9 +76,8 @@
 
     </uib-tab>
     <uib-tab heading="Achievements">
-			<ul class="list-group">
-				<div ng-repeat="variety in varieties">
 					<div class="variety-container">
+				<div ng-repeat="variety in varieties">
 
 						<div class="variety-entry">
 							<div class="variety-header-box">
@@ -91,6 +90,7 @@
 							</div>
 
 							<div ng-repeat="achievement in variety['achievements']">
+								<a ng-href="#/item/{{id}}/{{achievement['id']}}">
 								<div class="achievement-box">
 									ID: {{ achievement['id'] }}<br>
 									Anchor: {{achievement['anchor'] }}<br>
@@ -99,12 +99,12 @@
 									Date Tested: {{ achievement['test-date'] }} <br>
 									Date Submitted (uploaded): {{achievement['date-added'] }}<br>
 								</div>
+								</a>
 							</div>
 
 						</div> <!-- variety-entry -->
 					</div> <!-- variety-container -->
 				</div>
-			</ul>
 
     </uib-tab>
 

@@ -369,17 +369,18 @@ a.list-group-item:focus, a.list-group-item:hover, button.list-group-item:focus, 
     align-content: flex-start;
     align-items: flex-start;
     overflow: auto;
-    margin-bottom: 20px;
 }
 
 
-.variety-container > .variety-entry {
+.variety-entry {
   flex-grow: 1;
-  min-width: 150px;
+  min-width: 300px;
   max-width: 500px;
-  margin: 5px;
+  min-height: 400px;
+  margin: 20px;
   background-color: #CECECE;
 	box-shadow: 3px 3px 3px #888888;
+	padding-bottom: 10px;
 }
 
 .variety-header-box {
@@ -389,7 +390,8 @@ a.list-group-item:focus, a.list-group-item:hover, button.list-group-item:focus, 
     border-radius: 2px;
     font-size: 100%;
     border: thin solid #5D5D5D;
-    margin-bottom: 20px;
+		min-height: 80px;
+		padding: 0px 10px 0px 10px;
 }
 
 .variety-header-title {
@@ -403,7 +405,7 @@ a.list-group-item:focus, a.list-group-item:hover, button.list-group-item:focus, 
     border-radius: 5px;
     font-size: 90%;
     border: thin solid #B7B7B7;
-    margin: 5px;
+    margin: 20px 5px; 20px; 5px;
     padding: 5px;
 }
 
