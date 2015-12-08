@@ -22,8 +22,8 @@ hippoD.controller("ItemCtrl", function ($scope, $stateParams, $window, DBService
 					achievment['result'] = value['result'];
 					achievment['anchor'] = value['anchor'];
 					achievment['submitter'] = value['submitter'];
-					achievment['test-date'] = value['test-date'];
-					achievment['date-added'] = value['date-added'];
+					achievment['test-date'] = humanFormatDateYYYYMMDDHHMM(value['test-date']);
+					achievment['date-added'] = humanFormatDateYYYYMMDDHHMM(value['date-added']);
 
 					console.log("XXX");
 
@@ -39,8 +39,8 @@ hippoD.controller("ItemCtrl", function ($scope, $stateParams, $window, DBService
 				achievment['result'] = value['result'];
 				achievment['anchor'] = value['anchor'];
 				achievment['submitter'] = value['submitter'];
-				achievment['test-date'] = value['test-date'];
-				achievment['date-added'] = value['date-added'];
+				achievment['test-date'] = humanFormatDateYYYYMMDDHHMM(value['test-date']);
+				achievment['date-added'] = humanFormatDateYYYYMMDDHHMM(value['date-added']);
 
 				// new container required
 				var var_container = { };

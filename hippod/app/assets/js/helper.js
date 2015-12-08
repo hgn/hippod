@@ -42,6 +42,19 @@ function formatDateYYYYMMDD(date) {
     return [year, month, day].join('-');
 }
 
+function formatDateYYYYMMDDHHMM(date) {
+    var d = new Date(date),
+        month = '' + (d.getMonth() + 1),
+        day = '' + d.getDate(),
+        year = d.getFullYear();
+		    hours = d.getHours();
+				minutes = d.getMinutes();
+
+    if (month.length < 2) month = '0' + month;
+    if (day.length < 2) day = '0' + day;
+
+    return [year, month, day].join('-') + " " + hours + ":" + minutes;
+}
 
 function humanRelativeDate(date) {
 	var actual_date = new Date();
@@ -95,6 +108,11 @@ function humanRelativeDate(date) {
 }
 
 function humanFormatDateYYYYMMDD(date) {
-	return humanRelativeDate(date) + "(" + formatDateYYYYMMDD(date) + ")";
+	return humanRelativeDate(date) + " (" + formatDateYYYYMMDD(date) + ")";
 }
+
+function humanFormatDateYYYYMMDDHHMM(date) {
+	return humanRelativeDate(date) + " (" + formatDateYYYYMMDDHHMM(date) + ")";
+}
+
 
