@@ -62,8 +62,6 @@ hippoD.controller("ItemCtrl", function ($scope, $stateParams, $window, DBService
 
 		  var index = achiev_res_date_arr.length - 1;
 
-      console.log(value['result']);
-
 			switch (value['result']) {
 				case "failed":
       	  achiev_res_date_arr[index]['fail'] += 1;
@@ -159,17 +157,48 @@ hippoD.controller("ItemCtrl", function ($scope, $stateParams, $window, DBService
 		updateAchievementChart(res);
 	});
 
+	function formatCategories(cat_arr) {
+		var ret_str = "";
+		angular.forEach(cat_arr, function(v, k) {
+			ret_str = "/ " + v;
+		});
+		return ret_str;
+	};
+
+	function formatTags(tags_arr) {
+		var ret_str = "";
+		angular.forEach(tags_arr, function(v, k) {
+			ret_str = " " + v;
+		});
+		return ret_str;
+	};
+
+	function formatReferences(ref_arr) {
+		var ret_str = "";
+		angular.forEach(ref_arr, function(v, k) {
+			ret_str = " " + v;
+		});
+		return ret_str;
+	};
+
+
 	DBService.getFoo($scope.id).then(function(res) {
 		$scope.data = res;
+		$scope.responsible = res['object-attachment']['responsible'];
+		$scope.categories  = formatCategories(res['object-attachment']['categories']);
+		$scope.tags        = formatTags(res['object-attachment']['tags']);
+		$scope.references  = formatReferences(res['object-attachment']['references']);
+		$scope.date_added  = humanFormatDateYYYYMMDDHHMM(res['object-attachment']['date-added']);
+		console.log(res);
 	});
 
 	$scope.graphTestResultOptions = {
 		chart: {
 			type: 'stackedAreaChart',
-			height: 180,
+			height: 160,
 			margin : {
 				top: 0,
-				right: 50,
+				right: 10,
 				bottom: 30,
 				left: 5
 			},

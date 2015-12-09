@@ -45,43 +45,41 @@
 
 					<div class="list-group">
 						<div class="list-group-item">
-							<h5 class="list-group-item-heading">Maturity: Testing</h5>
+							<h5 class="list-group-item-heading"><span class="glyphicon
+							glyphicon-info-sign" aria-hidden="true"></span> Maturity: {{ data['maturity-level']['level'] }}</h5>
 						</div>
 					</div>
 
 					<div class="list-group">
 						<div class="list-group-item">
-							<h5 class="list-group-item-heading">Category: team:orange / topic:ip / subtopic:route-cache</h5>
+							<h5 class="list-group-item-heading"><span class="glyphicon
+							glyphicon-tasks" aria-hidden="true"></span> Category: {{ categories }}</h5>
 						</div>
 					</div>
 
 					<div class="list-group">
 						<div class="list-group-item">
-							<h5 class="list-group-item-heading">Last Submitter: Charles Darwin</h5>
+							<h5 class="list-group-item-heading"><span class="glyphicon glyphicon-user" aria-hidden="true"></span> Responsible: {{ responsible }}</h5>
 						</div>
 					</div>
 
 					<div class="list-group">
 						<div class="list-group-item">
-							<h5 class="list-group-item-heading">Responsible: Albert Einstein</h5>
+							<h5 class="list-group-item-heading"><span class="glyphicon
+							glyphicon-eye-open" aria-hidden="true"></span> Tags: {{ tags }}</h5>
 						</div>
 					</div>
 
 					<div class="list-group">
 						<div class="list-group-item">
-							<h5 class="list-group-item-heading">Tags: TCP, IP, IGMP</h5>
+							<h5 class="list-group-item-heading"><span class="glyphicon
+							glyphicon-link" aria-hidden="true"></span> References: {{ references }}</h5>
 						</div>
 					</div>
 
 					<div class="list-group">
 						<div class="list-group-item">
-							<h5 class="list-group-item-heading">References: doors:329329, doors:23832823</h5>
-						</div>
-					</div>
-
-					<div class="list-group">
-						<div class="list-group-item">
-							<h5 class="list-group-item-heading">Added: 2015-11-18T22:34:27.560953</h5>
+							<h5 class="list-group-item-heading"><span class="glyphicon glyphicon-time" aria-hidden="true"></span> Added: {{ date_added }}</h5>
 						</div>
 					</div>
 
@@ -111,8 +109,8 @@
 									Anchor: {{achievement['anchor'] }}<br>
 									Status: {{ achievement['result'] }}<br>
 									Submitter: {{ achievement['submitter'] }} <br>
-									Date Tested: {{ achievement['test-date'] }} <br>
-									Date Submitted (uploaded): {{achievement['date-added'] }}<br>
+									Date Tested:  <span class="glyphicon glyphicon-time" aria-hidden="true"></span> {{ achievement['test-date'] }} <br>
+									Date Uploaded: <span class="glyphicon glyphicon-time" aria-hidden="true"></span> {{achievement['date-added'] }}<br>
 								</div>
 								</a>
 							</div>
@@ -124,7 +122,15 @@
     </uib-tab>
 
 		<uib-tab heading="Settings">
-			maturity level
+
+    <h4>Maturity Level:</h4>
+
+			<div class="btn-group" role="group" aria-label="...">
+				<button type="button" class="btn btn-default">Testing</button>
+				<button type="button" class="btn btn-default">Stable</button>
+				<button type="button" class="btn btn-default">Outdated</button>
+			</div>
+
     </uib-tab>
   </uib-tabset>
 
