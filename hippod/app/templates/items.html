@@ -375,19 +375,7 @@
 					Never tested: {{ noAchievements }}<br>
 
 					<div ng-controller="ItemsCtrl"> 
-						<nvd3-pie-chart
-					  		data="exampleData2"
-		 						id="exampleId"
-				 			  width="350"
-		            height="350"
-	              color="colorFunction()"
-	              x="xFunction()"
-                y="yFunction()"
-                showLabels="true"
-								donutLabelsOutside="true"
-								donut="true" donutRatio=".45">
-							<svg width="350"></svg>
-						</nvd3-pie-chart>
+						<nvd3 options="optionsPieChart" data="exampleData2"></nvd3>
 					</div>
 
 

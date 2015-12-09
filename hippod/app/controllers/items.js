@@ -161,6 +161,36 @@ hippoD.controller("ItemsCtrl", function ($scope, ItemService, $uibModal, $log, $
 			$scope.nonApplicableAchievements = nonapplicable_achievement;
 			$scope.noAchievements = no_achievements;
 
+			var colorArray = [ '#4CAF50', '#F44336', '#2196F3', '#A1887F' ];
+			function colorFunction() {
+				return function(d, i) {
+					return colorArray[i];
+				};
+			};
+
+			$scope.optionsPieChart = {
+				chart: {
+					type: 'pieChart',
+					height: 500,
+					x: function(d){return d.key;},
+					y: function(d){return d.y;},
+					showLabels: true,
+					duration: 500,
+					labelThreshold: 0.01,
+					labelSunbeamLayout: true,
+				  growOnHover: true,
+	        color:colorFunction(),
+					legend: {
+						margin: {
+							top: 20,
+							right: 0,
+							bottom: 0,
+							left: 0
+						}
+					}
+				}
+			};
+
 			$scope.exampleData2 = [
 				{ key: "Passed", y: passed_achievement },
 				{ key: "Failed", y: failed_achievement },
@@ -185,12 +215,6 @@ hippoD.controller("ItemsCtrl", function ($scope, ItemService, $uibModal, $log, $
 		$scope.yFunction = function(){
 			return function(d){
 				return d.y;
-			};
-		}
-		var colorArray = [ '#4CAF50', '#F44336', '#2196F3', '#A1887F' ];
-		$scope.colorFunction = function() {
-			return function(d, i) {
-				return colorArray[i];
 			};
 		}
 

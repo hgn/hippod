@@ -1,4 +1,4 @@
-var hippoD = angular.module('hippoDApp', ['ui.router', 'ui.bootstrap', 'nvd3ChartDirectives', 'angular-loading-bar']);
+var hippoD = angular.module('hippoDApp', ['ui.router', 'ui.bootstrap', 'nvd3', 'angular-loading-bar']);
 
 hippoD.config(function($stateProvider, $urlRouterProvider) {
 

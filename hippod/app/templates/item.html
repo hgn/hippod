@@ -6,15 +6,10 @@
 	<div class="row">
 		<div class="col-md-6">
 			<h3 class="modal-title">{{ data['object-item']['title'] }}</h3>
-			<b>{{ data['object-item-id'] }}</b>
+			ID: {{ data['object-item-id'] }}<br ><br >
 		</div>
 		<div class="col-md-6">
-			<span class="label label-primary">Maturity: Testing</span>
-			<div class="clearfix"></div>
-			<span class="label label-info">Category: team:orange / topic:ip / subtopic:route-cache</span>
-			<div class="clearfix"></div>
-			<span class="label label-warning">Last Submitter: Charles Darwin</span>
-			<div class="clearfix"></div>
+			<nvd3 options="graphTestResultOptions" data="graphTestResultData"></nvd3>
 		</div>
 	</div> <!-- row -->
 
@@ -45,6 +40,24 @@
 					</ul>
 				</div> <!-- col8 -->
 				<div class="col-md-4">
+
+					<div class="list-group">
+						<div class="list-group-item">
+							<h5 class="list-group-item-heading">Maturity: Testing</h5>
+						</div>
+					</div>
+
+					<div class="list-group">
+						<div class="list-group-item">
+							<h5 class="list-group-item-heading">Category: team:orange / topic:ip / subtopic:route-cache</h5>
+						</div>
+					</div>
+
+					<div class="list-group">
+						<div class="list-group-item">
+							<h5 class="list-group-item-heading">Last Submitter: Charles Darwin</h5>
+						</div>
+					</div>
 
 					<div class="list-group">
 						<div class="list-group-item">

@@ -25,9 +25,6 @@ hippoD.controller("ItemCtrl", function ($scope, $stateParams, $window, DBService
 					achievment['test-date'] = humanFormatDateYYYYMMDDHHMM(value['test-date']);
 					achievment['date-added'] = humanFormatDateYYYYMMDDHHMM(value['date-added']);
 
-					console.log("XXX");
-
-					console.log(var_data);
 					value2['achievements'].push(achievment);
 				}
 			});
@@ -63,5 +60,84 @@ hippoD.controller("ItemCtrl", function ($scope, $stateParams, $window, DBService
 			$scope.varieties = var_data;
 		});
 	});
+
+
+
+
+
+
+
+
+
+  $scope.graphTestResultOptions = {
+            chart: {
+                type: 'stackedAreaChart',
+                height: 150,
+                margin : {
+                    top: 0,
+                    right: 0,
+                    bottom: 30,
+                    left: 55
+                },
+                x: function(d){return d[0];},
+                y: function(d){return d[1];},
+                useVoronoi: false,
+                clipEdge: true,
+                duration: 100,
+                useInteractiveGuideline: true,
+                xAxis: {
+                    showMaxMin: false,
+                    tickFormat: function(d) {
+                        return d3.time.format('%x')(new Date(d))
+                    }
+                },
+                yAxis: {
+                    tickFormat: function(d){
+                        return d3.format(',.2f')(d);
+                    }
+                },
+								showYAxis: false,
+								showLegend: false,
+								showControls: false,
+                zoom: {
+                    enabled: true,
+                    scaleExtent: [1, 10],
+                    useFixedDomain: false,
+                    useNiceScale: false,
+                    horizontalOff: false,
+                    verticalOff: true,
+                    unzoomEventType: 'dblclick.zoom'
+                }
+            }
+        };
+
+        $scope.graphTestResultData = [
+            {
+                "key" : "Passed" ,
+                "values" : [ [ 1025409600000 , 2] , [ 1028088000000 , 3] ] 
+            },
+
+            {
+                "key" : "Failed" ,
+                "values" : [ [ 1025409600000 , 3] , [ 1028088000000 , 0] ]
+            },
+
+            {
+                "key" : "Non Applicable" ,
+                "values" : [ [ 1025409600000 , 1] , [ 1028088000000 , 0] ]
+            },
+
+            {
+                "key" : "Not Tested" ,
+                "values" : [ [ 1025409600000 , 0] , [ 1028088000000 , 0] ]
+            }
+
+
+
+        ];
+
+
+
+
 
 });
