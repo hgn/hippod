@@ -409,3 +409,12 @@ a.list-group-item:focus, a.list-group-item:hover, button.list-group-item:focus, 
     padding: 5px;
 }
 
+.inverted-rounded-box {
+    background-color: #E6E6E6;
+		color: #6F6F6F;
+    border-radius: 3px;
+    font-size: 90%;
+    margin: 10px 0px 10px 0px;
+    padding: 5px 5px 5px 5px;
+}
+
