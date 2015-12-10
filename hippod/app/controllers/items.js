@@ -133,7 +133,6 @@ hippoD.controller("ItemsCtrl", function ($scope, ItemService, $uibModal, $log, $
 						nonapplicable_achievement++;
 					} else {
 						console.log("corrupt achievement!");
-						console.log(value);
 					}
 
 					var test_date = new Date(value['object-achievements']['test-date']);
@@ -203,7 +202,6 @@ hippoD.controller("ItemsCtrl", function ($scope, ItemService, $uibModal, $log, $
   
 
 		}, function(error) {
-			console.log(res);
 			$scope.data = null;
 		});
 

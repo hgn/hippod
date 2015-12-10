@@ -27,7 +27,6 @@ hippoD.factory('ItemService', function($http) {
 
           .then(function (response) {
           // The then function here is an opportunity to modify the response
-          console.log(response);
           // The return value gets picked up by the then in the controller.
           return response.data;
         });
@@ -55,7 +54,6 @@ hippoD.factory('DBService', function($http) {
 				 .then(function (response) {
 					 var achievements = response.data.data['object-achievements'];
 					 for (var i = 0; i < achievements.length; i++) {
-						//console.log(achievements[i]);
 					 }
 					 response.data.data['__attachments'] = attachments;
 

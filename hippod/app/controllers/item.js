@@ -189,7 +189,6 @@ DBService.getFoo($scope.id).then(function(res) {
 	$scope.tags        = formatTags(res['object-attachment']['tags']);
 	$scope.references  = formatReferences(res['object-attachment']['references']);
 	$scope.date_added  = humanFormatDateYYYYMMDDHHMM(res['object-attachment']['date-added']);
-	console.log(res);
 });
 
 $scope.graphTestResultOptions = {
