@@ -193,7 +193,7 @@ DBService.getFoo($scope.id).then(function(res) {
 
 $scope.graphTestResultOptions = {
 	chart: {
-		type: 'stackedAreaChart',
+		type: 'multiBarChart',
 		height: 160,
 		margin : {
 			top: 0,
@@ -201,6 +201,7 @@ $scope.graphTestResultOptions = {
 			bottom: 30,
 			left: 5
 		},
+		stacked: true,
 		x: function(d){return d[0];},
 		y: function(d){return d[1];},
 		useVoronoi: false,
@@ -210,7 +211,7 @@ $scope.graphTestResultOptions = {
 		xAxis: {
 			showMaxMin: false,
 			tickFormat: function(d) {
-				return d3.time.format('%x')(new Date(d))
+				return d3.time.format('%Y-%m-%d')(new Date(d))
 			}
 		},
 		yAxis: {
