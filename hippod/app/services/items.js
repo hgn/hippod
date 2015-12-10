@@ -93,7 +93,7 @@ hippoD.factory('DBService', function($http) {
 						 }
 					 }
 
-					 return response.data;
+					 return response.data.data;
 				 });
 		 return promise;
    }
@@ -130,6 +130,8 @@ hippoD.factory('HippodDataService', function($http) {
 hippoD.filter('toHtmlSave', function($sce) {
 
 	function replaceAll(str, find, replace) {
+		if (!str)
+			return str;
 		return str.replace(new RegExp(find, 'g'), replace);
 	}
 
