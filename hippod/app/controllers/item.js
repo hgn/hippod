@@ -160,7 +160,7 @@ HippodDataService.getAchievements($scope.id).then(function(res) {
 function formatCategories(cat_arr) {
 	var ret_str = "";
 	angular.forEach(cat_arr, function(v, k) {
-		ret_str = "/ " + v;
+		ret_str += '<span class="glyphicon glyphicon-menu-right"></span> ' + v;
 	});
 	return ret_str;
 };
@@ -168,7 +168,7 @@ function formatCategories(cat_arr) {
 function formatTags(tags_arr) {
 	var ret_str = "";
 	angular.forEach(tags_arr, function(v, k) {
-		ret_str = " " + v;
+		ret_str += " " + v;
 	});
 	return ret_str;
 };

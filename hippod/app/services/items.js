@@ -134,6 +134,7 @@ hippoD.filter('toHtmlSave', function($sce) {
 	}
 
 	return function(text, argument) {
+
 		// we correct the link from username (tomato.png) to
 		// link: api/v1/data/34994393434934
 		angular.forEach(argument, function(value, key) {

@@ -46,40 +46,54 @@
 					<div class="list-group">
 						<div class="list-group-item">
 							<h5 class="list-group-item-heading"><span class="glyphicon
-							glyphicon-info-sign" aria-hidden="true"></span> Maturity: {{ data['maturity-level']['level'] }}</h5>
+							glyphicon-info-sign" aria-hidden="true"></span>
+								Maturity:<br><br>
+						{{ data['maturity-level']['level'] }}</h5>
 						</div>
 					</div>
 
 					<div class="list-group">
 						<div class="list-group-item">
 							<h5 class="list-group-item-heading"><span class="glyphicon
-							glyphicon-tasks" aria-hidden="true"></span> Category: {{ categories }}</h5>
-						</div>
-					</div>
-
-					<div class="list-group">
-						<div class="list-group-item">
-							<h5 class="list-group-item-heading"><span class="glyphicon glyphicon-user" aria-hidden="true"></span> Responsible: {{ responsible }}</h5>
-						</div>
-					</div>
-
-					<div class="list-group">
-						<div class="list-group-item">
-							<h5 class="list-group-item-heading"><span class="glyphicon
-							glyphicon-eye-open" aria-hidden="true"></span> Tags: {{ tags }}</h5>
+							glyphicon-tasks" aria-hidden="true"></span>
+								Category:<br><br>
+							<span ng-bind-html="categories | toHtmlSave : nil"></span>
+							</h5>
 						</div>
 					</div>
 
 					<div class="list-group">
 						<div class="list-group-item">
 							<h5 class="list-group-item-heading"><span class="glyphicon
-							glyphicon-link" aria-hidden="true"></span> References: {{ references }}</h5>
+									glyphicon-user" aria-hidden="true"></span>
+								Responsible:<br><br>
+								{{ responsible }}</h5>
 						</div>
 					</div>
 
 					<div class="list-group">
 						<div class="list-group-item">
-							<h5 class="list-group-item-heading"><span class="glyphicon glyphicon-time" aria-hidden="true"></span> Added: {{ date_added }}</h5>
+							<h5 class="list-group-item-heading"><span class="glyphicon
+							glyphicon-eye-open" aria-hidden="true"></span>
+								Tags:<br><br>
+								{{ tags }}</h5>
+						</div>
+					</div>
+
+					<div class="list-group">
+						<div class="list-group-item">
+							<h5 class="list-group-item-heading"><span class="glyphicon
+							glyphicon-link" aria-hidden="true"></span>
+								References:<br><br>
+								{{ references }}</h5>
+						</div>
+					</div>
+
+					<div class="list-group">
+						<div class="list-group-item">
+							<h5 class="list-group-item-heading"><span class="glyphicon
+							glyphicon-time" aria-hidden="true"></span> Added:<br><br>
+						{{ date_added }}</h5>
 						</div>
 					</div>
 
