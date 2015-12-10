@@ -17,6 +17,11 @@ import uuid
 
 pp = pprint.PrettyPrinter(depth=6)
 
+def random_image():
+    with open("data/plot.png", "rb") as f:
+        content = f.read()
+        return base64.b64encode(content)
+
 def random_id():
     return str(uuid.uuid4())[0:5]
 
@@ -64,7 +69,7 @@ def add_n(n):
         # json requires a string -> convert to UTF-8
         desc_data['data'] = base64.b64encode(
                 """
-# This is the Description Header #
+# Rooter: A Methodology for the Typical Unification of Access Points and Redundancy #
 
 Collaboratively administrate empowered **markets** via plug-and-play networks.
 Dynamically procrastinate __B2C users__ after installed base benefits. Dramatically
@@ -74,20 +79,24 @@ visualize customer directed convergence without **revolutionary ROI**.
 	    abort(0);
     }
 
+* Item1
+* Item2
+* Item3
+
 Proctively envisioned multimedia based expertise and cross-media growth
 strategies. Seamlessly visualize quality intellectual capital without superior
 collaboration and idea-sharing. Holistically pontificate installed base portals
 after maintainable products.
 
-## Shizzle Dizzle Header Second Order ##
+![Description](image.png)
+
+
+## Harnessing Byzantine Fault Tolerance Using Classical Theory ##
 
 Efficiently unleash cross-media information without cross-media value. Quickly
 maximize **timely deliverables** for real-time schemas. Dramatically maintain
 clicks-and-mortar __solutions__ without functional solutions.
 
-* Item1
-* Item2
-* Item3
 
 Completely synergize resource taxing relationships via premier niche markets.
 Professionally cultivate one-to-one customer service with robust ideas.
@@ -117,8 +126,6 @@ strategies. Seamlessly visualize quality intellectual capital without superior
 collaboration and idea-sharing. Holistically pontificate installed base portals
 after maintainable products.
 
-![Description](image.gif)
-
 ## Shizzle Dizzle Header Second Order ##
 
 Proctively envisioned multimedia based expertise and cross-media growth
@@ -130,9 +137,9 @@ after maintainable products.
         data['object-item']['data'].append(desc_data)
 
         img_data = dict()
-        img_data['name'] = 'image.gif'
-        img_data['mime-type'] = 'image/gif'
-        img_data['data'] = "R0lGODlhDwAPAKECAAAAzMzM/////wAAACwAAAAADwAPAAACIISPeQHsrZ5ModrLlN48CXF8m2iQ3YmmKqVlRtW4MLwWACH+H09wdGltaXplZCBieSBVbGVhZCBTbWFydFNhdmVyIQAAOw=="
+        img_data['name'] = 'image.png'
+        img_data['mime-type'] = 'image/png'
+        img_data['data'] = random_image().decode("utf-8") 
         data['object-item']['data'].append(img_data)
 
         img_data = dict()
