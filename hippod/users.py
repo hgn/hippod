@@ -7,6 +7,7 @@ import os
 
 from hippod import app
 
+from hippod.error_object import *
 
 def load_data(path):
     with open(path) as data_file:
