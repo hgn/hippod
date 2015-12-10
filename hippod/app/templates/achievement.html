@@ -5,9 +5,20 @@
 	<h4>ID: {{ id }}</h4>
 	<h5>ID: {{ achievement }}</h5>
 
-	<nvd3 options="options" data="data"></nvd3>
+	<h4>Attachments:</h4>
 
-	<h4>Attachments</h4>
+  <h4>Delete Achievment:</h4>
+
+	<div class="alert alert-danger">
+		<span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+		<strong>Danger!</strong> Deleted achievements cannot be recovered!
+		Note that <b>released</b> achievements can never be deleted.
+	</div>
+	<button type="button" class="btn btn-default btn-lg">
+		<span class="glyphicon glyphicon-star" aria-hidden="true"></span>
+		Delete Achievement
+	</button>
+
 
 </div> <!-- main-content-container -->
 
