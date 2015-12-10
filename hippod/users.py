@@ -15,6 +15,7 @@ def load_data(path):
 
 
 def filter_data(data, user_filter):
+    filter_str = ""
     if type(data) != list:
         msg = "user DB contains no data - failed to search for record"
         raise ApiError(msg, http_code=404)
@@ -24,10 +25,11 @@ def filter_data(data, user_filter):
         skip_entry = False
         if user_filter:
             for key, value in user_filter.items():
+                filter_str += "{},".format(value.lower())
                 if key not in item:
                     skip_entry = True
                     break
-                if key in item and item[key] != value:
+                if key in item and item[key].lower() != value.lower():
                     skip_entry = True
                     break
         if skip_entry:
@@ -41,7 +43,7 @@ def filter_data(data, user_filter):
         ret.append(entry)
 
     if len(ret) == 0:
-        msg = "user DB do not contain valid entry for given filter"
+        msg = "user DB do not contain valid user for given filter {}".format(filter_str)
         raise ApiError(msg, http_code=404)
 
     return ret
