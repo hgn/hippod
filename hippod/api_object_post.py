@@ -28,6 +28,16 @@ def check_attachment(attachment):
         return False
     return True
 
+def add_initial_severity_level(object_item):
+    # allowed values: none, trivial, minor, major, critical
+    # blocker
+    data = dict()
+    data['level'] = 'none'
+    data['since'] = datetime.datetime.now().isoformat('T')
+
+    object_item['severity'] = list()
+    object_item['severity'].append(data)
+
 
 def add_initial_maturity_level(object_item):
     data = dict()
@@ -50,6 +60,7 @@ def create_container_data_merge_issue_new(sha_sum, object_item, submitter):
     d['achievements'] = []
 
     add_initial_maturity_level(d)
+    add_initial_severity_level(d)
 
     # the object is a little bit special. We iterate over the
     # data section as always and compress or not compress
