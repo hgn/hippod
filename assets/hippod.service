@@ -1,0 +1,9 @@
+[Unit]
+Description=HippoD Service to Collect Test Statistics
+
+[Service]
+Type=forking
+ExecStart=/usr/bin/python3 /var/www/hippod/run.py
+
+[Install]
+WantedBy=multi-user.target
