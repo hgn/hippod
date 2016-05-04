@@ -21,4 +21,5 @@ install:
 	@echo ".. enable service via: systemctl enable hippod.service"
 	@echo ".. start service via: systemctl start hippod.service"
 	@echo ".. status via: systemctl status hippod.service"
+	@echo ".. logging via: journalctl -u hippod.service"
 
