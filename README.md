@@ -1,7 +1,7 @@
 
 # Introduction #
 
-![alt tag](https://raw.githubusercontent.com/hgn/contestcolld/master/doc/process.png)
+![alt tag](https://raw.githubusercontent.com/hgn/hippod/master/doc/process.png)
 
 
 ## Installation and Dependencies ##
