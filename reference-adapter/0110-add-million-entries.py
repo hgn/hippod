@@ -17,7 +17,7 @@ def random_title(length):
     return s
 
 def add_n(n):
-    url = 'http://localhost:5000/api/v1/object'
+    url = 'http://localhost:8080/api/v1/object'
     data = dict()
     data["submitter"] = "John Doe <john.doe@example.com>"
     data["object-item"] = dict()
@@ -43,7 +43,7 @@ def add_n(n):
 
     print("\r\n\n")
 
-    url = 'http://localhost:5000/api/v1/objects'
+    url = 'http://localhost:8080/api/v1/objects'
     data = '''
     {
         "limit": 0,

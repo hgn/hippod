@@ -1,5 +1,5 @@
-#!/usr/bin/python
-# coding: utf-7
+#!/usr/bin/python3
+# coding: utf-8
 
 import json
 import requests
@@ -10,7 +10,7 @@ pp = pprint.PrettyPrinter(depth=6)
 
 
 def add_n(n):
-    url = 'http://localhost:5000/api/v1/object'
+    url = 'http://localhost:8080/api/v1/object'
     data = dict()
     data["submitter"] = "John Doe <john.doe@example.com>"
     data["object-item"] = dict()
@@ -35,7 +35,7 @@ def add_n(n):
 
 
 
-    url = 'http://localhost:5000/api/v1/objects'
+    url = 'http://localhost:8080/api/v1/objects'
     data = '''
     {
         "limit": 1000,
