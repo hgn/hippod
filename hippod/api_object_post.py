@@ -358,5 +358,3 @@ async def handle(request):
     o['processing-time'] = "{0:.4f}".format(end - start)
     o.http_code(200)
     return o.transform()
-
-

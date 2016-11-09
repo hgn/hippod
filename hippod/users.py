@@ -56,4 +56,3 @@ def get(app, user_filter=None):
     path = app['CONF_USER_FILEPATH']
     data = load_data(path)
     return filter_data(data, user_filter)
-

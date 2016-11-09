@@ -30,25 +30,24 @@ def get_achievement_int(app, sha_id, achievement_id):
 
 
 async def handle(request):
-	print("Loading Achievement:")
-	if request.method != "GET" and request.method != "POST":
-		msg = "Internal Error... request method: {} is not allowed".format(request.method)
-		raise hippod.error_object.ApiError(msg)
-	app = request.app
-	sha_id = request.match_info['sha_id']
-	achievement_id = request.match_info['achievement_id']
+    print("Loading Achievement:")
+    if request.method != "GET" and request.method != "POST":
+        msg = "Internal Error... request method: {} is not allowed".format(request.method)
+        raise hippod.error_object.ApiError(msg)
+    app = request.app
+    sha_id = request.match_info['sha_id']
+    achievement_id = request.match_info['achievement_id']
 
 
-	try:
-		start = time.clock()
-		data = get_achievement_int(app, sha_id, achievement_id)
-		end = time.clock()
-	except ApiError as e:
-		return e.transform()
+    try:
+        start = time.clock()
+        data = get_achievement_int(app, sha_id, achievement_id)
+        end = time.clock()
+    except ApiError as e:
+        return e.transform()
 
-	o = hippod.ex3000.Ex3000()
-	o['data'] = data
-	o['processing-time'] = "{0:.4f}".format(end - start)
-	o.http_code(200)
-	return o.transform()
-
+    o = hippod.ex3000.Ex3000()
+    o['data'] = data
+    o['processing-time'] = "{0:.4f}".format(end - start)
+    o.http_code(200)
+    return o.transform()

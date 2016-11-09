@@ -31,4 +31,3 @@ async def handle(request):
 	o['data'] = data
 	o.http_code(202)
 	return o.transform()
-
