@@ -11,14 +11,11 @@ import hippod.api_shared
 
 from hippod.error_object import *
 
-from hippod import app
-
-from flask import jsonify
-from flask import request
 
 
-def obj_available(sha_sum):
-    path = app.config['DB_DATA_PATH']
+def obj_available(app, sha_sum):
+    path = app['DB_DATA_PATH']
+    print(sha_sum)
     obj_path  = os.path.join(path, sha_sum, "blob.bin")
     attr_path = os.path.join(path, sha_sum, "attr.db")
 
@@ -27,8 +24,8 @@ def obj_available(sha_sum):
     return True
 
 
-def get_attr_obj(sha_sum):
-    path = app.config['DB_DATA_PATH']
+def get_attr_obj(app, sha_sum):
+    path = app['DB_DATA_PATH']
     attr_path = os.path.join(path, sha_sum, "attr.db")
     with open(attr_path) as data_file:
         return json.load(data_file)
@@ -38,12 +35,12 @@ def is_attr_compressed(obj):
     return obj['compressed'] == 'true'
 
 
-def get_data(sha_sum, decompress=None, encode_base64=False):
+def get_data(app, sha_sum, decompress=None, encode_base64=False):
     if decompress == None:
         msg = "decompres True or False required"
         raise ApiError(msg)
 
-    path = app.config['DB_DATA_PATH']
+    path = app['DB_DATA_PATH']
     obj_path  = os.path.join(path, sha_sum, "blob.bin")
     with open(obj_path, 'rb') as f:
         data = f.read()
@@ -89,9 +86,9 @@ def decode_and_compress(data):
     return compressed_data, size_real
 
 
-def decode_and_write_file(sha_sum, data, compress=False):
+def decode_and_write_file(app, sha_sum, data, compress=False):
     size_stats = dict()
-    path = app.config['DB_DATA_PATH']
+    path = app['DB_DATA_PATH']
     obj_path = os.path.join(path, sha_sum)
     if not os.path.isdir(obj_path):
         os.makedirs(obj_path)
@@ -100,7 +97,7 @@ def decode_and_write_file(sha_sum, data, compress=False):
     if os.path.isfile(blob_path):
         # great, file already in the database
         # return original attr.db
-        return get_attr_obj(sha_sum)
+        return get_attr_obj(app, sha_sum)
 
     size_stats['base64-encoded'] = len(data['data'])
     if compress:
@@ -112,7 +109,8 @@ def decode_and_write_file(sha_sum, data, compress=False):
 
     size_stats['size-stored'] = len(bin_data)
     size_stats['size-real'] = size_real
-    hippod.statistic.update_mimetype_data_store(data['mime-type'],
+    hippod.statistic.update_mimetype_data_store(app,
+                                                data['mime-type'],
                                                 size_real,
                                                 len(bin_data),
                                                 compress)
@@ -134,7 +132,7 @@ def decode_and_write_file(sha_sum, data, compress=False):
     return d
 
 
-def save_object_item_data(data):
+def save_object_item_data(app, data):
     # we need at least some data now:
     # - mimetype
     # - name
@@ -156,7 +154,7 @@ def save_object_item_data(data):
     compressable = False
     if is_compressable(data):
         compressable = True
-    attr_data = decode_and_write_file(sha, data, compress=compressable)
+    attr_data = decode_and_write_file(app, sha, data, compress=compressable)
 
     # update data entry
     del data['data']
@@ -165,9 +163,9 @@ def save_object_item_data(data):
     data['size-real'] = attr_data['statistics']['size-real']
 
 
-def save_object_item_data_list(object_item):
+def save_object_item_data_list(app, object_item):
     if not 'data' in object_item:
         return
     for data in object_item['data']:
-        save_object_item_data(data)
+        save_object_item_data(app, data)
 

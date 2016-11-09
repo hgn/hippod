@@ -10,7 +10,7 @@ pp = pprint.PrettyPrinter(depth=6)
 
 
 def query_user():
-    url = 'http://localhost:5000/api/v1/users'
+    url = 'http://localhost:8080/api/v1/users'
     data = dict()
     data["filter"] = dict() 
     data["filter"]['username'] = 'john_doe'

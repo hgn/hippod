@@ -9,25 +9,23 @@ import time
 import zlib
 import sys
 
+import aiohttp
+
 import hippod.hasher
 import hippod.ex3000
 import hippod.api_shared
 
 from hippod.error_object import *
 
-from hippod import app
-
-from flask import jsonify
-from flask import request
 
 
-def get_all_achievement_data(sha_sum, cont_obj):
+def get_all_achievement_data(app, sha_sum, cont_obj):
     if len(cont_obj['achievements']) <= 0:
         return None
 
     ret_list = list()
     for achievement in reversed(cont_obj['achievements']):
-        data = hippod.api_shared.get_achievement_data_by_sha_id(sha_sum, achievement["id"])
+        data = hippod.api_shared.get_achievement_data_by_sha_id(app, sha_sum, achievement["id"])
 
         r = dict()
         r['id'] = achievement["id"]
@@ -48,7 +46,7 @@ def get_all_achievement_data(sha_sum, cont_obj):
     return ret_list
 
 
-def get_last_attachment_data(sha_sum, cont_obj):
+def get_last_attachment_data(app, sha_sum, cont_obj):
     if len(cont_obj['attachments']) <= 0:
         return None
 
@@ -56,7 +54,7 @@ def get_last_attachment_data(sha_sum, cont_obj):
     last_date_added = cont_obj['attachments'][-1]["date-added"]
     last_submitter  = cont_obj['attachments'][-1]["submitter"]
 
-    data = hippod.api_shared.get_attachment_data_by_sha_id(sha_sum, last_element_id)
+    data = hippod.api_shared.get_attachment_data_by_sha_id(app, sha_sum, last_element_id)
 
     r = dict()
     for key, value in data.items():
@@ -74,7 +72,7 @@ def get_last_attachment_data(sha_sum, cont_obj):
     return r
 
 
-def container_obj_to_ret_obj(sha_sum, cont_obj):
+def container_obj_to_ret_obj(app, sha_sum, cont_obj):
     ret_obj = dict()
 
     # add object item ID
@@ -90,44 +88,43 @@ def container_obj_to_ret_obj(sha_sum, cont_obj):
     ret_obj['maturity-level'] = cont_obj['maturity-level'][-1]
 
     # add last attachment
-    data = get_last_attachment_data(sha_sum, cont_obj)
+    data = get_last_attachment_data(app, sha_sum, cont_obj)
     if data:
         ret_obj['object-attachment'] = data
 
     # add all achievements with all data
-    data = get_all_achievement_data(sha_sum, cont_obj)
+    data = get_all_achievement_data(app, sha_sum, cont_obj)
     if data:
         ret_obj['object-achievements'] = data
 
     return ret_obj
 
-
-
-def object_get_int(sha_sum):
-    (ret, data) = hippod.api_shared.read_cont_obj_by_id(sha_sum)
+def object_get_int(app, sha_sum):
+    (ret, data) = hippod.api_shared.read_cont_obj_by_id(app, sha_sum)
     if not ret:
         msg = "cannot read object by id: {}".format(sha_sum)
         raise ApiError(msg)
-    return container_obj_to_ret_obj(sha_sum, data)
-    
+    return container_obj_to_ret_obj(app, sha_sum, data)
 
-@app.route('/api/v1/object/<sha_sum>', methods=['GET', 'POST'])
-def object_get_id(sha_sum):
+def handle(request):
+    print("Object Loading:")
+    if request.method != "GET" and request.method != "POST":
+        msg = "Internal Error... request method: {} is not allowed".format(request.method)
+        raise hippod.error_object.ApiError(msg)
+    app = request.app
+    sha_sum = request.match_info['sha_sum']
+
     try:
         start = time.clock()
-        #xobj = request.get_json(force=False)
-        data = object_get_int(sha_sum)
+        data = object_get_int(app, sha_sum)
         end = time.clock()
     except ApiError as e:
         return e.transform()
-    #except Exception as e:
-    #    return ApiError(str(e)).transform()
+    except Exception as e:
+        return ApiError(str(e)).transform()
 
     o = hippod.ex3000.Ex3000()
     o['data'] = data
     o['processing-time'] = "{0:.4f}".format(end - start)
     o.http_code(200)
     return o.transform()
-
-
-

@@ -5,7 +5,9 @@ import base64
 import datetime
 import os
 
-from hippod import app
+import aiohttp
+
+
 
 from hippod.error_object import *
 
@@ -50,8 +52,7 @@ def filter_data(data, user_filter):
 
 
 
-def get(user_filter=None):
-    path = app.config['CONF_USER_FILEPATH']
+def get(app, user_filter=None):
+    path = app['CONF_USER_FILEPATH']
     data = load_data(path)
     return filter_data(data, user_filter)
-

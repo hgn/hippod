@@ -5,7 +5,6 @@ import base64
 import datetime
 import os
 
-from hippod import app
 
 def dir_size(path):
     total_size = os.path.getsize(path)
@@ -18,10 +17,10 @@ def dir_size(path):
     return total_size
 
 
-def folder_size(db_path):
+def folder_size(app, db_path):
     root_size      = os.path.getsize(db_path)
-    data_size      = dir_size(app.config['DB_DATA_PATH'])
-    object_db_size = dir_size(app.config['DB_OBJECT_PATH'])
+    data_size      = dir_size(app['DB_DATA_PATH'])
+    object_db_size = dir_size(app['DB_OBJECT_PATH'])
 
     cumulative = root_size + data_size + object_db_size
     return cumulative, object_db_size, data_size
@@ -41,15 +40,15 @@ def load_data(path):
     with open(path) as data_file:
         return json.load(data_file)
 
-def update_global_db_stats():
-    stat_path = app.config['DB_STATISTICS_FILEPATH']
+def update_global_db_stats(app):
+    stat_path = app['DB_STATISTICS_FILEPATH']
     today = datetime.datetime.now().strftime('%Y-%m-%d')
     uptodate, data = stats_written_today(stat_path, today)
     if uptodate:
         return
 
-    db_path = app.config['DB_ROOT_PATH']
-    cumulative, object_db_size, data_db_size = folder_size(db_path)
+    db_path = app['DB_ROOT_PATH']
+    cumulative, object_db_size, data_db_size = folder_size(app, db_path)
 
     # XXX: this assumes that the DB can grow *only*
     if len(data['item-bytes-overtime']) > 0 and \
@@ -65,8 +64,8 @@ def update_global_db_stats():
     with open(stat_path, "w+") as f:
         f.write(d_jsonfied)
 
-def get():
-    path = app.config['DB_STATISTICS_FILEPATH']
+def get(app):
+    path = app['DB_STATISTICS_FILEPATH']
     with open(path) as data_file:
         data = json.load(data_file)
         if not len(data['item-bytes-overtime']) > 0:
@@ -82,8 +81,8 @@ def data_write(path, data):
     with open(path, "w+") as f:
         f.write(d)
 
-def update_mimetype_data_store(mimetype, size_raw, size_compressed, compressed):
-    stat_path = app.config['DB_STATISTICS_FILEPATH']
+def update_mimetype_data_store(app, mimetype, size_raw, size_compressed, compressed):
+    stat_path = app['DB_STATISTICS_FILEPATH']
     data = load_data(stat_path)
     ptr = data['data-compression']
     if mimetype not in ptr:

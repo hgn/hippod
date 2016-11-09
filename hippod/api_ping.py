@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 # coding: utf-8
 
 import json
@@ -13,19 +13,21 @@ import hippod.users
 
 from hippod.error_object import *
 
-from hippod import app
-
-from flask import jsonify
-from flask import request
+import aiohttp
 
 
-@app.route('/api/v1/ping', methods=['GET'])
-def handle_ping():
-    data = dict()
-    data['version'] = app.config['VERSION']
 
-    o = hippod.ex3000.Ex3000()
-    o['data'] = data
-    o.http_code(202)
-    return o.transform()
+async def handle(request):
+	if request.method != "GET":
+		msg = "Internal Error... request method: {} is not allowed".format(request.method)
+		raise hippod.error_object.ApiError(msg)
+	app = request.app
 
+	data = dict()
+	data['version'] = app['VERSION']
+	print("\nVersion:")
+	print(data['version'])
+	o = hippod.ex3000.Ex3000()
+	o['data'] = data
+	o.http_code(202)
+	return o.transform()

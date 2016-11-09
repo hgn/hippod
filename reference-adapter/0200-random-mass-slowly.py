@@ -39,7 +39,7 @@ def random_submitter():
     return d[random.randint(0, len(d) - 1)]
 
 def query_full(id):
-    url = 'http://localhost:5000/api/v1/object/{}'.format(id)
+    url = 'http://localhost:8080/api/v1/object/{}'.format(id)
     data = ''' '''
     headers = {'Content-type': 'application/json', 'Accept': 'application/json'}
     r = requests.get(url, data=data, headers=headers)
@@ -50,7 +50,7 @@ def query_full(id):
     pp.pprint(data)
 
 def add_n(n):
-    url = 'http://localhost:5000/api/v1/object'
+    url = 'http://localhost:8080/api/v1/object'
     headers = {'Content-type': 'application/json', 'Accept': 'application/json'}
 
     for i in range(n):
@@ -201,7 +201,7 @@ after maintainable products.
     sys.exit(0)
     print("\r\n\n")
 
-    url = 'http://localhost:5000/api/v1/objects'
+    url = 'http://localhost:8080/api/v1/objects'
     data = '''
     {
         "limit": 0,

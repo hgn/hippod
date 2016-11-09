@@ -13,26 +13,29 @@ import hippod.users
 
 from hippod.error_object import *
 
-from hippod import app
-
-from flask import jsonify
-from flask import request
+import aiohttp
+import asyncio
 
 
-def get_user_data(req_obj):
+def get_user_data(app, req_obj):
     if not 'filter' in req_obj:
         msg = "user data MUST contain a filter"
         raise ApiError(msg)
     user_filter = req_obj['filter']
-    return hippod.users.get(user_filter=user_filter)
+    return hippod.users.get(app, user_filter=user_filter)
 
 
-@app.route('/api/v1/users', methods=['GET', 'POST'])
-def get_users():
+async def handle(request):
+    print("User Loading:")
+    if request.method != "GET" and request.method != "POST":
+        msg = "Internal Error... request method: {} is not allowed".format(request.method)
+        raise hippod.error_object.ApiError(msg)
+    app = request.app
+
     try:
         start = time.clock()
-        req_obj = request.get_json(force=False)
-        data = get_user_data(req_obj)
+        req_obj = await request.json()
+        data = get_user_data(app, req_obj)
         end = time.clock()
     except ApiError as e:
         return e.transform()
@@ -41,4 +44,3 @@ def get_users():
     o['data'] = data
     o['processing-time'] = "{0:.4f}".format(end - start)
     return o.transform()
-
