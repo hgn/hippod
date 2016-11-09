@@ -6,25 +6,24 @@ import time
 import zlib
 import sys
 
-from hippod import app
+import aiohttp
 
-from flask import jsonify
-from flask import request
 
-def read_cont_obj_by_id(sha_sum):
-    path = os.path.join(app.config['DB_OBJECT_PATH'],
+
+def read_cont_obj_by_id(app, sha_sum):
+    path = os.path.join(app['DB_OBJECT_PATH'],
                         sha_sum[0:2],
                         sha_sum,
                         'container.db')
     if not os.path.isfile(path):
-        return [False]
+        return [False, None]
     with open(path) as data_file:
         data = json.load(data_file)
     return [True, data]
 
 
-def get_achievement_data_by_sha_id(sha, id_no):
-    path = os.path.join(app.config['DB_OBJECT_PATH'],
+def get_achievement_data_by_sha_id(app, sha, id_no):
+    path = os.path.join(app['DB_OBJECT_PATH'],
                         sha[0:2],
                         sha,
                         'achievements',
@@ -34,8 +33,8 @@ def get_achievement_data_by_sha_id(sha, id_no):
     return data
 
 
-def get_attachment_data_by_sha_id(sha, id_no):
-    path = os.path.join(app.config['DB_OBJECT_PATH'],
+def get_attachment_data_by_sha_id(app, sha, id_no):
+    path = os.path.join(app['DB_OBJECT_PATH'],
                         sha[0:2],
                         sha,
                         'attachments',

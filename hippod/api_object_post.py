@@ -9,6 +9,9 @@ import time
 import zlib
 import sys
 
+import aiohttp
+import asyncio
+
 import hippod.hasher
 import hippod.ex3000
 import hippod.api_shared
@@ -17,10 +20,6 @@ import hippod.mime_data_db
 
 from hippod.error_object import *
 
-from hippod import app
-
-from flask import jsonify
-from flask import request
 
 
 def check_attachment(attachment):
@@ -49,7 +48,7 @@ def add_initial_maturity_level(object_item):
     object_item['maturity-level'].append(data)
 
 
-def create_container_data_merge_issue_new(sha_sum, object_item, submitter):
+def create_container_data_merge_issue_new(app, sha_sum, object_item, submitter):
     date = datetime.datetime.now().isoformat('T') # ISO 8601 format
     d = dict()
     d['submitter'] = submitter
@@ -65,7 +64,7 @@ def create_container_data_merge_issue_new(sha_sum, object_item, submitter):
     # the object is a little bit special. We iterate over the
     # data section as always and compress or not compress
     # data and save it in a different path
-    hippod.mime_data_db.save_object_item_data_list(object_item)
+    hippod.mime_data_db.save_object_item_data_list(app, object_item)
     d['object-item'] = object_item
 
     #if 'attachment' in xobj and len(xobj['attachment']) > 0:
@@ -76,8 +75,8 @@ def create_container_data_merge_issue_new(sha_sum, object_item, submitter):
     return json.dumps(d, sort_keys=True,indent=4, separators=(',', ': '))
 
 
-def save_new_object_container(sha_sum, object_item, submitter):
-    obj_root_path = app.config['DB_OBJECT_PATH']
+def save_new_object_container(app, sha_sum, object_item, submitter):
+    obj_root_path = app['DB_OBJECT_PATH']
     obj_root_pre_path = os.path.join(obj_root_path, sha_sum[0:2])
     if not os.path.isdir(obj_root_pre_path):
         os.makedirs(obj_root_pre_path)
@@ -96,14 +95,14 @@ def save_new_object_container(sha_sum, object_item, submitter):
         msg = "internal error: {}".format(inspect.currentframe())
         raise ApiError(msg)
     else:
-        cd = create_container_data_merge_issue_new(sha_sum, object_item, submitter)
+        cd = create_container_data_merge_issue_new(app, sha_sum, object_item, submitter)
         fd = open(file_path, 'w')
         fd.write(cd)
         fd.close()
 
 
-def is_obj_already_in_db(sha_sum):
-    path = os.path.join(app.config['DB_OBJECT_PATH'],
+def is_obj_already_in_db(app, sha_sum):
+    path = os.path.join(app['DB_OBJECT_PATH'],
                         sha_sum[0:2],
                         sha_sum,
                         'container.db')
@@ -115,10 +114,10 @@ def is_obj_already_in_db(sha_sum):
 
 
 
-def write_cont_obj_by_id(sha, py_object):
+def write_cont_obj_by_id(app, sha, py_object):
     data = json.dumps(py_object, sort_keys=True,indent=4,
                       separators=(',', ': '))
-    path = os.path.join(app.config['DB_OBJECT_PATH'],
+    path = os.path.join(app['DB_OBJECT_PATH'],
                         sha[0:2],
                         sha,
                         'container.db')
@@ -127,12 +126,12 @@ def write_cont_obj_by_id(sha, py_object):
     fd.close()
 
 
-def write_achievement_file(sha, id_no, achievement):
+def write_achievement_file(app, sha, id_no, achievement):
     # swap out data if mime types say so and modify
     # achievement inplace to reflect changes
-    hippod.mime_data_db.save_object_item_data_list(achievement)
+    hippod.mime_data_db.save_object_item_data_list(app, achievement)
 
-    path = os.path.join(app.config['DB_OBJECT_PATH'],
+    path = os.path.join(app['DB_OBJECT_PATH'],
                         sha[0:2],
                         sha,
                         'achievements',
@@ -144,8 +143,8 @@ def write_achievement_file(sha, id_no, achievement):
     fd.close()
 
 
-def write_attachment_file(sha, id_no, attachment):
-    path = os.path.join(app.config['DB_OBJECT_PATH'],
+def write_attachment_file(app, sha, id_no, attachment):
+    path = os.path.join(app['DB_OBJECT_PATH'],
                         sha[0:2],
                         sha,
                         'attachments',
@@ -181,13 +180,13 @@ def validate_achievement(achievement):
     validate_date(achievement['test-date'])
 
 
-def update_attachment_achievement(sha_sum, xobj):
+def update_attachment_achievement(app, sha_sum, xobj):
     # ok, the object is in database, we now update the data
     # attachments are updated (overwrite), achievements are
     # added
     rewrite_required = False
     date = datetime.datetime.now().isoformat('T')
-    (ret, data) = hippod.api_shared.read_cont_obj_by_id(sha_sum)
+    (ret, data) = hippod.api_shared.read_cont_obj_by_id(app, sha_sum)
     if not ret:
         msg = "cannot read object although it is an update!?"
         raise ApiError(msg)
@@ -206,11 +205,11 @@ def update_attachment_achievement(sha_sum, xobj):
             new_attachment_meta['submitter'] = xobj['submitter']
 
             current_attachments.append(new_attachment_meta)
-            write_attachment_file(sha_sum, current_attachments_no, xobj['attachment'])
+            write_attachment_file(app, sha_sum, current_attachments_no, xobj['attachment'])
             data['attachments'] = current_attachments
             rewrite_required = True
         else:
-            last_attachment = hippod.api_shared.get_attachment_data_by_sha_id(sha_sum, current_attachments_no - 1)
+            last_attachment = hippod.api_shared.get_attachment_data_by_sha_id(app, sha_sum, current_attachments_no - 1)
             sha_sum_last = hippod.hasher.check_sum_attachment(last_attachment)
             sha_sum_new  = hippod.hasher.check_sum_attachment(xobj['attachment'])
             if sha_sum_last != sha_sum_new:
@@ -220,7 +219,7 @@ def update_attachment_achievement(sha_sum, xobj):
                 new_attachment_meta['submitter'] = xobj['submitter']
 
                 current_attachments.append(new_attachment_meta)
-                write_attachment_file(sha_sum, current_attachments_no, xobj['attachment'])
+                write_attachment_file(app, sha_sum, current_attachments_no, xobj['attachment'])
                 data['attachments'] = current_attachments
                 rewrite_required = True
 
@@ -243,18 +242,18 @@ def update_attachment_achievement(sha_sum, xobj):
             a['submitter'] = xobj['submitter']
 
             # now we save the achievement in a seperate file
-            write_achievement_file(sha_sum, current_achievements_no, a)
+            write_achievement_file(app, sha_sum, current_achievements_no, a)
             current_achievements_no += 1
 
         data["achievements"] = current_achievements
         rewrite_required = True
 
     if rewrite_required:
-        write_cont_obj_by_id(sha_sum, data)
+        write_cont_obj_by_id(app, sha_sum, data)
 
 
-def object_index_init():
-    db_path = app.config['DB_OBJECT_PATH']
+def object_index_init(app):
+    db_path = app['DB_OBJECT_PATH']
     object_index_db_path = os.path.join(db_path, "object-index.db")
     if not os.path.isfile(object_index_db_path):
         return list()
@@ -262,8 +261,8 @@ def object_index_init():
         return json.load(data_file)
 
 
-def object_index_update(d):
-    db_path = app.config['DB_OBJECT_PATH']
+def object_index_update(app, d):
+    db_path = app['DB_OBJECT_PATH']
     object_index_db_path = os.path.join(db_path, "object-index.db")
     data = json.dumps(d, sort_keys=True, indent=4, separators=(',', ': '))
     fd = open(object_index_db_path, 'w')
@@ -271,19 +270,19 @@ def object_index_update(d):
     fd.close()
 
 
-def object_index_initial_add(sha_sum, xobj):
+def object_index_initial_add(app, sha_sum, xobj):
     # read existing data set
-    object_index = object_index_init()
+    object_index = object_index_init(app)
     # create new data set
     d = dict()
     d['object-item-id'] = sha_sum
     # append new data set
     object_index.append(d)
     # update the object index
-    object_index_update(object_index)
+    object_index_update(app, object_index)
 
 
-def try_adding_xobject(xobj):
+def try_adding_xobject(app, xobj):
     if not 'submitter' in xobj:
         msg = "No submitter in xobject given!"
         raise ApiError(msg)
@@ -315,35 +314,39 @@ def try_adding_xobject(xobj):
     # to file partly and later the achievement can be miss-formated.
     # object container file write should be delayed until everything
     # is sane.
-    ret = is_obj_already_in_db(sha_sum)
+    ret = is_obj_already_in_db(app, sha_sum)
     if not ret:
         # new entry, save to file
-        save_new_object_container(sha_sum, xobj['object-item'], xobj['submitter'])
-        object_index_initial_add(sha_sum, xobj)
+        save_new_object_container(app, sha_sum, xobj['object-item'], xobj['submitter'])
+        object_index_initial_add(app, sha_sum, xobj)
 
-    update_attachment_achievement(sha_sum, xobj)
+    update_attachment_achievement(app, sha_sum, xobj)
 
     ret_data = dict()
     ret_data['id'] = sha_sum
     return ret_data
 
-def check_request_size_limit(request):
+def check_request_size_limit(app, request):
     cl = request.content_length
-    if cl is not None and cl > app.config['MAX_REQUEST_SIZE']:
+    if cl is not None and cl > app['MAX_REQUEST_SIZE']:
         msg = "Request data size {} > limit ({})".format(
-                cl, app.config['MAX_REQUEST_SIZE'])
+                cl, app['MAX_REQUEST_SIZE'])
         raise ApiError(msg)
 
 
+async def handle(request):
+    print("Posting Object:")
+    if request.method != "POST":
+        msg = "Internal Error... request method: {} is not allowed".format(request.method)
+        raise hippod.error_object.ApiError(msg)
+    app = request.app
 
-@app.route('/api/v1/object', methods=['POST'])
-def object_post():
     try:
         start = time.clock()
-        check_request_size_limit(request)
-        xobj = request.get_json(force=False)
-        data = try_adding_xobject(xobj)
-        hippod.statistic.update_global_db_stats()
+        check_request_size_limit(app, request)
+        xobj = await request.json()
+        data = try_adding_xobject(app, xobj)
+        hippod.statistic.update_global_db_stats(app)
         end = time.clock()
     except ApiError as e:
         return e.transform()
@@ -355,6 +358,5 @@ def object_post():
     o['processing-time'] = "{0:.4f}".format(end - start)
     o.http_code(200)
     return o.transform()
-
 
 

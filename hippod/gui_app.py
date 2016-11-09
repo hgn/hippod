@@ -3,8 +3,8 @@
 
 from hippod import app
 
-from flask import render_template
+# from flask import render_template
 
-@app.route('/')
-def webapp():
-    return app.send_static_file('index.html')
+# @app.route('/')
+# def webapp():
+#     return app.send_static_file('index.html')

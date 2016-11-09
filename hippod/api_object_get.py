@@ -9,19 +9,18 @@ import time
 import zlib
 import sys
 
+import aiohttp
+import asyncio
+
 import hippod.hasher
 import hippod.ex3000
 import hippod.api_shared
 
 from hippod.error_object import *
 
-from hippod import app
 
-from flask import jsonify
-from flask import request
-
-def object_index_read():
-    db_path = app.config['DB_OBJECT_PATH']
+def object_index_read(app):
+    db_path = app['DB_OBJECT_PATH']
     object_index_db_path = os.path.join(db_path, "object-index.db")
     if not os.path.isfile(object_index_db_path):
         return None
@@ -66,14 +65,14 @@ def null_func(data):
     pass
 
 
-def get_last_achievement_data(sha_sum, cont_obj):
+def get_last_achievement_data(app, sha_sum, cont_obj):
     if len(cont_obj['achievements']) <= 0:
         return None
 
     last_date_added = cont_obj['achievements'][-1]["date-added"]
     last_element_id = cont_obj['achievements'][-1]["id"]
 
-    data = hippod.api_shared.get_achievement_data_by_sha_id(sha_sum, last_element_id)
+    data = hippod.api_shared.get_achievement_data_by_sha_id(app, sha_sum, last_element_id)
     test_result = data["result"]
     test_date   = data["test-date"]
     submitter   = data["submitter"]
@@ -88,7 +87,7 @@ def get_last_achievement_data(sha_sum, cont_obj):
     return r
 
 
-def get_last_attachment_data(sha_sum, cont_obj):
+def get_last_attachment_data(app, sha_sum, cont_obj):
     if len(cont_obj['attachments']) <= 0:
         return None
 
@@ -96,7 +95,7 @@ def get_last_attachment_data(sha_sum, cont_obj):
     last_date_added = cont_obj['attachments'][-1]["date-added"]
     last_submitter  = cont_obj['attachments'][-1]["submitter"]
 
-    data = hippod.api_shared.get_attachment_data_by_sha_id(sha_sum, last_element_id)
+    data = hippod.api_shared.get_attachment_data_by_sha_id(app, sha_sum, last_element_id)
 
     r = dict()
     for key, value in data.items():
@@ -114,7 +113,7 @@ def get_last_attachment_data(sha_sum, cont_obj):
     return r
 
 
-def container_obj_to_ret_obj(request_data, sha_sum, cont_obj):
+def container_obj_to_ret_obj(app, request_data, sha_sum, cont_obj):
     ret_obj = dict()
 
     # add object item ID
@@ -128,12 +127,12 @@ def container_obj_to_ret_obj(request_data, sha_sum, cont_obj):
     ret_obj['maturity-level'] = cont_obj['maturity-level'][-1]
 
     # add last attachment
-    data = get_last_attachment_data(sha_sum, cont_obj)
+    data = get_last_attachment_data(app, sha_sum, cont_obj)
     if data:
         ret_obj['object-attachment'] = data
 
     # add last achievement with basic information
-    data = get_last_achievement_data(sha_sum, cont_obj)
+    data = get_last_achievement_data(app, sha_sum, cont_obj)
     if data:
         ret_obj['object-achievements'] = data
         if request_data['filter-by-result'] != "all":
@@ -149,16 +148,16 @@ def container_obj_to_ret_obj(request_data, sha_sum, cont_obj):
     return True, ret_obj
 
 
-def object_data_by_id(request_data, sha_sum):
-    (ret, data) = hippod.api_shared.read_cont_obj_by_id(sha_sum)
+def object_data_by_id(app, request_data, sha_sum):
+    (ret, data) = hippod.api_shared.read_cont_obj_by_id(app, sha_sum)
     if not ret:
         msg = "cannot read object by id: {}".format(sha_sum)
         raise ApiError(msg)
-    return container_obj_to_ret_obj(request_data, sha_sum, data)
+    return container_obj_to_ret_obj(app, request_data, sha_sum, data)
 
 
-def object_get_by_sub_data_rev(request_data, reverse=True):
-    object_index_data = object_index_read()
+def object_get_by_sub_data_rev(app, request_data, reverse=True):
+    object_index_data = object_index_read(app)
     if not object_index_data:
         return None
     limit = request_data['limit']
@@ -166,7 +165,7 @@ def object_get_by_sub_data_rev(request_data, reverse=True):
     ret_data = list()
     list_sort_func = (null_func, reversed)[bool(reverse)]
     for i in list_sort_func(object_index_data):
-        success, data = object_data_by_id(request_data, i['object-item-id'])
+        success, data = object_data_by_id(app, request_data, i['object-item-id'])
         if not success:
             # probably a filter (status, maturity_level, ..)
             continue
@@ -178,24 +177,28 @@ def object_get_by_sub_data_rev(request_data, reverse=True):
     return ret_data
 
 
-def object_get_int(xobj):
+def object_get_int(app, xobj):
     request_data = check_request_data(xobj)
     if request_data['ordering'] == "by-submitting-date-reverse":
-        return object_get_by_sub_data_rev(request_data, reverse=True)
+        return object_get_by_sub_data_rev(app, request_data, reverse=True)
     elif request_data['ordering'] == "by-submitting-date":
-        return object_get_by_sub_data_rev(request_data, reverse=False)
+        return object_get_by_sub_data_rev(app, request_data, reverse=False)
     else:
         msg = "ordering not supported"
         raise ApiError(msg)
-    
 
 
-@app.route('/api/v1/objects', methods=['GET', 'POST'])
-def object_get():
+async def handle(request):
+    print("Object Loading:")
+    if request.method != "GET" and request.method != "POST":
+        msg = "Internal Error... request method: {} is not allowed".format(request.method)
+        raise hippod.error_object.ApiError(msg)
+    app = request.app
+
     try:
         start = time.clock()
-        xobj = request.get_json(force=False)
-        data = object_get_int(xobj)
+        xobj = await request.json()
+        data = object_get_int(app, xobj)
         end = time.clock()
     except ApiError as e:
         return e.transform()
@@ -207,6 +210,4 @@ def object_get():
     o['processing-time'] = "{0:.4f}".format(end - start)
     o.http_code(200)
     return o.transform()
-
-
 
