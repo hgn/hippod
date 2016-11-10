@@ -5,8 +5,19 @@ import json
 import requests
 import pprint
 import unittest
+import argparse
 
 pp = pprint.PrettyPrinter(depth=6)
+
+arser = argparse.ArgumentParser()
+parser.add_argument('--quite', help='Just print an OK at the end and fade out the printed data' )
+args = parser.parse_args()
+
+def pprnt(data):
+    if args.quite:
+        pass
+    else:
+        pp.pprint(data)
 
 
 def query_user():
@@ -22,7 +33,7 @@ def query_user():
     print(r.status_code)
     print("\nRet Data:")
     ret_data = r.json()
-    pp.pprint(ret_data)
+    pprnt(ret_data)
 
 
 if __name__ == '__main__':

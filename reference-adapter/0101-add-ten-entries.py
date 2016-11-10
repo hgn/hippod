@@ -5,8 +5,22 @@ import json
 import requests
 import pprint
 import unittest
+import argparse
 
 pp = pprint.PrettyPrinter(depth=6)
+
+parser = argparse.ArgumentParser()
+parser.add_argument('--quite',
+                    help='Just print an OK at the end and fade out the printed data',
+                    action='store_true')
+args = parser.parse_args()
+
+def pprnt(data):
+    if args.quite:
+        pass
+    else:
+        pp.pprint(data)
+
 
 
 def add_n(n):
@@ -23,14 +37,14 @@ def add_n(n):
     headers = {'Content-type': 'application/json', 'Accept': 'application/json'}
     for i in range(n):
         data['object-item']['title'] = "title {}".format(i)
-        pp.pprint(data)
+        pprnt(data)
         dj = json.dumps(data, sort_keys=True, separators=(',', ': '))
         r = requests.post(url, data=dj, headers=headers)
-        print("\nStatus Code:")
-        print(r.status_code)
-        print("\nRet Data:")
+        pprnt("\nStatus Code:")
+        pprnt(r.status_code)
+        pprnt("\nRet Data:")
         ret_data = r.json()
-        pp.pprint(ret_data)
+        pprnt(ret_data)
         assert len(ret_data['data']['id']) > 0
 
 
@@ -46,12 +60,17 @@ def add_n(n):
 
     headers = {'Content-type': 'application/json', 'Accept': 'application/json'}
     r = requests.get(url, data=data, headers=headers)
-    print("\nStatus Code:")
-    print(r.status_code)
-    print("\nRet Data:")
+    pprnt("\nStatus Code:")
+    pprnt(r.status_code)
+    pprnt("\nRet Data:")
     data = r.json()
-    pp.pprint(data)
+    pprnt(data)
+    return r.status_code
 
 
 if __name__ == '__main__':
-    add_n(10)
+    status = add_n(10)
+    if status==200:
+        print("OK")
+    else:
+        print("FAIL")

@@ -1,5 +1,5 @@
-#!/usr/bin/python
-# coding: utf-7
+#!/usr/bin/python3
+# coding: utf-8
 
 import sys
 import json
@@ -14,8 +14,22 @@ import time
 import datetime
 import base64
 import uuid
+import argparse
 
 pp = pprint.PrettyPrinter(depth=6)
+
+parser = argparse.ArgumentParser()
+parser.add_argument('--quite',
+                    help='Just print an OK at the end and fade out the printed data',
+                    action='store_true')
+args = parser.parse_args()
+
+def pprnt(data):
+    if args.quite:
+        pass
+    else:
+        pp.pprint(data)
+
 
 def random_image():
     with open("data/plot.png", "rb") as f:
@@ -47,7 +61,7 @@ def query_full(id):
     print(r.status_code)
     print("\nRet Data:")
     data = r.json()
-    pp.pprint(data)
+    pprnt(data)
 
 def add_n(n):
     url = 'http://localhost:8080/api/v1/object'
@@ -216,8 +230,13 @@ after maintainable products.
     print(r.status_code)
     print("\nRet Data:")
     data = r.json()
-    pp.pprint(data)
+    pprnt(data)
+    return r.status_code
 
 
 if __name__ == '__main__':
-    add_n(10000)
+    status = add_n(100)
+    if status==200:
+        print("OK")
+    else:
+        print("FAIL")

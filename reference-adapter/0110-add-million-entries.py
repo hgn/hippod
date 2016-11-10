@@ -1,5 +1,5 @@
-#!/usr/bin/python
-# coding: utf-7
+#!/usr/bin/python3
+# coding: utf-8
 
 import sys
 import json
@@ -8,8 +8,22 @@ import pprint
 import unittest
 import string
 import random
+import argparse
 
 pp = pprint.PrettyPrinter(depth=6)
+
+parser = argparse.ArgumentParser()
+parser.add_argument('--quite',
+                    help='Just print an OK at the end and fade out the printed data',
+                    action='store_true')
+args = parser.parse_args()
+
+def pprnt(data):
+    if args.quite:
+        pass
+    else:
+        pp.pprint(data)
+
 
 def random_title(length):
     words = ['Foo', 'Bar', 'Linux', 'Something', 'Yeah', 'Nope', 'Random', "REST", "IPv6"]
@@ -39,7 +53,10 @@ def add_n(n):
         #pp.pprint(ret_data)
         assert len(ret_data['data']['id']) > 0
         processing_time = ret_data['processing-time']
-        sys.stderr.write("\rEntry: {}, HTTPStatusCode: {} ServerProcTime {}s".format(i, r.status_code, processing_time))
+        if args.quite:
+            pass
+        else:
+            sys.stderr.write("\rEntry: {}, HTTPStatusCode: {} ServerProcTime {}s".format(i, r.status_code, processing_time))
 
     print("\r\n\n")
 
@@ -54,12 +71,18 @@ def add_n(n):
 
     headers = {'Content-type': 'application/json', 'Accept': 'application/json'}
     r = requests.get(url, data=data, headers=headers)
-    print("\nStatus Code:")
-    print(r.status_code)
-    print("\nRet Data:")
+    pprnt("\nStatus Code:")
+    pprnt(r.status_code)
+    pprnt("\nRet Data:")
     data = r.json()
-    pp.pprint(data)
-
+    pprnt(data)
+    return r.status_code
 
 if __name__ == '__main__':
-    add_n(100)
+    status = add_n(100)
+    if status==200:
+        print("OK")
+        
+    else:
+        print("FAIL")
+        
