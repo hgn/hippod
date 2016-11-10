@@ -6,29 +6,11 @@
 
 ## Installation and Dependencies ##
 
-Only python and python-flask is required to run contestcolld.
-
-### Microsoft Windows ###
-
-Since Python version 2.7.9 *pip* is already included in standard python. A
-simple ```pip install flask``` will then install flask.
-
-There are several ways to install *pip* by hand but I recommend using a actual
-Python version.
-
-### Linux ###
-
-#### Debian and Ubuntu ####
+Python 3.4 is required to run hippod.  After installing base packages please
+install the following python specific packages:
 
 ```
-sudo apt-get install python-flask
-sudo apt-get install python3-markdown
-```
-
-#### Arch ####
-
-```
-sudo pacman -S community/python2-flask
+pip3 install -r requirements.txt
 ```
 
 ### Testing Dependencies ###
