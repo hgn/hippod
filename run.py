@@ -125,7 +125,9 @@ def main():
                         '/api/v1/users',
                         api_users.handle)    
 
-    app.router.add_static('/', 'hippod/app')
+    absdir = os.path.dirname(os.path.realpath(__file__))
+    app_path = os.path.join(absdir, 'hippod/app')
+    app.router.add_static('/', app_path)
 
     web.run_app(app, host='0.0.0.0', port=8080)
 
