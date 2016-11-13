@@ -141,7 +141,7 @@ def setup_routes(app, conf):
 def main(conf):
     app = init_aiohttp(conf)
     setup_routes(app, conf)
-    web.run_app(app, host='0.0.0.0', port=8080)
+    web.run_app(app, host=conf.common.host, port=conf.common.port)
 
 
 def parse_args():
@@ -159,6 +159,15 @@ def load_configuration_file(args):
     with open(args.configuration) as json_data:
         return addict.Dict(json.load(json_data))
 
+def configuration_check(conf):
+    # this function check for variables, if required
+    # we should exit here with a proper message. If a
+    # configuration knob is not required we set here a
+    # proper default
+    if not "host" in conf.common:
+        conf.common.host = '0.0.0.0'
+    if not "port" in conf.common:
+        conf.common.port = '8080'
 
 def conf_init():
     args = parse_args()
