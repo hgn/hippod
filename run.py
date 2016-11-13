@@ -6,6 +6,8 @@ import sys
 import datetime
 import json
 import random
+import argparse
+import addict
 
 from aiohttp import web
 
@@ -20,9 +22,12 @@ from hippod import api_object_get
 from hippod import api_object_get_full
 from hippod import api_data_get
 
-
-
 APP_VERSION = "002"
+
+# exit codes for shell, failures can later be sub-devided
+# if required and shell/user has benefit of this information
+EXIT_OK      = 0
+EXIT_FAILURE = 1
 
 
 def db_create_initial_statistics(path):
@@ -99,7 +104,7 @@ check_conf_environmet(app, conf_path_root)
 
 
 
-def main(): 
+def main(conf): 
     app.router.add_route('*',
                         '/api/v1/achievement/{sha_id}/{achievement_id}',
                         api_achievement_get.handle)
@@ -132,6 +137,27 @@ def main():
     web.run_app(app, host='0.0.0.0', port=8080)
 
 
+def parse_args():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("-f", "--configuration", help="configuration", type=str, default=None)
+    parser.add_argument("-v", "--verbose", help="verbose", action='store_true', default=False)
+    args = parser.parse_args()
+    if not args.configuration:
+        sys.stderr.write("Configuration required, please specify a valid file path, exiting now\n")
+        sys.exit(EXIT_FAILURE)
+    return args
+
+def load_configuration_file(args):
+    with open(args.configuration) as json_data:
+        return addict.Dict(json.load(json_data))
+
+def conf_init():
+    args = parse_args()
+    conf = load_configuration_file(args)
+    return conf
+
 
 if __name__ == '__main__':
-    main()
+    sys.stdout.write("HippoD - 2015, 2016\n")
+    conf = conf_init()
+    main(conf)

@@ -1,2 +1,3 @@
-aiohttp>=1.1.2
+aiohttp>=1.1
 markdown>=2.6
+addict>=1.1

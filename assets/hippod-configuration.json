@@ -1,0 +1,19 @@
+{
+    "common" : {
+        "debug" : false
+    },
+
+    "db" : {
+			"path" : "/tmp/hippod-db"
+		},
+
+		"user-db" : {
+			"method" : "ldap",
+			"ldap-credentials" : {
+				"cn" : "",
+				"username" : "",
+				"password" : ""
+			}
+		}
+
+}
