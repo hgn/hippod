@@ -1,21 +1,21 @@
 {
-    "common" : {
-        "debug" : false,
-				"host"  : "0.0.0.0",
-				"port"  : 8080
-    },
+	"common" : {
+		"debug" : false,
+		"host"  : "0.0.0.0",
+		"port"  : 8080
+	},
 
-    "db" : {
-			"path" : "/tmp/hippod-db"
-		},
+	"db" : {
+		"path" : "/tmp/hippod-db"
+	},
 
-		"user-db" : {
-			"method" : "ldap",
-			"ldap-credentials" : {
-				"cn" : "",
-				"username" : "",
-				"password" : ""
-			}
+	"user-db" : {
+		"method" : "ldap",
+		"ldap-credentials" : {
+			"cn" : "",
+			"username" : "",
+			"password" : ""
 		}
+	}
 
 }
