@@ -92,7 +92,7 @@ def init_aiohttp(conf):
     app = web.Application(middlewares=[aiohttp_index.IndexMiddleware()])
 
     app["VERSION"] = APP_VERSION
-    app["instance_path"] = "instance"
+    app["instance_path"] = conf.db.path
     set_config_defaults(app)
 
 
@@ -168,6 +168,11 @@ def configuration_check(conf):
         conf.common.host = '0.0.0.0'
     if not "port" in conf.common:
         conf.common.port = '8080'
+
+    if not "path" in conf.db:
+        sys.stderr.write("No path configured for database, but required! Please specify "
+                         "a path in db section\n")
+        sys.exit(EXIT_FAILURE)
 
 def conf_init():
     args = parse_args()
