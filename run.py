@@ -40,6 +40,7 @@ def db_create_initial_statistics(path):
     with open(path,"w+") as f:
         f.write(d_jsonfied)
 
+
 def conf_create_user_statistics(path):
     sys.stderr.write("create user db: {}\n".format(path))
     d = list()
@@ -52,6 +53,7 @@ def conf_create_user_statistics(path):
     d_jsonfied =  json.dumps(d, sort_keys=True,indent=4, separators=(',', ': '))
     with open(path,"w+") as f:
         f.write(d_jsonfied)
+
 
 def check_db_environmet(app, path):
     if not os.path.isdir(path):
@@ -71,6 +73,7 @@ def check_db_environmet(app, path):
     if not os.path.isfile(obj_path):
         db_create_initial_statistics(obj_path)
 
+
 def check_conf_environmet(app, path):
     if not os.path.isdir(path):
         os.makedirs(path)
@@ -79,32 +82,32 @@ def check_conf_environmet(app, path):
     if not os.path.isfile(obj_path):
         conf_create_user_statistics(obj_path)
 
+
 def set_config_defaults(app):
     app['MAX_REQUEST_SIZE'] = 5000000
 
 
 
-# building instance of Web Application
-# IndexMiddleware from aiohttp_index helps to serve static files, e.g. index.html
+def init_aiohttp(conf):
+    app = web.Application(middlewares=[aiohttp_index.IndexMiddleware()])
 
-app = web.Application(middlewares=[aiohttp_index.IndexMiddleware()])
-
-app["VERSION"] = APP_VERSION
-app["instance_path"] = "instance"
-set_config_defaults(app)
+    app["VERSION"] = APP_VERSION
+    app["instance_path"] = "instance"
+    set_config_defaults(app)
 
 
-db_path_root = os.path.join(app["instance_path"], "db")
-app["DB_ROOT_PATH"] = db_path_root
-check_db_environmet(app, db_path_root)
+    db_path_root = os.path.join(app["instance_path"], "db")
+    app["DB_ROOT_PATH"] = db_path_root
+    check_db_environmet(app, db_path_root)
 
-conf_path_root = os.path.join(app["instance_path"], "conf")
-app['CONF_ROOT_PATH'] = conf_path_root
-check_conf_environmet(app, conf_path_root)
+    conf_path_root = os.path.join(app["instance_path"], "conf")
+    app['CONF_ROOT_PATH'] = conf_path_root
+    check_conf_environmet(app, conf_path_root)
+
+    return app
 
 
-
-def main(conf): 
+def setup_routes(app, conf):
     app.router.add_route('*',
                         '/api/v1/achievement/{sha_id}/{achievement_id}',
                         api_achievement_get.handle)
@@ -134,6 +137,10 @@ def main(conf):
     app_path = os.path.join(absdir, 'hippod/app')
     app.router.add_static('/', app_path)
 
+
+def main(conf):
+    app = init_aiohttp(conf)
+    setup_routes(app, conf)
     web.run_app(app, host='0.0.0.0', port=8080)
 
 
@@ -147,9 +154,11 @@ def parse_args():
         sys.exit(EXIT_FAILURE)
     return args
 
+
 def load_configuration_file(args):
     with open(args.configuration) as json_data:
         return addict.Dict(json.load(json_data))
+
 
 def conf_init():
     args = parse_args()
