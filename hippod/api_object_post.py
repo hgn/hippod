@@ -335,7 +335,6 @@ def check_request_size_limit(app, request):
 
 
 async def handle(request):
-    print("Posting Object:")
     if request.method != "POST":
         msg = "Internal Error... request method: {} is not allowed".format(request.method)
         raise hippod.error_object.ApiError(msg)

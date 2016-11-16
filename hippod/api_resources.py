@@ -21,7 +21,6 @@ def get_statistics():
 
 
 def handle(request):
-    print("Resources Loading:")
     if request.method != "GET":
         msg = "Internal Error... request method: {} is not allowed".format(request.method)
         raise hippod.error_object.ApiError(msg)

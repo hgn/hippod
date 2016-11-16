@@ -30,7 +30,6 @@ def get_achievement_int(app, sha_id, achievement_id):
 
 
 async def handle(request):
-    print("Loading Achievement:")
     if request.method != "GET" and request.method != "POST":
         msg = "Internal Error... request method: {} is not allowed".format(request.method)
         raise hippod.error_object.ApiError(msg)
