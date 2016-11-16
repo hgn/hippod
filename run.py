@@ -21,6 +21,7 @@ from hippod import api_object_post
 from hippod import api_object_get
 from hippod import api_object_get_full
 from hippod import api_data_get
+from hippod import user_db
 
 APP_VERSION = "002"
 
@@ -36,20 +37,6 @@ def db_create_initial_statistics(path):
     d = dict()
     d['item-bytes-overtime'] = list()
     d['data-compression'] = dict()
-    d_jsonfied =  json.dumps(d, sort_keys=True,indent=4, separators=(',', ': '))
-    with open(path,"w+") as f:
-        f.write(d_jsonfied)
-
-
-def conf_create_user_statistics(path):
-    sys.stderr.write("create user db: {}\n".format(path))
-    d = list()
-    entry = dict()
-    entry['username'] = "john_doe"
-    entry['fullname'] = "John Doe"
-    entry['email']    = "john@example.coa"
-    entry['color']    = '#{:02X}'.format(random.randint(0, 0xFFFFFF))
-    d.append(entry)
     d_jsonfied =  json.dumps(d, sort_keys=True,indent=4, separators=(',', ': '))
     with open(path,"w+") as f:
         f.write(d_jsonfied)
@@ -74,13 +61,12 @@ def check_db_environmet(app, path):
         db_create_initial_statistics(obj_path)
 
 
-def check_conf_environmet(app, path):
+def check_conf_environment(app, path):
     if not os.path.isdir(path):
         os.makedirs(path)
     obj_path = os.path.join(path, 'user.conf')
     app['CONF_USER_FILEPATH'] = obj_path
-    if not os.path.isfile(obj_path):
-        conf_create_user_statistics(obj_path)
+
 
 
 def set_config_defaults(app):
@@ -95,14 +81,16 @@ def init_aiohttp(conf):
     app["instance_path"] = conf.db.path
     set_config_defaults(app)
 
-
     db_path_root = os.path.join(app["instance_path"], "db")
     app["DB_ROOT_PATH"] = db_path_root
     check_db_environmet(app, db_path_root)
 
     conf_path_root = os.path.join(app["instance_path"], "conf")
     app['CONF_ROOT_PATH'] = conf_path_root
-    check_conf_environmet(app, conf_path_root)
+    check_conf_environment(app, conf_path_root)
+
+    db_path = os.path.join(conf_path_root, "user.db")
+    app["userdb"] = user_db.UserDB(conf, db_path)
 
     return app
 
