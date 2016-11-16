@@ -21,12 +21,11 @@ def get_user_data(app, req_obj):
     if not 'filter' in req_obj:
         msg = "user data MUST contain a filter"
         raise ApiError(msg)
-    user_filter = req_obj['filter']
-    return hippod.users.get(app, user_filter=user_filter)
+    user_filter = req_obj['filter']['username']
+    return hippod.users.get(app, user_filter)
 
 
 async def handle(request):
-    print("User Loading:")
     if request.method != "GET" and request.method != "POST":
         msg = "Internal Error... request method: {} is not allowed".format(request.method)
         raise hippod.error_object.ApiError(msg)

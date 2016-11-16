@@ -107,7 +107,6 @@ def object_get_int(app, sha_sum):
     return container_obj_to_ret_obj(app, sha_sum, data)
 
 def handle(request):
-    print("Object Loading:")
     if request.method != "GET" and request.method != "POST":
         msg = "Internal Error... request method: {} is not allowed".format(request.method)
         raise hippod.error_object.ApiError(msg)

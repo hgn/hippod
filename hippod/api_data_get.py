@@ -32,7 +32,6 @@ def object_data_get_int(app, sha_sum):
 
 
 def handle(request):
-    print("Loading Data:")
     if request.method != "GET" and request.method != "POST":
         msg = "Internal Error... request method: {} is not allowed".format(request.method)
         raise hippod.error_object.ApiError(msg)

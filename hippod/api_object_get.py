@@ -189,7 +189,6 @@ def object_get_int(app, xobj):
 
 
 async def handle(request):
-    print("Object Loading:")
     if request.method != "GET" and request.method != "POST":
         msg = "Internal Error... request method: {} is not allowed".format(request.method)
         raise hippod.error_object.ApiError(msg)

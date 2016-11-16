@@ -9,12 +9,14 @@
 		"path" : "/tmp/hippod-db"
 	},
 
-	"user-db" : {
-		"method" : "ldap",
-		"ldap-credentials" : {
-			"cn" : "",
-			"username" : "",
-			"password" : ""
+	"userdb" : {
+		"method" : "file",
+		"ldap_credentials" : {
+			"server" : "ldap://<MY_LDAP_SERVER>.<DOMAIN>",
+			"port" : "389",
+			"bind" : "ou=MAIN,dc=<EXAMPLE>,dc=net",
+			"username" : "<USER>",
+			"password" : "<PASSWORD>"
 		}
 	}
 
