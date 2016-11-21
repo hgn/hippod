@@ -72,7 +72,7 @@ class UserDB:
         elif conf.userdb.method == "file":
             self.ldap_method = False
         else:
-            msg = "configuration methdod {} unknown. Only 'ldap' or " +
+            msg = "configuration methdod {} unknown. Only 'ldap' or " \
                   "'file' methods are valid"
             msg = msg.format(conf.userdb.method)
             raise ApiError(msg)
@@ -125,13 +125,13 @@ class UserDB:
                         self.password, self.bind)
             ok, data = ldap.query(username)
             if not ok:
-                msg = "user {} not known in user database or LDAP server" +
+                msg = "user {} not known in user database or LDAP server" \
                       " down or credentials wrong. More info: {}"
                 msg = msg.format(username, data)
                 raise ApiError(msg)
             self._local_db_add_entry(data, username)
         if not data and not self.ldap_method:
-            msg = "user {} not known in local user database. Please add" +
+            msg = "user {} not known in local user database. Please add" \
                   " manually entry for this user in local user.db"
             msg = msg.format(username)
             raise ApiError(msg)

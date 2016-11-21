@@ -48,24 +48,28 @@ def add_initial_maturity_level(object_item):
     object_item['maturity-level'].append(data)
 
 
-def create_container_data_merge_issue_new(app, sha_sum, object_item, submitter):
+def create_container_data_merge_issue_new(app, sha_major, sha_minor, object_item):
     date = datetime.datetime.now().isoformat('T') # ISO 8601 format
     d = dict()
-    d['submitter'] = submitter
-    d['object-item-id'] = sha_sum
+    d['title'] = object_item['object-item']['title']
+    d['version'] = object_item['object-item']['version']
+    d['categories'] = object_item['object-item']['categories']
+    d['object-item-id'] = sha_major
     d['date-added'] = date
     d['attachments'] = []
     d['attachment-last-modified'] = date
-    d['achievements'] = []
+    d['minor-list'] = list()
+    d['minor-list'].append(sha_minor)
 
-    add_initial_maturity_level(d)
-    add_initial_severity_level(d)
+    # add_initial_maturity_level(d)                     # wurde entfernt aus container.db struktur von hgn ja??
+    # add_initial_severity_level(d)
 
     # the object is a little bit special. We iterate over the
     # data section as always and compress or not compress
     # data and save it in a different path
-    hippod.mime_data_db.save_object_item_data_list(app, object_item)
-    d['object-item'] = object_item
+
+    # hippod.mime_data_db.save_object_item_data_list(app, object_item)
+    # d['object-item'] = object_item
 
     #if 'attachment' in xobj and len(xobj['attachment']) > 0:
     #    if not check_attachment(xobj['attachment']):
@@ -75,36 +79,77 @@ def create_container_data_merge_issue_new(app, sha_sum, object_item, submitter):
     return json.dumps(d, sort_keys=True,indent=4, separators=(',', ': '))
 
 
-def save_new_object_container(app, sha_sum, object_item, submitter):
+def create_subcontainer_data_merge_issue_new(app, sha_major, sha_minor, object_item, submitter):
+    date = datetime.datetime.now().isoformat('T')
+    d_sub = dict()
+    d_sub['submitter'] = submitter
+    d_sub['date-added'] = date
+    d_sub['achievements'] = []
+    obj_data = hippod.mime_data_db.save_object_item_data_list(app, object_item['object-item'])
+    d_sub['object-item'] = obj_data
+    return json.dumps(d_sub, sort_keys=True,indent=4, separators=(',', ': '))
+
+
+def save_new_object_container(app, sha_major, sha_minor, object_item, submitter):
     obj_root_path = app['DB_OBJECT_PATH']
-    obj_root_pre_path = os.path.join(obj_root_path, sha_sum[0:2])
+    obj_root_pre_path = os.path.join(obj_root_path, sha_major[0:2])
     if not os.path.isdir(obj_root_pre_path):
         os.makedirs(obj_root_pre_path)
-    obj_root_full_path = os.path.join(obj_root_pre_path, sha_sum)
-    if not os.path.isdir(obj_root_full_path):
-        os.makedirs(obj_root_full_path)
-    achie_path = os.path.join(obj_root_full_path, 'achievements')
+    obj_root_major_path = os.path.join(obj_root_pre_path, sha_major)
+    if not os.path.isdir(obj_root_major_path):
+        os.makedirs(obj_root_major_path)
+    obj_minor_path = os.path.join(obj_root_major_path, sha_minor)
+    if not os.path.isdir(obj_minor_path):
+        os.makedirs(obj_minor_path)
+    achie_path = os.path.join(obj_minor_path, 'achievements')
     if not os.path.isdir(achie_path):
         os.makedirs(achie_path)
-    attachie_path = os.path.join(obj_root_full_path, 'attachments')
+    attachie_path = os.path.join(obj_root_major_path, 'attachments')
     if not os.path.isdir(attachie_path):
         os.makedirs(attachie_path)
 
-    file_path = os.path.join(obj_root_full_path, 'container.db')
-    if os.path.isfile(file_path):
+    file_path = os.path.join(obj_root_major_path, 'container.db')
+    minor_file_path = os.path.join(obj_minor_path, 'subcontainer.db')
+
+    if os.path.isfile(file_path) or os.path.isfile(minor_file_path):                 # subfile auch??
         msg = "internal error: {}".format(inspect.currentframe())
         raise ApiError(msg)
     else:
-        cd = create_container_data_merge_issue_new(app, sha_sum, object_item, submitter)
+        cd = create_container_data_merge_issue_new(app, sha_major, sha_minor, object_item)
         fd = open(file_path, 'w')
         fd.write(cd)
         fd.close()
+        cd_minor = create_subcontainer_data_merge_issue_new(app, sha_major, sha_minor, object_item, submitter)
+        fd_minor = open(minor_file_path, 'w')
+        fd_minor.write(cd_minor)
+        fd_minor.close()
 
 
-def is_obj_already_in_db(app, sha_sum):
+def save_new_object_minor_container(app, sha_major, sha_minor, object_item, submitter):
+    obj_root_path = app['DB_OBJECT_PATH']
+    obj_minor_path = os.path.join(obj_root_path, sha_major[0:2], sha_major, sha_minor)
+    if not os.path.isdir(obj_minor_path):
+        os.makedirs(obj_minor_path)
+    achie_path = os.path.join(obj_minor_path, 'achievements')
+    if not os.path.isdir(achie_path):
+        os.makedirs(achie_path)
+
+    minor_file_path = os.path.join(obj_minor_path, 'subcontainer.db')
+
+    if os.path.isfile(minor_file_path):
+        msg = "internal error: {}".format(inspect.currentframe())
+        raise ApiError(msg)
+    else:
+        cd_minor = create_subcontainer_data_merge_issue_new(app, sha_major, sha_minor, object_item, submitter)
+        fd_minor = open(minor_file_path, 'w')
+        fd_minor.write(cd_minor)
+        fd_minor.close()
+
+
+def is_obj_major_already_in_db(app, sha_major):
     path = os.path.join(app['DB_OBJECT_PATH'],
-                        sha_sum[0:2],
-                        sha_sum,
+                        sha_major[0:2],
+                        sha_major,
                         'container.db')
     if os.path.isfile(path):
         return True
@@ -112,48 +157,100 @@ def is_obj_already_in_db(app, sha_sum):
         return False
 
 
+def is_obj_minor_already_in_db(app, sha_major, sha_minor):
+    path = os.path.join(app['DB_OBJECT_PATH'],
+                        sha_major[0:2],
+                        sha_major,
+                        sha_minor,
+                        'subcontainer.db')
+    if os.path.isfile(path):
+        return True
+    else:
+        return False
 
 
-def write_cont_obj_by_id(app, sha, py_object):
+def write_cont_obj_by_id(app, sha_major, py_object):
     data = json.dumps(py_object, sort_keys=True,indent=4,
                       separators=(',', ': '))
     path = os.path.join(app['DB_OBJECT_PATH'],
-                        sha[0:2],
-                        sha,
+                        sha_major[0:2],
+                        sha_major,
                         'container.db')
     fd = open(path, 'w')
     fd.write(data)
     fd.close()
 
 
-def write_achievement_file(app, sha, id_no, achievement):
+def write_subcont_obj_by_id(app, sha_major, sha_minor, py_object):
+    data = json.dumps(py_object, sort_keys=True,indent=4,
+                      separators=(',', ': '))
+    path = os.path.join(app['DB_OBJECT_PATH'],
+                        sha_major[0:2],
+                        sha_major,
+                        sha_minor,
+                        'subcontainer.db')
+    fd = open(path, 'w')
+    fd.write(data)
+    fd.close()
+
+
+def write_achievement_file(app, sha_major, sha_minor, id_no, achievement):
     # swap out data if mime types say so and modify
     # achievement inplace to reflect changes
-    hippod.mime_data_db.save_object_item_data_list(app, achievement)
+    try:
+        hippod.mime_data_db.save_object_item_data_list(app, achievement)
 
-    path = os.path.join(app['DB_OBJECT_PATH'],
-                        sha[0:2],
-                        sha,
-                        'achievements',
-                        '{}.db'.format(id_no))
-    data = json.dumps(achievement, sort_keys=True,indent=4,
-                      separators=(',', ': '))
-    fd = open(path, 'w')
-    fd.write(data)
-    fd.close()
+        path = os.path.join(app['DB_OBJECT_PATH'],
+                            sha_major[0:2],
+                            sha_major,
+                            sha_minor,
+                            'achievements',
+                            '{}.db'.format(id_no))
+        data = json.dumps(achievement, sort_keys=True,indent=4,
+                          separators=(',', ': '))
+        fd = open(path, 'w')
+        fd.write(data)
+        fd.close()
+    except Exception:
+        msg = "Internal Error...file {} maybe not available, although wanted to update?"
+        msg = msg.format(path)
+        raise ApiError(msg).transform()
 
 
-def write_attachment_file(app, sha, id_no, attachment):
-    path = os.path.join(app['DB_OBJECT_PATH'],
-                        sha[0:2],
-                        sha,
-                        'attachments',
-                        '{}.db'.format(id_no))
-    data = json.dumps(attachment, sort_keys=True,indent=4,
-                      separators=(',', ': '))
-    fd = open(path, 'w')
-    fd.write(data)
-    fd.close()
+def write_attachment_file(app, sha_major, id_no, attachment):
+    try:
+        path = os.path.join(app['DB_OBJECT_PATH'],
+                            sha_major[0:2],
+                            sha_major,
+                            'attachments',
+                            '{}.db'.format(id_no))
+        data = json.dumps(attachment, sort_keys=True,indent=4,
+                          separators=(',', ': '))
+        fd = open(path, 'w')
+        fd.write(data)
+        fd.close()
+    except Exception:
+        msg = "Internal Error...file {} maybe not available, although wanted to update?"
+        msg = msg.format(path)
+        raise ApiError(msg).transform()
+
+
+def add_minor_list(app, sha_major, sha_minor):
+    try:
+        path = app['DB_OBJECT_PATH']
+        container_file = os.path.join(path, sha_major[0:2], sha_major, 'container.db')
+        with open(container_file, 'r') as file:
+            cntr = json.load(file)
+            cntr['minor-list'].append(sha_minor)
+            file.close()
+        with open(container_file, 'w') as file:
+            cntr = json.dumps(cntr, sort_keys=True, indent=4, separators=(',', ': '))
+            file.write(cntr)
+            file.close()
+    except Exception:
+        msg = "Internal Error...file {} maybe not available, although wanted to update?"
+        msg = msg.format(path)
+        raise ApiError(msg).transform()
 
 
 def validate_date(formated_data):
@@ -180,14 +277,15 @@ def validate_achievement(achievement):
     validate_date(achievement['test-date'])
 
 
-def update_attachment_achievement(app, sha_sum, xobj):
+def update_attachment_achievement(app, sha_major, sha_minor, xobj):
     # ok, the object is in database, we now update the data
     # attachments are updated (overwrite), achievements are
     # added
     rewrite_required = False
     date = datetime.datetime.now().isoformat('T')
-    (ret, data) = hippod.api_shared.read_cont_obj_by_id(app, sha_sum)
-    if not ret:
+    (ret, data) = hippod.api_shared.read_cont_obj_by_id(app, sha_major)     # container?? merge mit subcontainer?
+    (ret2, data_sub) = hippod.api_shared.read_subcont_obj_by_id(app, sha_major, sha_minor)
+    if not ret or not ret2:
         msg = "cannot read object although it is an update!?"
         raise ApiError(msg)
 
@@ -205,11 +303,11 @@ def update_attachment_achievement(app, sha_sum, xobj):
             new_attachment_meta['submitter'] = xobj['submitter']
 
             current_attachments.append(new_attachment_meta)
-            write_attachment_file(app, sha_sum, current_attachments_no, xobj['attachment'])
+            write_attachment_file(app, sha_major, current_attachments_no, xobj['attachment'])
             data['attachments'] = current_attachments
             rewrite_required = True
         else:
-            last_attachment = hippod.api_shared.get_attachment_data_by_sha_id(app, sha_sum, current_attachments_no - 1)
+            last_attachment = hippod.api_shared.get_attachment_data_by_sha_id(app, sha_major, current_attachments_no - 1)
             sha_sum_last = hippod.hasher.check_sum_attachment(last_attachment)
             sha_sum_new  = hippod.hasher.check_sum_attachment(xobj['attachment'])
             if sha_sum_last != sha_sum_new:
@@ -219,7 +317,7 @@ def update_attachment_achievement(app, sha_sum, xobj):
                 new_attachment_meta['submitter'] = xobj['submitter']
 
                 current_attachments.append(new_attachment_meta)
-                write_attachment_file(app, sha_sum, current_attachments_no, xobj['attachment'])
+                write_attachment_file(app, sha_major, current_attachments_no, xobj['attachment'])
                 data['attachments'] = current_attachments
                 rewrite_required = True
 
@@ -227,7 +325,7 @@ def update_attachment_achievement(app, sha_sum, xobj):
         if type(xobj['achievements']) is not list:
                 msg = "achievements data MUST be a list - but isn't"
                 raise ApiError(msg)
-        current_achievements = data["achievements"]
+        current_achievements = data_sub["achievements"]
         current_achievements_no = len(current_achievements)
         # add new achievements in same order
         for a in xobj['achievements']:
@@ -242,14 +340,16 @@ def update_attachment_achievement(app, sha_sum, xobj):
             a['submitter'] = xobj['submitter']
 
             # now we save the achievement in a seperate file
-            write_achievement_file(app, sha_sum, current_achievements_no, a)
+            write_achievement_file(app, sha_major, sha_minor, current_achievements_no, a)
             current_achievements_no += 1
 
-        data["achievements"] = current_achievements
-        rewrite_required = True
+        data_sub["achievements"] = current_achievements
+        rewrite_required_sub = True
 
     if rewrite_required:
-        write_cont_obj_by_id(app, sha_sum, data)
+        write_cont_obj_by_id(app, sha_major, data)
+    if rewrite_required_sub:
+        write_subcont_obj_by_id(app, sha_major, sha_minor, data_sub)
 
 
 def object_index_init(app):
@@ -270,19 +370,19 @@ def object_index_update(app, d):
     fd.close()
 
 
-def object_index_initial_add(app, sha_sum, xobj):
+def object_index_initial_add_major(app, sha_major, sha_minor, xobj):
     # read existing data set
     object_index = object_index_init(app)
     # create new data set
     d = dict()
-    d['object-item-id'] = sha_sum
+    d['object-item-id'] = sha_major
     # append new data set
     object_index.append(d)
     # update the object index
     object_index_update(app, object_index)
 
 
-def try_adding_xobject(app, xobj):
+def try_adding_xobject(app, xobj):                                # required attributes hier abgefragt ???
     if not 'submitter' in xobj:
         msg = "No submitter in xobject given!"
         raise ApiError(msg)
@@ -295,11 +395,11 @@ def try_adding_xobject(app, xobj):
     sha_sum=""
     if 'object-item' in xobj:
         # calculate the ID now
-        sha_sum = hippod.hasher.check_sum_object_issue(xobj['object-item'])
+        sha_major, sha_minor = hippod.hasher.check_sum_object_issue(xobj['object-item'])
         if 'object-item-id' in xobj:
             # this is an additional check - both should be
-            # identical
-            if sha_sum != xobj['object-item-id']:
+            # identical                                             # ACHTUNG 1. IF true, 2. FALSE u ignoriert dann elif+else!!!
+            if sha_major != xobj['object-item-id']:                 # vllt doch sha minor?,weil prüfen auf ganze data
                 msg = "object data corrupt - object item " \
                       "sha_sum missmatch to object-item-id"
                 raise ApiError(msg)
@@ -314,16 +414,26 @@ def try_adding_xobject(app, xobj):
     # to file partly and later the achievement can be miss-formated.
     # object container file write should be delayed until everything
     # is sane.
-    ret = is_obj_already_in_db(app, sha_sum)
+    ret = is_obj_major_already_in_db(app, sha_major)
     if not ret:
         # new entry, save to file
-        save_new_object_container(app, sha_sum, xobj['object-item'], xobj['submitter'])
-        object_index_initial_add(app, sha_sum, xobj)
+        # FULL update
+        save_new_object_container(app, sha_major, sha_minor, xobj, xobj['submitter'])
+        object_index_initial_add_major(app, sha_major, sha_minor, xobj)
 
-    update_attachment_achievement(app, sha_sum, xobj)
+    ret2 = is_obj_minor_already_in_db(app, sha_major, sha_minor)
+    if not ret2:
+        # new entry, save to file
+        save_new_object_minor_container(app, sha_major, sha_minor, xobj, xobj['submitter'])
+        add_minor_list(app, sha_major, sha_minor)
+
+        #object_index_initial_add_minor(app, sha_major, sha_minor, xobj)          # object_index für minor?? NEIN!? allgemeiner index für alle obj??
+
+    update_attachment_achievement(app, sha_major, sha_minor, xobj)
 
     ret_data = dict()
-    ret_data['id'] = sha_sum
+    ret_data['id'] = sha_major
+    print(ret_data)
     return ret_data
 
 def check_request_size_limit(app, request):

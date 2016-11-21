@@ -57,9 +57,15 @@ def check_sum_object_issue(o):
             msg = "object data currupt - version missing: {}".format(str(o))
             raise ApiError(msg)
 
-        # Use a sorted dictionary
-        buf = __sum_dict(o)
-        return hashlib.sha1(buf.encode('utf-8')).hexdigest()
+        #majorbuf = str.join("", o["title"] + o["categories"])
+        cat_buf = ''.join(map(str, o["categories"]))
+        majorbuf = o["title"].replace(" ", "") + cat_buf
+        sha_major = hashlib.sha1(majorbuf.encode('utf-8')).hexdigest()
+
+        minorbuf = __sum_dict(o)
+        sha_minor = hashlib.sha1(minorbuf.encode('utf-8')).hexdigest()
+
+        return sha_major, sha_minor
 
 
 def check_sum_attachment(o):
