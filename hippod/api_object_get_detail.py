@@ -124,13 +124,20 @@ def container_obj_to_ret_obj(app, request_data, sha_major, cont_obj):
     ret_obj['object-item']['title'] = cont_obj['title']
     ret_obj['object-item']['categories'] = cont_obj['categories']
 
+    sub_cont_last = cont_obj['subcontainer-list'][-1]
+    ret_obj['object-item']['date'] = sub_cont_last['date-added']
+    ret_obj['object-item']['last-submitter'] = sub_cont_last['submitter']
+    if len(cont_obj['subcontainer-list']) > 1:
+        ret_obj['conflict'] = True
+    else: ret_obj['conflict'] = False
+
     # add last attachment
-    # data = get_last_attachment_data(app, sha_major, cont_obj)
+    # data = get_last_attachment_data(app, sha_major, cont_obj)             # attachments ?
     # if data:
     #     ret_obj['object-attachment'] = data
 
     # add last achievement with basic information
-    # data = get_last_achievement_data(app, sha_major, cont_obj)
+    # data = get_last_achievement_data(app, sha_major, cont_obj)            # achievements ?
     # if data:
     #     ret_obj['object-achievements'] = data
     #     if request_data['filter-by-result'] != "all":
@@ -172,7 +179,6 @@ def object_get_by_sub_data_rev(app, request_data, reverse=True):
             limit -= 1
             if limit <= 0:
                 break
-    print(ret_data)
     return ret_data
 
 

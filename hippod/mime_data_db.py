@@ -128,7 +128,6 @@ def decode_and_write_file(app, sha_sum, data, compress=False):
     fd = open(attr_path, 'w')
     fd.write(d_json)
     fd.close()
-
     return d
 
 
@@ -160,16 +159,10 @@ def save_object_item_data(app, data):
     del data['mime-type']
     data['data-id'] = sha
     data['size-real'] = attr_data['statistics']['size-real']
-    data['type'] = attr_data['mime-type']
-    ret = dict()
-    data_list = list()
-    data_list.append(data)
-    ret['data'] = data_list
-    return ret
+
 
 def save_object_item_data_list(app, object_item):
     if not 'data' in object_item:
         return
     for data in object_item['data']:
-        return save_object_item_data(app, data)
-
+        save_object_item_data(app, data)

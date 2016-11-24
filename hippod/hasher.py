@@ -73,7 +73,6 @@ def check_sum_attachment(o):
         if type(o) is not dict:
             msg = "attachment currupt - must be dict: {}".format(str(o))
             raise ApiError(msg)
-
         buf = __sum_dict(o)
         return hashlib.sha1(buf.encode('utf-8')).hexdigest()
 
