@@ -56,14 +56,14 @@ def null_func(data):
     pass
 
 
-def get_last_achievement_data(app, sha_major, cont_obj):
-    if len(cont_obj['achievements']) <= 0:
+def get_last_achievement_data(app, sha_major, sha_minor, sub_cont_obj):
+    if len(sub_cont_obj['achievements']) <= 0:
         return None
 
-    last_date_added = cont_obj['achievements'][-1]["date-added"]
-    last_element_id = cont_obj['achievements'][-1]["id"]
+    last_date_added = sub_cont_obj['achievements'][-1]["date-added"]
+    last_element_id = sub_cont_obj['achievements'][-1]["id"]
 
-    data = hippod.api_shared.get_achievement_data_by_sha_id(app, sha_major, last_element_id)
+    data = hippod.api_shared.get_achievement_data_by_sha_id(app, sha_major, sha_minor, last_element_id)
     test_result = data["result"]
     test_date   = data["test-date"]
     submitter   = data["submitter"]
@@ -114,6 +114,34 @@ def container_obj_to_ret_obj(app, request_data, sha_major, cont_obj):
     ret_obj['object-item'] = dict()
     ret_obj['object-item']['title'] = cont_obj['title']
     ret_obj['object-item']['categories'] = cont_obj['categories']
+
+    sub_cont_last = cont_obj['subcontainer-list'][-1]
+    ret_obj['object-item']['date'] = sub_cont_last['date-added']
+    ret_obj['object-item']['last-submitter'] = sub_cont_last['submitter']
+    ret_obj['object-item']['sha-minor'] = sub_cont_last['sha-minor']
+    if len(cont_obj['subcontainer-list']) > 1:
+        ret_obj['conflict'] = True
+    else: ret_obj['conflict'] = False
+
+    # add last attachment
+    data = get_last_attachment_data(app, sha_major, cont_obj)
+    if data:
+        ret_obj['object-item']['tags'] = data['tags']
+
+    db_root_path = app['DB_OBJECT_PATH']
+    subcntr_path = os.path.join(db_root_path, sha_major[0:2], sha_major,\
+                                sub_cont_last['sha-minor'], 'subcontainer.db')
+    with open(subcntr_path) as file:
+        full_sub_cont_last = json.load(file)
+
+    # add last achievement with basic information
+    data = get_last_achievement_data(app, sha_major, sub_cont_last['sha-minor'], full_sub_cont_last)
+    if data:
+        ret_obj['object-item']['last-test-date'] = data['test-date']
+        ret_obj['object-item']['result'] = data['test-result']
+        if request_data['filter-by-result'] != "all":
+            if request_data['filter-by-result'] != data['test-result']:
+                return False, None
 
     # filter checks
     if request_data['filter-by-maturity-level'] != "all":

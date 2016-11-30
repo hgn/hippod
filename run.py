@@ -19,6 +19,7 @@ from hippod import api_achievement_get
 from hippod import api_users
 from hippod import api_object_post
 from hippod import api_object_get
+from hippod import api_object_get_detail
 from hippod import api_object_get_full
 from hippod import api_data_get
 from hippod import user_db
@@ -97,13 +98,13 @@ def init_aiohttp(conf):
 
 def setup_routes(app, conf):
     app.router.add_route('*',
-                        '/api/v1/achievement/{sha_id}/{achievement_id}',
+                        '/api/v1/achievement/{sha_major}/{sha_minor}/{achievement_id}',
                         api_achievement_get.handle)
     app.router.add_route('*',
-                        '/api/v1/object/{sha_sum}',
+                        '/api/v1/object/{sha_major}',
                         api_object_get_full.handle)
     app.router.add_route('*',
-                        '/api/v1/data/{sha_id}',
+                        '/api/v1/data/{sha_sum}',
                         api_data_get.handle)
     app.router.add_route('GET',
                         '/api/v1/ping',
@@ -114,6 +115,9 @@ def setup_routes(app, conf):
     app.router.add_route('*',
                         '/api/v1/objects',
                         api_object_get.handle)
+    app.router.add_route('*',
+                        '/api/v1/objects-detail-last',
+                        api_object_get_detail.handle)
     app.router.add_route('POST',
                         '/api/v1/object',
                         api_object_post.handle)

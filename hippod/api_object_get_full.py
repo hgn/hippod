@@ -19,14 +19,13 @@ from hippod.error_object import *
 
 
 
-def get_all_achievement_data(app, sha_sum, cont_obj):
-    if len(cont_obj['achievements']) <= 0:
+def get_all_achievement_data(app, sha_major, sha_minor, subcont_obj):
+    if len(subcont_obj['achievements']) <= 0:
         return None
 
     ret_list = list()
-    for achievement in reversed(cont_obj['achievements']):
-        data = hippod.api_shared.get_achievement_data_by_sha_id(app, sha_sum, achievement["id"])
-
+    for achievement in reversed(subcont_obj['achievements']):
+        data = hippod.api_shared.get_achievement_data_by_sha_id(app, sha_major, sha_minor, achievement["id"])
         r = dict()
         r['id'] = achievement["id"]
         r['variety-id'] = achievement["variety-id"]
@@ -46,7 +45,7 @@ def get_all_achievement_data(app, sha_sum, cont_obj):
     return ret_list
 
 
-def get_last_attachment_data(app, sha_sum, cont_obj):
+def get_last_attachment_data(app, sha_major, cont_obj):
     if len(cont_obj['attachments']) <= 0:
         return None
 
@@ -54,7 +53,7 @@ def get_last_attachment_data(app, sha_sum, cont_obj):
     last_date_added = cont_obj['attachments'][-1]["date-added"]
     last_submitter  = cont_obj['attachments'][-1]["submitter"]
 
-    data = hippod.api_shared.get_attachment_data_by_sha_id(app, sha_sum, last_element_id)
+    data = hippod.api_shared.get_attachment_data_by_sha_id(app, sha_major, last_element_id)
 
     r = dict()
     for key, value in data.items():
@@ -72,50 +71,59 @@ def get_last_attachment_data(app, sha_sum, cont_obj):
     return r
 
 
-def container_obj_to_ret_obj(app, sha_sum, cont_obj):
+def container_obj_to_ret_obj(app, sha_major, cont_obj):
     ret_obj = dict()
-
     # add object item ID
-    ret_obj['object-item-id'] = sha_sum
+    ret_obj['object-item-id'] = sha_major
 
     # add some object items
     ret_obj['object-item'] = dict()
-    ret_obj['object-item']['title'] = cont_obj['object-item']['title'] 
-    ret_obj['object-item']['version'] = cont_obj['object-item']['version']
-    if 'data' in cont_obj['object-item']:
-        ret_obj['object-item']['data'] = cont_obj['object-item']['data']
+    ret_obj['object-item']['title'] = cont_obj['title']
+    ret_obj['subcontainer'] = list()
 
-    ret_obj['maturity-level'] = cont_obj['maturity-level'][-1]
+    for sub_cont in cont_obj['subcontainer-list']:
+        sub_dict = dict()
+        sub_dict['object-item'] = dict()
+        sub_dict['sha-minor'] = sub_cont['sha-minor']
+        sub_dict['object-item']['data'] = list()
+        ok, full_sub_cont = hippod.api_shared.read_subcont_obj_by_id(app, sha_major, sub_cont['sha-minor'])
+        if not ok:
+            msg = "subcontainer {} not available, although entry in subcontainer-list"
+            msg = msg.format(sub_cont['sha-minor'])
+            raise ApiError(msg)
+        data = get_all_achievement_data(app, sha_major, sub_cont['sha-minor'], full_sub_cont)
+        if data:
+            sub_dict['object-achievements'] = data
+        if 'data' in full_sub_cont['object-item']:
+            sub_dict['object-item']['data'].append(full_sub_cont['object-item']['data'])
+        # error handling not required?
+        ret_obj['subcontainer'].append(sub_dict)
 
     # add last attachment
-    data = get_last_attachment_data(app, sha_sum, cont_obj)
+    data = get_last_attachment_data(app, sha_major, cont_obj)
     if data:
         ret_obj['object-attachment'] = data
-
-    # add all achievements with all data
-    data = get_all_achievement_data(app, sha_sum, cont_obj)
-    if data:
-        ret_obj['object-achievements'] = data
-
     return ret_obj
 
-def object_get_int(app, sha_sum):
-    (ret, data) = hippod.api_shared.read_cont_obj_by_id(app, sha_sum)
-    if not ret:
-        msg = "cannot read object by id: {}".format(sha_sum)
+
+def object_get_int(app, sha_major):
+    ok, data = hippod.api_shared.read_cont_obj_by_id(app, sha_major)
+    if not ok:
+        msg = "cannot read object by id: {}".format(sha_major)
         raise ApiError(msg)
-    return container_obj_to_ret_obj(app, sha_sum, data)
+    return container_obj_to_ret_obj(app, sha_major, data)
+
 
 def handle(request):
     if request.method != "GET" and request.method != "POST":
         msg = "Internal Error... request method: {} is not allowed".format(request.method)
         raise hippod.error_object.ApiError(msg)
     app = request.app
-    sha_sum = request.match_info['sha_sum']
+    sha_major = request.match_info['sha_major']
 
     try:
         start = time.clock()
-        data = object_get_int(app, sha_sum)
+        data = object_get_int(app, sha_major)
         end = time.clock()
     except ApiError as e:
         return e.transform()

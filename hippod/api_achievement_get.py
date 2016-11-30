@@ -17,16 +17,18 @@ from hippod.error_object import *
 
 
 
-def get_data_blob(app, sha_sum, achievement_id):
+def get_data_blob(app, sha_major, sha_minor, achievement_id):
     try:
-        data = hippod.api_shared.get_attachment_data_by_sha_id(app, sha_sum, achievement_id)
+        data = hippod.api_shared.get_achievement_data_by_sha_id(app, sha_major, sha_minor, achievement_id)
+        print(data)
+        return data
     except:
-        msg = "Achievment ID {} is not available".format(sha_sum)
+        msg = "Achievment ID {} or {} is not available".format(sha_major, sha_minor)
         raise ApiError(msg, http_code=404)
 
 
-def get_achievement_int(app, sha_id, achievement_id):
-    return get_data_blob(app, sha_id, achievement_id)
+def get_achievement_int(app, sha_major, sha_minor, achievement_id):
+    return get_data_blob(app, sha_major, sha_minor, achievement_id)
 
 
 async def handle(request):
@@ -34,13 +36,15 @@ async def handle(request):
         msg = "Internal Error... request method: {} is not allowed".format(request.method)
         raise hippod.error_object.ApiError(msg)
     app = request.app
-    sha_id = request.match_info['sha_id']
+    sha_major = request.match_info['sha_major']
+    sha_minor = request.match_info['sha_minor']
     achievement_id = request.match_info['achievement_id']
 
 
     try:
         start = time.clock()
-        data = get_achievement_int(app, sha_id, achievement_id)
+        data = get_achievement_int(app, sha_major, sha_minor, achievement_id)
+        print(data)
         end = time.clock()
     except ApiError as e:
         return e.transform()
