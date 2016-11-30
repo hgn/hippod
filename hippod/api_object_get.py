@@ -19,15 +19,6 @@ import hippod.api_shared
 from hippod.error_object import *
 
 
-def object_index_read(app):
-    db_path = app['DB_OBJECT_PATH']
-    object_index_db_path = os.path.join(db_path, "object-index.db")
-    if not os.path.isfile(object_index_db_path):
-        return None
-    with open(object_index_db_path) as data_file:
-        return json.load(data_file)
-
-
 def check_request_data(xobj):
     ordering = "by-submitting-date-reverse"
     limit = 0 # "unlimited"
@@ -155,7 +146,7 @@ def object_data_by_id(app, request_data, sha_major):
 
 
 def object_get_by_sub_data_rev(app, request_data, reverse=True):
-    object_index_data = object_index_read(app)
+    object_index_data = hippod.api_shared.object_index_read(app)
     if not object_index_data:
         return None
     limit = request_data['limit']
@@ -172,7 +163,6 @@ def object_get_by_sub_data_rev(app, request_data, reverse=True):
             limit -= 1
             if limit <= 0:
                 break
-    print(ret_data)
     return ret_data
 
 

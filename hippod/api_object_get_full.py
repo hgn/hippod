@@ -79,38 +79,30 @@ def container_obj_to_ret_obj(app, sha_major, cont_obj):
     # add some object items
     ret_obj['object-item'] = dict()
     ret_obj['object-item']['title'] = cont_obj['title']
-    ret_obj['object-item']['version'] = cont_obj['version']
     ret_obj['subcontainer'] = list()
 
     for sub_cont in cont_obj['subcontainer-list']:
         sub_dict = dict()
         sub_dict['object-item'] = dict()
-        sub_dict['sha_minor'] = sub_cont['sha_minor']
+        sub_dict['sha-minor'] = sub_cont['sha-minor']
         sub_dict['object-item']['data'] = list()
-        ok, full_sub_cont = hippod.api_shared.read_subcont_obj_by_id(app, sha_major, sub_cont['sha_minor'])
-        if ok:
-            data = get_all_achievement_data(app, sha_major, sub_cont['sha_minor'], full_sub_cont)
-            if data:
-                sub_dict['object-achievements'] = data
-            if 'data' in full_sub_cont['object-item']:
-                print(sub_dict)
-                sub_dict['object-item']['data'].append(full_sub_cont['object-item']['data'])
-            # exception not required?
-        else:
+        ok, full_sub_cont = hippod.api_shared.read_subcont_obj_by_id(app, sha_major, sub_cont['sha-minor'])
+        if not ok:
             msg = "subcontainer {} not available, although entry in subcontainer-list"
-            msg = msg.format(sub_cont['sha_minor'])
+            msg = msg.format(sub_cont['sha-minor'])
             raise ApiError(msg)
+        data = get_all_achievement_data(app, sha_major, sub_cont['sha-minor'], full_sub_cont)
+        if data:
+            sub_dict['object-achievements'] = data
+        if 'data' in full_sub_cont['object-item']:
+            sub_dict['object-item']['data'].append(full_sub_cont['object-item']['data'])
+        # error handling not required?
         ret_obj['subcontainer'].append(sub_dict)
 
     # add last attachment
     data = get_last_attachment_data(app, sha_major, cont_obj)
     if data:
         ret_obj['object-attachment'] = data
-
-    # add all achievements with all data
-    # data = get_all_achievement_data(app, sha_major, sha_minor, subcont_obj)
-    # if data:
-    #     ret_obj['object-achievements'] = data
     return ret_obj
 
 

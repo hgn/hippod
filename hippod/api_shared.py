@@ -55,3 +55,12 @@ def get_attachment_data_by_sha_id(app, sha_major, id_no):
     with open(path) as data_file:
         data = json.load(data_file)
     return data
+
+
+def object_index_read(app):
+    db_path = app['DB_OBJECT_PATH']
+    object_index_db_path = os.path.join(db_path, "object-index.db")
+    if not os.path.isfile(object_index_db_path):
+        return None
+    with open(object_index_db_path) as data_file:
+        return json.load(data_file)

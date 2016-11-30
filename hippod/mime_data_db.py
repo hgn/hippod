@@ -15,7 +15,6 @@ from hippod.error_object import *
 
 def obj_available(app, sha_sum):
     path = app['DB_DATA_PATH']
-    print(sha_sum)
     obj_path  = os.path.join(path, sha_sum, "blob.bin")
     attr_path = os.path.join(path, sha_sum, "attr.db")
 
@@ -115,9 +114,8 @@ def decode_and_write_file(app, sha_sum, data, compress=False):
                                                 len(bin_data),
                                                 compress)
 
-    fd = open(blob_path, 'wb')
-    fd.write(bin_data)
-    fd.close()
+    with open(blob_path, 'wb') as fd:
+        fd.write(bin_data)
 
     d = dict()
     d['mime-type'] = data['mime-type']
@@ -125,9 +123,8 @@ def decode_and_write_file(app, sha_sum, data, compress=False):
     d['statistics'] = size_stats
     d_json = json.dumps(d, sort_keys=True, indent=4, separators=(',', ': '))
     attr_path = os.path.join(obj_path, "attr.db")
-    fd = open(attr_path, 'w')
-    fd.write(d_json)
-    fd.close()
+    with open(attr_path, 'w') as fd:
+        fd.write(d_json)
     return d
 
 

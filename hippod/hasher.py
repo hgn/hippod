@@ -57,9 +57,7 @@ def check_sum_object_issue(o):
             msg = "object data currupt - version missing: {}".format(str(o))
             raise ApiError(msg)
 
-        #majorbuf = str.join("", o["title"] + o["categories"])
-        cat_buf = ''.join(map(str, o["categories"]))
-        majorbuf = o["title"].replace(" ", "") + cat_buf
+        majorbuf = ''.join(o["title"]) + ''.join(o["categories"])
         sha_major = hashlib.sha1(majorbuf.encode('utf-8')).hexdigest()
 
         minorbuf = __sum_dict(o)

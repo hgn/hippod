@@ -19,15 +19,6 @@ import hippod.api_shared
 from hippod.error_object import *
 
 
-def object_index_read(app):
-    db_path = app['DB_OBJECT_PATH']
-    object_index_db_path = os.path.join(db_path, "object-index.db")
-    if not os.path.isfile(object_index_db_path):
-        return None
-    with open(object_index_db_path) as data_file:
-        return json.load(data_file)
-
-
 def check_request_data(xobj):
     ordering = "by-submitting-date-reverse"
     limit = 0 # "unlimited"
@@ -65,14 +56,14 @@ def null_func(data):
     pass
 
 
-def get_last_achievement_data(app, sha_major, cont_obj):
-    if len(cont_obj['achievements']) <= 0:
+def get_last_achievement_data(app, sha_major, sha_minor, sub_cont_obj):
+    if len(sub_cont_obj['achievements']) <= 0:
         return None
 
-    last_date_added = cont_obj['achievements'][-1]["date-added"]
-    last_element_id = cont_obj['achievements'][-1]["id"]
+    last_date_added = sub_cont_obj['achievements'][-1]["date-added"]
+    last_element_id = sub_cont_obj['achievements'][-1]["id"]
 
-    data = hippod.api_shared.get_achievement_data_by_sha_id(app, sha_major, last_element_id)
+    data = hippod.api_shared.get_achievement_data_by_sha_id(app, sha_major, sha_minor, last_element_id)
     test_result = data["result"]
     test_date   = data["test-date"]
     submitter   = data["submitter"]
@@ -127,22 +118,30 @@ def container_obj_to_ret_obj(app, request_data, sha_major, cont_obj):
     sub_cont_last = cont_obj['subcontainer-list'][-1]
     ret_obj['object-item']['date'] = sub_cont_last['date-added']
     ret_obj['object-item']['last-submitter'] = sub_cont_last['submitter']
+    ret_obj['object-item']['sha-minor'] = sub_cont_last['sha-minor']
     if len(cont_obj['subcontainer-list']) > 1:
         ret_obj['conflict'] = True
     else: ret_obj['conflict'] = False
 
     # add last attachment
-    # data = get_last_attachment_data(app, sha_major, cont_obj)             # attachments ?
-    # if data:
-    #     ret_obj['object-attachment'] = data
+    data = get_last_attachment_data(app, sha_major, cont_obj)
+    if data:
+        ret_obj['object-item']['tags'] = data['tags']
+
+    db_root_path = app['DB_OBJECT_PATH']
+    subcntr_path = os.path.join(db_root_path, sha_major[0:2], sha_major,\
+                                sub_cont_last['sha-minor'], 'subcontainer.db')
+    with open(subcntr_path) as file:
+        full_sub_cont_last = json.load(file)
 
     # add last achievement with basic information
-    # data = get_last_achievement_data(app, sha_major, cont_obj)            # achievements ?
-    # if data:
-    #     ret_obj['object-achievements'] = data
-    #     if request_data['filter-by-result'] != "all":
-    #         if request_data['filter-by-result'] != data['test-result']:
-    #             return false, none
+    data = get_last_achievement_data(app, sha_major, sub_cont_last['sha-minor'], full_sub_cont_last)
+    if data:
+        ret_obj['object-item']['last-test-date'] = data['test-date']
+        ret_obj['object-item']['result'] = data['test-result']
+        if request_data['filter-by-result'] != "all":
+            if request_data['filter-by-result'] != data['test-result']:
+                return False, None
 
     # filter checks
     if request_data['filter-by-maturity-level'] != "all":
@@ -162,7 +161,7 @@ def object_data_by_id(app, request_data, sha_major):
 
 
 def object_get_by_sub_data_rev(app, request_data, reverse=True):
-    object_index_data = object_index_read(app)
+    object_index_data = hippod.api_shared.object_index_read(app)
     if not object_index_data:
         return None
     limit = request_data['limit']
