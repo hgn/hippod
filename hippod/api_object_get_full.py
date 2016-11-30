@@ -111,9 +111,6 @@ def object_get_int(app, sha_major):
     if not ok:
         msg = "cannot read object by id: {}".format(sha_major)
         raise ApiError(msg)
-    # if not ret_sub:
-    #     msg = "cannot read object by sub_id: {}".format(sha_minor)
-    #     raise ApiError(msg)
     return container_obj_to_ret_obj(app, sha_major, data)
 
 

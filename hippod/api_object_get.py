@@ -115,19 +115,6 @@ def container_obj_to_ret_obj(app, request_data, sha_major, cont_obj):
     ret_obj['object-item']['title'] = cont_obj['title']
     ret_obj['object-item']['categories'] = cont_obj['categories']
 
-    # add last attachment
-    # data = get_last_attachment_data(app, sha_major, cont_obj)
-    # if data:
-    #     ret_obj['object-attachment'] = data
-
-    # add last achievement with basic information
-    # data = get_last_achievement_data(app, sha_major, cont_obj)
-    # if data:
-    #     ret_obj['object-achievements'] = data
-    #     if request_data['filter-by-result'] != "all":
-    #         if request_data['filter-by-result'] != data['test-result']:
-    #             return false, none
-
     # filter checks
     if request_data['filter-by-maturity-level'] != "all":
         if request_data['filter-by-maturity-level'] != \
@@ -190,8 +177,6 @@ async def handle(request):
         end = time.clock()
     except ApiError as e:
         return e.transform()
-    #except Exception as e:
-    #    return ApiError(str(e), 500).transform()
 
     o = hippod.ex3000.Ex3000()
     o['data'] = data

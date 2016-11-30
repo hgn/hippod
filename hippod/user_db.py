@@ -91,7 +91,6 @@ class UserDB:
         entry_sub['department'] = "Death Star"
         entry_sub['telephone']  = "00000000"
         #entry['color']    = '#{:02X}'.format(random.randint(0, 0xFFFFFF))
-        #d.append(entry)
         d_jsonfied =  json.dumps(entry, sort_keys=True,indent=4, separators=(',', ': '))
         with open(self.user_db_path,"w+") as f:
             f.write(d_jsonfied)

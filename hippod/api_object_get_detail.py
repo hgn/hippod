@@ -205,8 +205,6 @@ async def handle(request):
         end = time.clock()
     except ApiError as e:
         return e.transform()
-    #except Exception as e:
-    #    return ApiError(str(e), 500).transform()
 
     o = hippod.ex3000.Ex3000()
     o['data'] = data

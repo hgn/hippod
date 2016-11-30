@@ -31,14 +31,6 @@ def create_container_data_merge_issue_new(app, sha_major, sha_minor, object_item
     # data section as always and compress or not compress
     # data and save it in a different path
 
-    # hippod.mime_data_db.save_object_item_data_list(app, object_item)
-    # d['object-item'] = object_item
-
-    #if 'attachment' in xobj and len(xobj['attachment']) > 0:
-    #    if not check_attachment(xobj['attachment']):
-    #        return [False, None]
-    #    d['attachment'] = xobj['attachment']
-
     return json.dumps(d, sort_keys=True,indent=4, separators=(',', ': '))
 
 
