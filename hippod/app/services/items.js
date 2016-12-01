@@ -16,7 +16,7 @@ hippoD.factory('ItemService', function($http) {
         // $http returns a promise, which has a then function, which also returns a promise
         promise = $http(
 {
-        url: '/api/v1/objects',
+        url: '/api/v1/objects-detail-last',
         dataType: 'json',
         method: 'POST',
         data: obj,
@@ -42,104 +42,109 @@ hippoD.factory('ItemService', function($http) {
 hippoD.factory('DBService', function($http) {
    return {
      getFoo: function(id) {
-			 var obj = {};
-			 var promise = $http(
-				 {
-					 url: '/api/v1/object/' + id,
-					 dataType: 'json',
-					 method: 'POST',
-					 data: obj,
-					 headers: { "Content-Type": "application/json" }
-			   })
-				 .then(function (response) {
-					 var achievements = response.data.data['object-achievements'];
-					 for (var i = 0; i < achievements.length; i++) {
-					 }
-					 response.data.data['__attachments'] = attachments;
+             var obj = {};
+             var promise = $http(
+                 {
+                     url: '/api/v1/object/' + id,
+                     dataType: 'json',
+                     method: 'POST',
+                     data: obj,
+                     headers: { "Content-Type": "application/json" }
+               })
+                 .then(function (response) {
+                     var subcontainer = response.data.data['subcontainer'];
+                     var achievements = response.data.data['object-achievements'];
+                     for (var j = 0; j < subcontainer.length; j++) {
+                         //for (var i = 0; i < achievements.length; i++) {
+                         //}
+                         response.data.data['__attachments'] = attachments;
+                         var item_data = subcontainer[j]['object-item']['data'][0];
+                         var attachments = new Array();
+                         for (var i = 0; i < item_data.length; i++) {
+                             if (item_data[i]['type'] !== 'description') {
+                                 var entry = {};
+                                 entry['name'] = item_data[i]['name'];
+                                 //entry['size-real'] = item_data[i]['size-real'];
+                                 entry['data-id'] = item_data[i]['data-id'];
+                                 attachments.push(entry);
+                             }
+                         }
+                     }
+                    response.data.data['__attachments'] = attachments;
 
-					 var item_data = response.data.data['object-item']['data'];
-					 var attachments = new Array();
-					 for (var i = 0; i < item_data.length; i++) {
-						 if (item_data[i]['type'] !== 'description') {
-							 var entry = {};
-							 entry['name'] = item_data[i]['name'];
-							 entry['size-real'] = item_data[i]['size-real'];
-							 entry['data-id'] = item_data[i]['data-id'];
-							 attachments.push(entry);
-						 }
-					 }
-					response.data.data['__attachments'] = attachments;
+                     // fetch description
+                     item_data = subcontainer[subcontainer.length - 1]['object-item']['data'][0];
+                     for (var i = 0; i < item_data.length; i++) {
+                         if (item_data[i]['type'] == 'description') {
+                             return $http(
+                                     {
+                                         url: '/api/v1/data/' + item_data[i]['data-id'],
+                                         dataType: 'json',
+                                         method: 'POST',
+                                         data: obj,
+                                         headers: { "Content-Type": "application/json" }
+                                     })
+                                 .then(function (response_enc) {
+                                         var text = response_enc.data;
+                                         item_data[i]['data'] = text;
+                                         response.data.data['__description'] = text;
 
-					 // fetch description
-					 for (var i = 0; i < item_data.length; i++) {
-						 if (item_data[i]['type'] == 'description') {
-							 return $http(
-									 {
-										 url: '/api/v1/data/' + item_data[i]['data-id'],
-										 dataType: 'json',
-										 method: 'POST',
-										 data: obj,
-										 headers: { "Content-Type": "application/json" }
-									 })
-							     .then(function (response_enc) {
-										 var text = response_enc.data;
-										 item_data[i]['data'] = text;
-										 response.data.data['__description'] = text;
+                                         return response.data.data;
+                                     });
+                         }
+                     }
 
-										 return response.data.data;
-									 });
-						 }
-					 }
-
-					 return response.data.data;
-				 });
-		 return promise;
+                     return response.data.data;
+                 });
+         return promise;
    }
-	 }
+     }
 });
 
 
 hippoD.factory('HippodDataService', function($http) {
 
-	var getAchievements = function (core_id) {
+    var getAchievements = function (core_id) {
 
-			 var obj = {};
-			 var promise = $http(
-				 {
-					 url: '/api/v1/object/' + core_id,
-					 dataType: 'json',
-					 method: 'POST',
-					 data: obj,
-					 headers: { "Content-Type": "application/json" }
-			   })
-				 .then(function (response) {
-					 return response.data.data['object-achievements'];
-				 })
+             var obj = {};
+             var promise = $http(
+                 {
+                     url: '/api/v1/object/' + core_id,
+                     dataType: 'json',
+                     method: 'POST',
+                     data: obj,
+                     headers: { "Content-Type": "application/json" }
+               })
+                 .then(function (response) {
+                     var subcontainer = response.data.data['subcontainer'];
+                     for (var i = 0; i < subcontainer.length; i++)
+                       return subcontainer[i]['object-achievements'];
+                 })
 
-				 return promise;
+                 return promise;
 
-	};
+    };
 
-	return {
-		getAchievements: getAchievements
-	};
+    return {
+        getAchievements: getAchievements
+    };
 });
 
 hippoD.filter('toHtmlSave', function($sce) {
 
-	function replaceAll(str, find, replace) {
-		if (!str)
-			return str;
-		return str.replace(new RegExp(find, 'g'), replace);
-	}
+    function replaceAll(str, find, replace) {
+        if (!str)
+            return str;
+        return str.replace(new RegExp(find, 'g'), replace);
+    }
 
-	return function(text, argument) {
+    return function(text, argument) {
 
-		// we correct the link from username (tomato.png) to
-		// link: api/v1/data/34994393434934
-		angular.forEach(argument, function(value, key) {
-			text = replaceAll(text, value['name'],'api/v1/data/' + value['data-id']);
-		});
-		return $sce.trustAsHtml(text);
-	};
+        // we correct the link from username (tomato.png) to
+        // link: api/v1/data/34994393434934
+        angular.forEach(argument, function(value, key) {
+            text = replaceAll(text, value['name'],'api/v1/data/' + value['data-id']);
+        });
+        return $sce.trustAsHtml(text);
+    };
 });

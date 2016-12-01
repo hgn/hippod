@@ -126,7 +126,7 @@ def container_obj_to_ret_obj(app, request_data, sha_major, cont_obj):
     # add last attachment
     data = get_last_attachment_data(app, sha_major, cont_obj)
     if data:
-        ret_obj['object-item']['tags'] = data['tags']
+        ret_obj['object-attachment'] = data
 
     db_root_path = app['DB_OBJECT_PATH']
     subcntr_path = os.path.join(db_root_path, sha_major[0:2], sha_major,\
@@ -137,8 +137,7 @@ def container_obj_to_ret_obj(app, request_data, sha_major, cont_obj):
     # add last achievement with basic information
     data = get_last_achievement_data(app, sha_major, sub_cont_last['sha-minor'], full_sub_cont_last)
     if data:
-        ret_obj['object-item']['last-test-date'] = data['test-date']
-        ret_obj['object-item']['result'] = data['test-result']
+        ret_obj['object-achievements'] = data
         if request_data['filter-by-result'] != "all":
             if request_data['filter-by-result'] != data['test-result']:
                 return False, None

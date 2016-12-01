@@ -260,7 +260,7 @@ def object_index_update(app, d):
         fd.write(data)
 
 
-def object_index_initial_add_major(app, sha_major, sha_minor, xobj):
+def object_index_initial_add_major(app, sha_major, xobj):
     # read existing data set
     object_index = object_index_init(app)
     # create new data set
@@ -299,7 +299,7 @@ def try_adding_xobject(app, xobj):
         # new entry, save to file
         # FULL update
         hippod.store_container.save_new_object_container(app, sha_major, sha_minor, xobj, xobj['submitter'])
-        object_index_initial_add_major(app, sha_major, sha_minor, xobj)
+        object_index_initial_add_major(app, sha_major, xobj)
 
     ok2 = is_obj_minor_already_in_db(app, sha_major, sha_minor)
     if not ok2:

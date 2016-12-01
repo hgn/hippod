@@ -36,11 +36,11 @@ def handle(request):
         msg = "Internal Error... request method: {} is not allowed".format(request.method)
         raise hippod.error_object.ApiError(msg)
     app = request.app
-    sha_id = request.match_info['sha_id']
+    sha_sum = request.match_info['sha_sum']
 
     try:
         start = time.clock()
-        mime_type, data = object_data_get_int(app, sha_id)
+        mime_type, data = object_data_get_int(app, sha_sum)
         end = time.clock()
     except hippod.error_object.ApiError as e:
         return e.transform()
