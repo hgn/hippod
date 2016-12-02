@@ -43,10 +43,12 @@ def create_subcontainer_data_merge_issue_new(app, sha_major, sha_minor, object_i
     d_sub['submitter'] = submitter
     d_sub['achievements'] = []
     d_sub['object-item'] = dict()
-    d_sub['object-item']['data'] = object_item['object-item']['data']
+    if 'data' in object_item['object-item']:
+        d_sub['object-item']['data'] = object_item['object-item']['data']
+        # for i, v in enumerate(d_sub['object-item']['data']):
+        #     del d_sub['object-item']['data'][i]['size-real']
     hippod.mime_data_db.save_object_item_data_list(app, object_item['object-item'])
-    for i, v in enumerate(d_sub['object-item']['data']):
-        del d_sub['object-item']['data'][i]['size-real']
+    
     return json.dumps(d_sub, sort_keys=True,indent=4, separators=(',', ': '))
 
 

@@ -58,7 +58,7 @@ hippoD.factory('DBService', function($http) {
                          //for (var i = 0; i < achievements.length; i++) {
                          //}
                          response.data.data['__attachments'] = attachments;
-                         var item_data = subcontainer[j]['object-item']['data'][0];
+                         var item_data = subcontainer[j]['object-item']['data'];
                          var attachments = new Array();
                          for (var i = 0; i < item_data.length; i++) {
                              if (item_data[i]['type'] !== 'description') {
@@ -73,7 +73,7 @@ hippoD.factory('DBService', function($http) {
                     response.data.data['__attachments'] = attachments;
 
                      // fetch description
-                     item_data = subcontainer[subcontainer.length - 1]['object-item']['data'][0];
+                     item_data = subcontainer[subcontainer.length - 1]['object-item']['data'];
                      for (var i = 0; i < item_data.length; i++) {
                          if (item_data[i]['type'] == 'description') {
                              return $http(
