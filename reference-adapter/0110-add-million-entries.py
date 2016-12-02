@@ -58,7 +58,7 @@ def add_n(n):
         else:
             sys.stderr.write("\rEntry: {}, HTTPStatusCode: {} ServerProcTime {}s".format(i, r.status_code, processing_time))
 
-    print("\r\n\n")
+    pprnt("\r\n\n")
 
     url = 'http://localhost:8080/api/v1/objects'
     data = '''

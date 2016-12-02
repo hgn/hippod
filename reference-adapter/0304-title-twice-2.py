@@ -227,12 +227,17 @@ after maintainable products.
     pprnt("\nRet Data:")
     data = r.json()
     pprnt(data)
-    return r.status_code
+    for i, v in enumerate(data['data']):
+        if data['data'][i]['conflict'] == False:
+            continue
+        return None
+    if len(data['data']) == 1:
+        return r.status_code
 
 
 if __name__ == '__main__':
     status = add_n(1)
     if status==200:
-        print("OK.")
+        print("--- OK. One object with one subcontainer stored.")
     else:
         print("FAIL")
