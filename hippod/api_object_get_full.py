@@ -85,7 +85,6 @@ def container_obj_to_ret_obj(app, sha_major, cont_obj):
         sub_dict = dict()
         sub_dict['object-item'] = dict()
         sub_dict['sha-minor'] = sub_cont['sha-minor']
-        sub_dict['object-item']['data'] = list()
         ok, full_sub_cont = hippod.api_shared.read_subcont_obj_by_id(app, sha_major, sub_cont['sha-minor'])
         if not ok:
             msg = "subcontainer {} not available, although entry in subcontainer-list"
@@ -95,7 +94,7 @@ def container_obj_to_ret_obj(app, sha_major, cont_obj):
         if data:
             sub_dict['object-achievements'] = data
         if 'data' in full_sub_cont['object-item']:
-            sub_dict['object-item']['data'].append(full_sub_cont['object-item']['data'])
+            sub_dict['object-item']['data'] = full_sub_cont['object-item']['data']
         # error handling not required?
         ret_obj['subcontainer'].append(sub_dict)
 

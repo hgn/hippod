@@ -202,13 +202,13 @@ after maintainable products.
         pprnt(json.dumps(ret_data, sort_keys=True, separators=(',', ': '), indent=4))
         assert len(ret_data['data']['id']) > 0
         processing_time = ret_data['processing-time']
-        sys.stderr.write("\nHTTPStatusCode: {} ServerProcTime {}s\n".format(r.status_code, processing_time))
+        # sys.stderr.write("\nHTTPStatusCode: {} ServerProcTime {}s\n".format(r.status_code, processing_time))
 
         query_full(ret_data['data']['id'])
         time.sleep(1)
 
     pprnt("\r\n\n")
-    sys.exit(0)
+     #sys.exit(0)
     pprnt("\r\n\n")
 
     url = 'http://localhost:8080/api/v1/objects'

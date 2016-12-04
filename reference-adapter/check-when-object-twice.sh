@@ -2,7 +2,7 @@
 
 #set -x
 
-TEST=(0300-title-default.py 0300-title-default.py)
+TEST=(0304-title-twice-1.py 0304-title-twice-2.py)
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
