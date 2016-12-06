@@ -79,6 +79,10 @@ def container_obj_to_ret_obj(app, sha_major, cont_obj):
     # add some object items
     ret_obj['object-item'] = dict()
     ret_obj['object-item']['title'] = cont_obj['title']
+    if len(cont_obj['subcontainer-list']) > 1:
+        ret_obj['conflict'] = True
+    else:
+        ret_obj['conflict'] = False
     ret_obj['subcontainer'] = list()
 
     for sub_cont in cont_obj['subcontainer-list']:
@@ -105,12 +109,47 @@ def container_obj_to_ret_obj(app, sha_major, cont_obj):
     return ret_obj
 
 
-def object_get_int(app, sha_major):
+def concrete_container_obj_to_ret_obj(app, sha_major, sha_minor, cont_obj):
+    ret_obj = dict()
+
+    ret_obj['object-item-id'] = sha_major
+
+    ret_obj['object-item'] = dict()
+    ret_obj['object-item']['title'] = cont_obj['title']
+    for i,v in enumerate(cont_obj['subcontainer-list']):
+        if cont_obj['subcontainer-list'][i]['sha-minor'] == sha_minor:
+            sub_cont = cont_obj['subcontainer-list'][i]
+    sub_dict = dict()
+    sub_dict['object-item'] = dict()
+    ret_obj['subcontainer'] = list()
+    ok, full_sub_cont = hippod.api_shared.read_subcont_obj_by_id(app, sha_major, sha_minor)
+    if not ok:
+        msg = "subcontainer {} not available, although entry in subcontainer-list"
+        msg = msg.format(sha_minor)
+        raise ApiError(msg)
+    data = get_all_achievement_data(app, sha_major, sha_minor, full_sub_cont)
+    if data:
+        sub_dict['object-achievements'] = data
+    if 'data' in full_sub_cont['object-item']:
+        sub_dict['object-item']['data'] = full_sub_cont['object-item']['data']
+    # ret_obj['subcontainer'] = sub_dict
+    ret_obj['subcontainer'].append(sub_dict)
+
+    data = get_last_attachment_data(app, sha_major, cont_obj)
+    if data:
+        ret_obj['object-attachment'] = data
+    return ret_obj
+
+
+def object_get_int(app, sha_major, sha_minor):
     ok, data = hippod.api_shared.read_cont_obj_by_id(app, sha_major)
     if not ok:
         msg = "cannot read object by id: {}".format(sha_major)
         raise ApiError(msg)
-    return container_obj_to_ret_obj(app, sha_major, data)
+    if sha_minor == None:
+        return container_obj_to_ret_obj(app, sha_major, data)
+    else:
+        return concrete_container_obj_to_ret_obj(app, sha_major, sha_minor, data)
 
 
 def handle(request):
@@ -122,12 +161,33 @@ def handle(request):
 
     try:
         start = time.clock()
-        data = object_get_int(app, sha_major)
+        data = object_get_int(app, sha_major, None)
         end = time.clock()
     except ApiError as e:
         return e.transform()
-    except Exception as e:
+    except Exception as e:                              # remove this exception handling?
         return ApiError(str(e)).transform()
+
+    o = hippod.ex3000.Ex3000()
+    o['data'] = data
+    o['processing-time'] = "{0:.4f}".format(end - start)
+    o.http_code(200)
+    return o.transform()
+
+def handle_minor(request):
+    if request.method != "GET" and request.method != "POST":
+        msg = "Internal Error...request method: {} is not allowed".format(request.method)
+        raise hippod.error_object.ApiError(msg)
+    app = request.app
+    sha_major = request.match_info['sha_major']
+    sha_minor = request.match_info['sha_minor']
+
+    try:
+        start = time.clock()
+        data = object_get_int(app, sha_major, sha_minor)
+        end = time.clock()
+    except ApiError as e:
+        return e.transform()
 
     o = hippod.ex3000.Ex3000()
     o['data'] = data

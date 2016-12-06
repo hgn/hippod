@@ -165,7 +165,16 @@
 													<b>Submitter Date:</b> {{ items['object-achievements']['date-added'] }}<br>
 													<b>Test Date:</b> {{ items['object-achievements']['test-date'] }}<br>
 													<b>Result:</b> {{ items['object-achievements']['test-result'] }}<br>
-													<b>Conflict:<b> {{ items['conflict']}}<br>
+													<div ng-switch on='items["conflict"]'>
+														<div ng-switch-when="true">
+															<div class="alert alert-danger" role="alert">
+															 <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+															 <span class="sr-only"> Error:</span>
+																<b>Conflict:<b> Multiple subcontainers detected<br>
+															</div>
+														</div>
+														<div ng-switch-default></div>
+													</div>
 												</div>
 												<div class="attachments">
 													<b>Category:</b> {{ items['object-attachment']['categories'] }}<br>
@@ -197,7 +206,16 @@
 													<b>Submitter Date:</b> {{ items['object-achievements']['date-added'] }}<br>
 													<b>Test Date:</b> {{ items['object-achievements']['test-date'] }}<br>
 													<b>Result:</b> {{ items['object-achievements']['test-result'] }}<br>
-													<b>Conflict:<b> {{ items['conflict']}}<br>
+													<div ng-switch on='items["conflict"]'>
+														<div ng-switch-when="true">
+															<div class="alert alert-danger" role="alert">
+															 <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+															 <span class="sr-only"> Error:</span>
+																<b>Conflict:<b> Multiple subcontainers detected<br>
+															</div>
+														</div>
+														<div ng-switch-default></div>
+													</div>
 												</div>
 												<div class="attachments">
 													<b>Category:</b> {{ items['object-attachment']['categories'] }}<br>
@@ -228,7 +246,16 @@
 													<b>Submitter Date:</b> {{ items['object-achievements']['date-added'] }}<br>
 													<b>Test Date:</b> {{ items['object-achievements']['test-date'] }}<br>
 													<b>Result:</b> {{ items['object-achievements']['test-result'] }}<br>
-													<b>Conflict:<b> {{ items['conflict']}}<br>
+													<div ng-switch on='items["conflict"]'>
+														<div ng-switch-when="true">
+															<div class="alert alert-danger" role="alert">
+															 <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+															 <span class="sr-only"> Error:</span>
+																<b>Conflict:<b> Multiple subcontainers detected<br>
+															</div>
+														</div>
+														<div ng-switch-default></div>
+													</div>
 												</div>
 												<div class="attachments">
 													<b>Category:</b> {{ items['object-attachment']['categories'] }}<br>
@@ -260,7 +287,16 @@
 													<b>Submitter Date:</b> {{ items['object-achievements']['date-added'] }}<br>
 													<b>Test Date:</b> {{ items['object-achievements']['test-date'] }}<br>
 													<b>Result:</b> {{ items['object-achievements']['test-result'] }}<br>
-													<b>Conflict:<b> {{ items['conflict']}}<br>
+													<div ng-switch on='items["conflict"]'>
+														<div ng-switch-when="true">
+															<div class="alert alert-danger" role="alert">
+															 <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+															 <span class="sr-only"> Error:</span>
+																<b>Conflict:<b> Multiple subcontainers detected<br>
+															</div>
+														</div>
+														<div ng-switch-default></div>
+													</div>
 												</div>
 												<div class="attachments">
 													<b>Category:</b> {{ items['object-attachment']['categories'] }}<br>
@@ -298,7 +334,16 @@
 										<b>Last Submitter:</b> {{ items['object-achievements']['submitter'] }}<br>
 										<b>Date:</b> {{ items['object-achievements']['date-added'] }}<br>
 										<b>Result:</b> {{ items['object-achievements']['test-result'] }}<br>
-										<b>Conflict:<b> {{ items['conflict']}}<br>
+										<div ng-switch on='items["conflict"]'>
+														<div ng-switch-when="true">
+															<div class="alert alert-danger" role="alert">
+															 <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+															 <span class="sr-only"> Error:</span>
+																<b>Conflict:<b> Multiple subcontainers detected<br>
+															</div>
+														</div>
+														<div ng-switch-default></div>
+													</div>
 									</div>
 								</a>
 							</div>
@@ -312,7 +357,16 @@
 										<b>Last Submitter:</b> {{ items['object-achievements']['submitter'] }}<br>
 										<b>Date:</b> {{ items['object-achievements']['date-added'] }}<br>
 										<b>Result:</b> {{ items['object-achievements']['test-result'] }}<br>
-										<b>Conflict:<b> {{ items['conflict']}}<br>
+										<div ng-switch on='items["conflict"]'>
+														<div ng-switch-when="true">
+															<div class="alert alert-danger" role="alert">
+															 <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+															 <span class="sr-only"> Error:</span>
+																<b>Conflict:<b> Multiple subcontainers detected<br>
+															</div>
+														</div>
+														<div ng-switch-default></div>
+													</div>
 									</div>
 								</a>
 							</div>
@@ -326,7 +380,16 @@
 										<b>Last Submitter:</b> {{ items['object-achievements']['submitter'] }}<br>
 										<b>Date:</b> {{ items['object-achievements']['date-added'] }}<br>
 										<b>Result:</b> {{ items['object-achievements']['test-result'] }}<br>
-										<b>Conflict:<b> {{ items['conflict']}}<br>
+										<div ng-switch on='items["conflict"]'>
+														<div ng-switch-when="true">
+															<div class="alert alert-danger" role="alert">
+															 <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+															 <span class="sr-only"> Error:</span>
+																<b>Conflict:<b> Multiple subcontainers detected<br>
+															</div>
+														</div>
+														<div ng-switch-default></div>
+													</div>
 									</div>
 								</a>
 							</div>
@@ -340,7 +403,16 @@
 										<b>Last Submitter:</b> {{ items['object-achievements']['submitter'] }}<br>
 										<b>Date:</b> {{ items['object-achievements']['date-added'] }}<br>
 										<b>Result:</b> {{ items['object-achievements']['test-result'] }}<br>
-										<b>Conflict:<b> {{ items['conflict']}}<br>
+										<div ng-switch on='items["conflict"]'>
+														<div ng-switch-when="true">
+															<div class="alert alert-danger" role="alert">
+															 <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+															 <span class="sr-only"> Error:</span>
+																<b>Conflict:<b> Multiple subcontainers detected<br>
+															</div>
+														</div>
+														<div ng-switch-default></div>
+													</div>
 									</div>
 								</a>
 							</div>

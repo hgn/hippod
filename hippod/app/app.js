@@ -30,6 +30,14 @@ hippoD.config(function($stateProvider, $urlRouterProvider) {
         })
 
 
+        .state('item_specific', {
+                    url: '/item-specific/:id/:sub_id',
+            templateUrl: 'templates/item.html',
+            controller: 'Item_specificCntrl'
+        })
+
+
+
         .state('admin', {
             url: '/admin',
             templateUrl: 'templates/admin.html',

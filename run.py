@@ -104,6 +104,9 @@ def setup_routes(app, conf):
                         '/api/v1/object/{sha_major}',
                         api_object_get_full.handle)
     app.router.add_route('*',
+                        '/api/v1/object/{sha_major}/{sha_minor}',
+                        api_object_get_full.handle_minor)
+    app.router.add_route('*',
                         '/api/v1/data/{sha_sum}',
                         api_data_get.handle)
     app.router.add_route('GET',
