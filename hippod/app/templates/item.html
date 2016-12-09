@@ -105,7 +105,6 @@
 	<uib-tab heading="Achievements">
 		<div ng-switch on="conflict">
 			<div ng-switch-when="true">
-				<div ng-repeat="subcontainer in data['subcontainer']">
 								<div class="variety-container">
 							<div ng-repeat="variety in varieties">
 
@@ -119,8 +118,8 @@
 											</div>
 										</div>
 
-										<div ng-repeat="achievement in subcontainer['object-achievements']">
-											<a ng-href="#/item/{{id}}/{{achievement['id']}}">
+										<div ng-repeat="achievement in data['subcontainer'][index]['object-achievements']">
+											<a ng-href="#/item/{{id}}/{{data['subcontainer'][index]['sha-minor']}}/{{achievement['id']}}">
 											<div class="achievement-box">
 												ID: {{ achievement['id'] }}<br>
 												Anchor: {{achievement['anchor'] }}<br>
@@ -135,7 +134,6 @@
 									</div>
 								</div> <!-- variety-entry -->
 							</div> <!-- variety-container -->
-				</div>
 			</div>
 			<div ng-switch-default>
 				<div class="variety-container">
@@ -150,9 +148,9 @@
 												{{variety_data[0]}} : {{variety_data[1]}}<br>
 											</div>
 										</div>
-										<div ng-repeat="subcontainer in data['subcontainer']">
-										<div ng-repeat="achievement in subcontainer['object-achievements']">
-											<a ng-href="#/item/{{id}}/{{achievement['id']}}">
+										<!-- <div ng-repeat="subcontainer in data['subcontainer']"> -->
+										<div ng-repeat="achievement in data['subcontainer'][index]['object-achievements']">
+											<a ng-href="#/item/{{id}}/{{data['subcontainer'][index]['sha-minor']}}/{{achievement['id']}}">
 											<div class="achievement-box">
 												ID: {{ achievement['id'] }}<br>
 												Anchor: {{achievement['anchor'] }}<br>
@@ -163,7 +161,7 @@
 											</div>
 											</a>
 										</div>
-										</div>
+										<!-- </div> -->
 
 									</div>
 								</div> <!-- variety-entry -->
@@ -184,13 +182,14 @@
 
 	</uib-tab>
 
-    <div ng-switch on ="conflict">
-		<div ng-switch-when="true">
-		    <uib-tab heading="Conflicts">
+	<uib-tab heading="Conflicts" index="0" ng-if="conflict">
+    <!-- <div ng-switch on ="conflict"> -->
+		<!-- <div ng-switch-when="true"> -->
+		    <!-- <uib-tab heading="Conflicts"> -->
 						<div class="panel panel-default">
 							<div class="panel-heading"><h4> Multiple container content is detected</h4></div>
 							<div class="panel-body">
-								<p>Some tests obviously are in some aspects similiar (except for titel and categories).</p>
+								<p>Some tests obviously are in some aspects similiar.</p>
 							<table class="table">
 							<thead>
 							<tr>
@@ -212,10 +211,11 @@
 							</table>
 						</div>
 						</div>
-			</uib-tab>
-		</div>
-		<div ng-switch-default></div>
-	</div>
+			<!-- </uib-tab> -->
+		<!-- </div> -->
+		<!-- <div ng-switch-default></div> -->
+	<!-- </div> -->
+	</uib-tab>
   </uib-tabset>
 
 

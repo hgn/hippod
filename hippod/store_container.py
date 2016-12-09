@@ -7,6 +7,7 @@ import zlib
 import sys
 
 import hippod.api_object_post
+import hippod.users
 
 def create_container_data_merge_issue_new(app, sha_major, sha_minor, object_item):
     date = datetime.datetime.now().isoformat('T') # ISO 8601 format
@@ -21,7 +22,8 @@ def create_container_data_merge_issue_new(app, sha_major, sha_minor, object_item
     d['subcontainer-list'] = list()
     sub_cntr_init = dict()
     sub_cntr_init['sha-minor'] = sha_minor
-    sub_cntr_init['submitter'] = object_item['submitter']
+    user_data = hippod.users.get(app, object_item['submitter'])
+    sub_cntr_init['submitter'] = user_data[0]['fullname']
     sub_cntr_init['date-added'] = date
     d['subcontainer-list'].append(sub_cntr_init)
 
@@ -35,24 +37,26 @@ def create_container_data_merge_issue_new(app, sha_major, sha_minor, object_item
 
 
 # init token reflects whether first subcontainer created or not
-def create_subcontainer_data_merge_issue_new(app, sha_major, sha_minor, object_item, submitter):
+def create_subcontainer_data_merge_issue_new(app, sha_major, sha_minor, object_item):
     date = datetime.datetime.now().isoformat('T')
     obj_root_path = app['DB_OBJECT_PATH']
     cntr_path = os.path.join(obj_root_path, sha_major[0:2], sha_major, 'container.db')
     d_sub = dict()
-    d_sub['submitter'] = submitter
+    user_data = hippod.users.get(app, object_item['submitter'])
+    d_sub['submitter'] = user_data[0]['fullname']
     d_sub['achievements'] = []
     d_sub['object-item'] = dict()
     if 'data' in object_item['object-item']:
         d_sub['object-item']['data'] = object_item['object-item']['data']
         # for i, v in enumerate(d_sub['object-item']['data']):
-        #     del d_sub['object-item']['data'][i]['size-real']
+        #     if 'size-real' in d_sub['object-item']['data'][i]:
+        #         del d_sub['object-item']['data'][i]['size-real']
     hippod.mime_data_db.save_object_item_data_list(app, object_item['object-item'])
     
     return json.dumps(d_sub, sort_keys=True,indent=4, separators=(',', ': '))
 
 
-def save_new_object_container(app, sha_major, sha_minor, object_item, submitter):
+def save_new_object_container(app, sha_major, sha_minor, object_item):
     obj_root_path = app['DB_OBJECT_PATH']
     obj_root_pre_path = os.path.join(obj_root_path, sha_major[0:2])
     if not os.path.isdir(obj_root_pre_path):
@@ -79,12 +83,12 @@ def save_new_object_container(app, sha_major, sha_minor, object_item, submitter)
     cd = create_container_data_merge_issue_new(app, sha_major, sha_minor, object_item)
     with open(file_path, 'w') as fd:
         fd.write(cd)
-    cd_minor = create_subcontainer_data_merge_issue_new(app, sha_major, sha_minor, object_item, submitter)
+    cd_minor = create_subcontainer_data_merge_issue_new(app, sha_major, sha_minor, object_item)
     with open(minor_file_path, 'w') as fd_minor:
     	fd_minor.write(cd_minor)
 
 
-def save_new_object_minor_container(app, sha_major, sha_minor, object_item, submitter):
+def save_new_object_minor_container(app, sha_major, sha_minor, object_item):
     obj_root_path = app['DB_OBJECT_PATH']
     obj_minor_path = os.path.join(obj_root_path, sha_major[0:2], sha_major, sha_minor)
     if not os.path.isdir(obj_minor_path):
@@ -98,6 +102,6 @@ def save_new_object_minor_container(app, sha_major, sha_minor, object_item, subm
     if os.path.isfile(minor_file_path):
         msg = "internal error: {}".format(inspect.currentframe())
         raise ApiError(msg)
-    cd_minor = create_subcontainer_data_merge_issue_new(app, sha_major, sha_minor, object_item, submitter)
+    cd_minor = create_subcontainer_data_merge_issue_new(app, sha_major, sha_minor, object_item)
     with open(minor_file_path, 'w') as fd_minor:
     	fd_minor.write(cd_minor)

@@ -191,7 +191,9 @@ DBService_concrete.getFooConcrete($scope.id, $scope.sub_id).then(function(res) {
     $scope.tags        = formatTags(res['object-attachment']['tags']);
     $scope.references  = formatReferences(res['object-attachment']['references']);
     $scope.date_added  = humanFormatDateYYYYMMDDHHMM(res['object-attachment']['date-added']);
-    $scope.conflict = res['conflict']
+    $scope.conflict = res['conflict'];
+    $scope.latest_index = res['latest_index'];
+    $scope.index = res['requested-index']
 });
 
 $scope.graphTestResultOptions = {

@@ -69,10 +69,8 @@ def check_conf_environment(app, path):
     app['CONF_USER_FILEPATH'] = obj_path
 
 
-
 def set_config_defaults(app):
     app['MAX_REQUEST_SIZE'] = 5000000
-
 
 
 def init_aiohttp(conf):
@@ -90,8 +88,9 @@ def init_aiohttp(conf):
     app['CONF_ROOT_PATH'] = conf_path_root
     check_conf_environment(app, conf_path_root)
 
-    db_path = os.path.join(conf_path_root, "user.db")
-    app["userdb"] = user_db.UserDB(conf, db_path)
+    user_db_path = os.path.join(conf_path_root, "user.db")
+    ldap_db_path = os.path.join(conf_path_root, "ldap.db")
+    app["userdb"] = user_db.UserDB(conf, user_db_path, ldap_db_path)
 
     return app
 

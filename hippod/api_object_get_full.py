@@ -84,7 +84,7 @@ def container_obj_to_ret_obj(app, sha_major, cont_obj):
     else:
         ret_obj['conflict'] = False
     ret_obj['subcontainer'] = list()
-
+    buff_dict = dict()
     for sub_cont in cont_obj['subcontainer-list']:
         sub_dict = dict()
         sub_dict['object-item'] = dict()
@@ -100,8 +100,11 @@ def container_obj_to_ret_obj(app, sha_major, cont_obj):
         if 'data' in full_sub_cont['object-item']:
             sub_dict['object-item']['data'] = full_sub_cont['object-item']['data']
         # error handling not required?
+        buff_dict[sub_cont['sha-minor']] = data[0]['date-added']
         ret_obj['subcontainer'].append(sub_dict)
-
+    latest_subcont = max(buff_dict, key=lambda key: buff_dict[key])
+    # ret_obj['latest-subcontainer'] = latest_subcont
+    ret_obj['latest-subcontainer-index'] = next(index for (index,d) in enumerate(ret_obj['subcontainer']) if d['sha-minor']==latest_subcont)
     # add last attachment
     data = get_last_attachment_data(app, sha_major, cont_obj)
     if data:
@@ -116,24 +119,29 @@ def concrete_container_obj_to_ret_obj(app, sha_major, sha_minor, cont_obj):
 
     ret_obj['object-item'] = dict()
     ret_obj['object-item']['title'] = cont_obj['title']
+    if len(cont_obj['subcontainer-list']) > 1:
+        ret_obj['conflict'] = True
     for i,v in enumerate(cont_obj['subcontainer-list']):
         if cont_obj['subcontainer-list'][i]['sha-minor'] == sha_minor:
+            ret_obj['requested-index'] = i
             sub_cont = cont_obj['subcontainer-list'][i]
-    sub_dict = dict()
-    sub_dict['object-item'] = dict()
     ret_obj['subcontainer'] = list()
-    ok, full_sub_cont = hippod.api_shared.read_subcont_obj_by_id(app, sha_major, sha_minor)
-    if not ok:
-        msg = "subcontainer {} not available, although entry in subcontainer-list"
-        msg = msg.format(sha_minor)
-        raise ApiError(msg)
-    data = get_all_achievement_data(app, sha_major, sha_minor, full_sub_cont)
-    if data:
-        sub_dict['object-achievements'] = data
-    if 'data' in full_sub_cont['object-item']:
-        sub_dict['object-item']['data'] = full_sub_cont['object-item']['data']
-    # ret_obj['subcontainer'] = sub_dict
-    ret_obj['subcontainer'].append(sub_dict)
+    for sub_cont in cont_obj['subcontainer-list']:
+        sub_dict = dict()
+        sub_dict['object-item'] = dict()
+        sub_dict['sha-minor'] = sub_cont['sha-minor']
+        ok, full_sub_cont = hippod.api_shared.read_subcont_obj_by_id(app, sha_major, sub_cont['sha-minor'])
+        if not ok:
+            msg = "subcontainer {} not available, although entry in subcontainer-list"
+            msg = msg.format(sub_cont['sha-minor'])
+            raise ApiError(msg)
+        data = get_all_achievement_data(app, sha_major, sub_cont['sha-minor'], full_sub_cont)
+        if data:
+            sub_dict['object-achievements'] = data
+        if 'data' in full_sub_cont['object-item']:
+            sub_dict['object-item']['data'] = full_sub_cont['object-item']['data']
+        # ret_obj['subcontainer'] = sub_dict
+        ret_obj['subcontainer'].append(sub_dict)
 
     data = get_last_attachment_data(app, sha_major, cont_obj)
     if data:

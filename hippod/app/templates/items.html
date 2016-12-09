@@ -149,7 +149,7 @@
 						<div ng-switch on='items["object-achievements"]["test-result"]'>
 
 							<div ng-switch-when="passed">
-								<a ng-href="#/item/{{items['object-item-id']}}">
+								<a ng-href="#/item/{{items['object-item-id']}}/{{items['object-item']['sha-minor']}}">
 
 									<div class="item-container">
 										<div class="status-area status-area-success"></div>
@@ -169,8 +169,7 @@
 														<div ng-switch-when="true">
 															<div class="alert alert-danger" role="alert">
 															 <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
-															 <span class="sr-only"> Error:</span>
-																<b>Conflict:<b> Multiple subcontainers detected<br>
+																<b>Conflict:</b> Multiple subcontainers detected<br>
 															</div>
 														</div>
 														<div ng-switch-default></div>
@@ -190,7 +189,7 @@
 							</div>
 
 							<div ng-switch-when="failed">
-								<a ng-href="#/item/{{items['object-item-id']}}">
+								<a ng-href="#/item/{{items['object-item-id']}}/{{items['object-item']['sha-minor']}}">
 
 									<div class="item-container">
 										<div class="status-area status-area-failure"></div>
@@ -210,8 +209,7 @@
 														<div ng-switch-when="true">
 															<div class="alert alert-danger" role="alert">
 															 <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
-															 <span class="sr-only"> Error:</span>
-																<b>Conflict:<b> Multiple subcontainers detected<br>
+																<b>Conflict:</b> Multiple subcontainers detected<br>
 															</div>
 														</div>
 														<div ng-switch-default></div>
@@ -231,7 +229,7 @@
 							</div>
 
 							<div ng-switch-when="nonapplicable">
-								<a ng-href="#/item/{{items['object-item-id']}}">
+								<a ng-href="#/item/{{items['object-item-id']}}/{{items['object-item']['sha-minor']}}">
 									<div class="item-container">
 										<div class="status-area status-area-nonapplicable"></div>
 										<div class="item-main">
@@ -250,8 +248,7 @@
 														<div ng-switch-when="true">
 															<div class="alert alert-danger" role="alert">
 															 <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
-															 <span class="sr-only"> Error:</span>
-																<b>Conflict:<b> Multiple subcontainers detected<br>
+																<b>Conflict:</b> Multiple subcontainers detected<br>
 															</div>
 														</div>
 														<div ng-switch-default></div>
@@ -271,7 +268,7 @@
 							</div>
 
 							<div ng-switch-default>
-								<a ng-href="#/item/{{items['object-item-id']}}">
+								<a ng-href="#/item/{{items['object-item-id']}}/{{items['object-item']['sha-minor']}}">
 
 									<div class="item-container">
 										<div class="status-area status-area-nontest"></div>
@@ -291,8 +288,7 @@
 														<div ng-switch-when="true">
 															<div class="alert alert-danger" role="alert">
 															 <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
-															 <span class="sr-only"> Error:</span>
-																<b>Conflict:<b> Multiple subcontainers detected<br>
+																<b>Conflict:</b> Multiple subcontainers detected<br>
 															</div>
 														</div>
 														<div ng-switch-default></div>
@@ -325,7 +321,7 @@
 
 						<div ng-switch on='items["object-achievements"]["test-result"]'>
 							<div ng-switch-when="passed">
-								<a ng-href="#/item/{{items['object-item-id']}}">
+								<a ng-href="#/item/{{items['object-item-id']}}/{{items['object-item']['sha-minor']}}">
 									<div class="list-group-item test-success-indicator">
 										<p class="alignleft">{{ items["object-item"]['title'] }}</p>
 										<p class="alignright">{{ items["object-item-id"] }}</p>
@@ -338,8 +334,7 @@
 														<div ng-switch-when="true">
 															<div class="alert alert-danger" role="alert">
 															 <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
-															 <span class="sr-only"> Error:</span>
-																<b>Conflict:<b> Multiple subcontainers detected<br>
+																<b>Conflict:</b> Multiple subcontainers detected<br>
 															</div>
 														</div>
 														<div ng-switch-default></div>
@@ -348,7 +343,7 @@
 								</a>
 							</div>
 							<div ng-switch-when="failed">
-								<a ng-href="#/item/{{items['object-item-id']}}">
+								<a ng-href="#/item/{{items['object-item-id']}}/{{items['object-item']['sha-minor']}}">
 									<div class="list-group-item test-failure-indicator">
 										<p class="alignleft">{{ items["object-item"]['title'] }}</p>
 										<p class="alignright">{{ items["object-item-id"] }}</p>
@@ -361,8 +356,7 @@
 														<div ng-switch-when="true">
 															<div class="alert alert-danger" role="alert">
 															 <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
-															 <span class="sr-only"> Error:</span>
-																<b>Conflict:<b> Multiple subcontainers detected<br>
+																<b>Conflict:</b> Multiple subcontainers detected<br>
 															</div>
 														</div>
 														<div ng-switch-default></div>
@@ -371,7 +365,7 @@
 								</a>
 							</div>
 							<div ng-switch-when="nonapplicable">
-								<a ng-href="#/item/{{items['object-item-id']}}">
+								<a ng-href="#/item/{{items['object-item-id']}}/{{items['object-item']['sha-minor']}}">
 									<div class="list-group-item test-nonapplicable-indicator">
 										<p class="alignleft">{{ items["object-item"]['title'] }}</p>
 										<p class="alignright">{{ items["object-item-id"] }}</p>
@@ -384,8 +378,7 @@
 														<div ng-switch-when="true">
 															<div class="alert alert-danger" role="alert">
 															 <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
-															 <span class="sr-only"> Error:</span>
-																<b>Conflict:<b> Multiple subcontainers detected<br>
+																<b>Conflict:</b> Multiple subcontainers detected<br>
 															</div>
 														</div>
 														<div ng-switch-default></div>
@@ -394,7 +387,7 @@
 								</a>
 							</div>
 							<div ng-switch-default>
-								<a ng-href="#/item/{{items['object-item-id']}}">
+								<a ng-href="#/item/{{items['object-item-id']}}/{{items['object-item']['sha-minor']}}">
 									<div class="list-group-item test-nontest-indicator">
 										<p class="alignleft">{{ items["object-item"]['title'] }}</p>
 										<p class="alignright">{{ items["object-item-id"] }}</p>
@@ -407,8 +400,7 @@
 														<div ng-switch-when="true">
 															<div class="alert alert-danger" role="alert">
 															 <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
-															 <span class="sr-only"> Error:</span>
-																<b>Conflict:<b> Multiple subcontainers detected<br>
+																<b>Conflict:</b> Multiple subcontainers detected<br>
 															</div>
 														</div>
 														<div ng-switch-default></div>

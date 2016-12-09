@@ -155,7 +155,7 @@ def save_object_item_data(app, data):
     del data['data']
     del data['mime-type']
     data['data-id'] = sha
-    data['size-real'] = attr_data['statistics']['size-real']
+    # data['size-real'] = attr_data['statistics']['size-real']
 
 
 def save_object_item_data_list(app, object_item):

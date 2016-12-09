@@ -52,6 +52,7 @@ hippoD.factory('DBService', function($http) {
                      headers: { "Content-Type": "application/json" }
                })
                  .then(function (response) {
+                     var latest_index = response.data.data['latest-subcontainer-index'];
                      var subcontainer = response.data.data['subcontainer'];
                      var achievements = response.data.data['object-achievements'];
                      for (var j = 0; j < subcontainer.length; j++) {
@@ -72,7 +73,8 @@ hippoD.factory('DBService', function($http) {
                     response.data.data['__attachments'] = attachments;
 
                      // fetch description
-                     item_data = subcontainer[subcontainer.length - 1]['object-item']['data'];
+                     response.data.data.latest_index = latest_index;
+                     item_data = subcontainer[latest_index]['object-item']['data'];
                      for (var i = 0; i < item_data.length; i++) {
                          if (item_data[i]['type'] == 'description') {
                              return $http(
@@ -113,11 +115,12 @@ hippoD.factory('DBService_concrete', function($http) {
                                      headers: { "Content-Type": "application/json" }
                                })
                                  .then(function(response){
+                                     var requested_index = response.data.data['requested-index'];
                                      var subcontainer = response.data.data['subcontainer'];
                                      var achievements = response.data.data['object-achievements'];
                                      //for (var i = 0; i < achievements.length; i++) {
                                      //}
-                                     var item_data = subcontainer[0]['object-item']['data'];
+                                     var item_data = subcontainer[requested_index]['object-item']['data'];
                                      var attachments = new Array();
                                      for (var i = 0; i < item_data.length; i++) {
                                          if (item_data[i]['type'] !== 'description') {
@@ -173,9 +176,8 @@ hippoD.factory('HippodDataService', function($http) {
                })
                  .then(function (response) {
                      var subcontainer = response.data.data['subcontainer'];
-                     for (var i = 0; i < subcontainer.length; i++){
-                       return subcontainer[i]['object-achievements'];
-                   }
+                     var latest_index = response.data.data['latest-subcontainer-index'];
+                       return subcontainer[latest_index]['object-achievements'];
                  })
 
                  return promise;
@@ -201,8 +203,9 @@ hippoD.factory('HippodDataServiceConcrete', function($http) {
                      headers: { "Content-Type": "application/json" }
                })
                  .then(function (response) {
+                     var requested_index = response.data.data['requested-index']
                      var subcontainer = response.data.data['subcontainer'];
-                     return subcontainer[0]['object-achievements'];
+                     return subcontainer[requested_index]['object-achievements'];
                  })
 
                  return promise;
