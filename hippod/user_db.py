@@ -58,9 +58,11 @@ class LDAP:
 
 class UserDB:
 
-    def __init__(self, conf, user_db_path):
+    def __init__(self, conf, user_db_path, ldap_db_path):
         self.user_db_path = user_db_path
+        self.ldap_db_path = ldap_db_path
         self._init_user_db()
+        self._init_ldap_db()
         if conf.userdb.method == "ldap":
             self.ldap_method = True
             self.conf_ldap = conf
@@ -85,7 +87,6 @@ class UserDB:
         entry = dict()
         entry_sub = dict()
         entry["john_doe"] = entry_sub
-        entry_sub['username']   = "john_doe"
         entry_sub['fullname']   = "John Doe"
         entry_sub['email']      = "john@example.coa"
         entry_sub['department'] = "Death Star"
@@ -95,43 +96,78 @@ class UserDB:
         with open(self.user_db_path,"w+") as f:
             f.write(d_jsonfied)
 
+    def _init_ldap_db(self):
+        if  os.path.isfile(self.ldap_db_path):
+            return
+        print("initialize new LDAP database in {}".format(self.ldap_db_path))
+        entry = dict()
+        entry_sub = dict()
+        entry["john_doe"] = entry_sub
+        entry_sub['fullname']   = "John Doe"
+        entry_sub['email']      = "john@example.coa"
+        entry_sub['department'] = "Death Star"
+        entry_sub['telephone']  = "00000000"
+        #entry['color']    = '#{:02X}'.format(random.randint(0, 0xFFFFFF))
+        d_jsonfied =  json.dumps(entry, sort_keys=True,indent=4, separators=(',', ': '))
+        with open(self.ldap_db_path,"w+") as f:
+            f.write(d_jsonfied)
+
 
     def _check_file(self):
         assert(os.path.isfile(self.user_db_path))
 
 
-    def _local_db_add_entry(self, new_entry, username):
-        with open(self.user_db_path, 'r') as f:
+    def _local_ldap_db_add_entry(self, new_entry, username):
+        with open(self.ldap_db_path, 'r') as f:
             db = json.load(f)
         db[username] = new_entry
         db_json = json.dumps(db, sort_keys=True,indent=4, separators=(',', ': '))
-        with open(self.user_db_path, 'w') as f:
+        with open(self.ldap_db_path, 'w') as f:
             f.write(db_json)
 
 
     def _local_db_query_entry(self, username):
-        with open(self.user_db_path) as db_file:
-            db = json.load(db_file)
-            if not username in db:
-                return None
-            return db[username]
+        try:
+            with open(self.user_db_path) as db_file:
+                db = json.load(db_file)
+                if not username in db:
+                    return None
+                return db[username]
+        except ValueError:
+            # here use also logger
+            return
+
+
+    def _local_ldap_db_query_entry(self, username):
+        try:
+            with open(self.ldap_db_path) as db_file:
+                db = json.load(db_file)
+                if not username in db:
+                    return None
+                return db[username]
+        except ValueError:
+            # here use also logger
+            return
 
 
     def query_user(self, username):
-        data = self._local_db_query_entry(username)
-        if not data and self.ldap_method:
-            ldap = LDAP(self.server_addr, self.server_port, self.username,
-                        self.password, self.bind)
-            ok, data = ldap.query(username)
-            if not ok:
-                msg = "user {} not known in user database or LDAP server" \
-                      " down or credentials wrong. More info: {}"
-                msg = msg.format(username, data)
-                raise ApiError(msg)
-            self._local_db_add_entry(data, username)
-        if not data and not self.ldap_method:
+        data_local_db = self._local_db_query_entry(username)
+        if not data_local_db and self.ldap_method:
+            data_local_ldap = self._local_ldap_db_query_entry(username)
+            if not data_local_ldap:
+                ldap = LDAP(self.server_addr, self.server_port, self.username,
+                            self.password, self.bind)
+                ok, data = ldap.query(username)
+                if not ok:
+                    msg = "user {} not known in user database or LDAP server" \
+                          " down or credentials wrong. More info: {}"
+                    msg = msg.format(username, data)
+                    raise ApiError(msg)
+                self._local_ldap_db_add_entry(data, username)
+            return data_local_ldap
+        if not data_local_db and not self.ldap_method:
             msg = "user {} not known in local user database. Please add" \
                   " manually entry for this user in local user.db"
             msg = msg.format(username)
             raise ApiError(msg)
-        return data
+        return data_local_db

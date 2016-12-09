@@ -33,11 +33,11 @@ def random_title(length):
 def add_n(n):
     url = 'http://localhost:8080/api/v1/object'
     data = dict()
-    data["submitter"] = "John Doe <john.doe@example.com>"
+    data["submitter"] = "john_doe"
     data["object-item"] = dict()
     data["object-item"]['categories'] = [ "team:orange", "topic:ip", "subtopic:route-cache" ]
     data["object-item"]['version'] = 0
-    data["attachment"] = dict()
+    #data["attachment"] = dict()
     data["achievements"] = list()
 
     headers = {'Content-type': 'application/json', 'Accept': 'application/json'}

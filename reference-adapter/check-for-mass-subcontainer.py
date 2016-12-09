@@ -15,6 +15,7 @@ import datetime
 import base64
 import uuid
 import argparse
+import string
 
 pp = pprint.PrettyPrinter(depth=6)
 
@@ -37,15 +38,19 @@ def random_image():
         return base64.b64encode(content)
 
 def random_id():
-    return '0'
+    return str(uuid.uuid4())[0:5]
 
+def random_title(words):
+    words = ['Foo', 'Bar']
+    s = ' '.join(random.choice(words) for _ in range(1))
+    return s
 
 def random_result():
-    d = ['passed']
+    d = ['passed', 'failed', 'nonapplicable' ]
     return d[random.randint(0, len(d) - 1)]
 
 def random_submitter():
-    d = ['john_doe']
+    d = ['albi', 'isac43', 'tesla_driver', 'maryy', 'charlie']
     return d[random.randint(0, len(d) - 1)]
 
 def query_full(id):
@@ -53,9 +58,9 @@ def query_full(id):
     data = ''' '''
     headers = {'Content-type': 'application/json', 'Accept': 'application/json'}
     r = requests.get(url, data=data, headers=headers)
-    pprnt("\nStatus Code:")
-    pprnt(r.status_code)
-    pprnt("\nRet Data:")
+    print("\nStatus Code:")
+    print(r.status_code)
+    print("\nRet Data:")
     data = r.json()
     pprnt(data)
 
@@ -68,8 +73,8 @@ def add_n(n):
         data["submitter"] = random_submitter()
         data["object-item"] = dict()
         data["object-item"]['categories'] = [ "team:orange", "topic:ip", "subtopic:route-cache" ]
-        data["object-item"]['version'] = '0'
-        data['object-item']['title'] = "Foo"
+        data["object-item"]['version'] = random.randint(0,1)
+        data['object-item']['title'] = "{}".format(random_title(3))
 
         data['object-item']['data'] = list()
         desc_data = dict()
@@ -77,7 +82,7 @@ def add_n(n):
         desc_data['mime-type'] = 'text/markdown'
         # base64 requires a byte array for encoding -> .encode('utf-8')
         # json requires a string -> convert to UTF-8
-        desc_data['data'] = base64.b64encode(
+        default_string = (
                 """
 # Rooter: A Methodology for the Typical Unification of Access Points and Redundancy #
 
@@ -143,7 +148,10 @@ strategies. Seamlessly visualize quality intellectual capital without superior
 collaboration and idea-sharing. Holistically pontificate installed base portals
 after maintainable products.
 
-                """.encode('utf-8')).decode("utf-8") 
+                """)
+        changing_string = random.choice(string.ascii_letters) + random.choice(string.ascii_letters)
+        string_final = default_string + changing_string 
+        desc_data['data'] = base64.b64encode(string_final.encode('utf-8')).decode("utf-8") 
         data['object-item']['data'].append(desc_data)
 
         img_data = dict()
@@ -169,8 +177,8 @@ after maintainable products.
         achievement["result"] = random_result()
 
         # 1/4 of all achievements are anchored
-        # if random.randint(0, 3) == 0:
-        #     achievement["anchor"] = random_id()
+        if random.randint(0, 3) == 0:
+            achievement["anchor"] = random_id()
 
         # add data entry to achievement, can be everything
         # starting from images, over log files to pcap files, ...
@@ -181,37 +189,37 @@ after maintainable products.
         log_data['data'] = "R0lGODlhDwAPAKECAAABzMzM/////wAAACwAAAAADwAPAAACIISPeQHsrZ5ModrLlN48CXF8m2iQ3YmmKqVlRtW4MLwWACH+H09wdGltaXplZCBieSBVbGVhZCBTbWFydFNhdmVyIQAAOw=="
         achievement['data'].append(log_data)
 
-        # if random.randint(0, 3) == 0:
-        #     variety = dict()
-        #     variety['os-version'] = 'rhel23'
-        #     variety['platform']   = 'xeon-foo'
-        #     achievement["variety"] = variety
+        if random.randint(0, 3) == 0:
+            variety = dict()
+            variety['os-version'] = 'rhel23'
+            variety['platform']   = 'xeon-foo'
+            achievement["variety"] = variety
 
         data["achievements"] = list()
         data["achievements"].append(achievement)
 
         #os.system('cls' if os.name == 'nt' else 'clear')
-        pprnt("New Data:\n-----------\n")
-        pprnt(json.dumps(data, sort_keys=True, separators=(',', ': '), indent=4))
-        pprnt("\n-----------\n")
+        print("New Data:\n-----------\n")
+        print(json.dumps(data, sort_keys=True, separators=(',', ': '), indent=4))
+        print("\n-----------\n")
 
         dj = json.dumps(data, sort_keys=True, separators=(',', ': '))
         r = requests.post(url, data=dj, headers=headers)
-        pprnt("Return Data:\n-----------\n")
+        print("Return Data:\n-----------\n")
         ret_data = r.json()
-        pprnt(json.dumps(ret_data, sort_keys=True, separators=(',', ': '), indent=4))
+        print(json.dumps(ret_data, sort_keys=True, separators=(',', ': '), indent=4))
         assert len(ret_data['data']['id']) > 0
         processing_time = ret_data['processing-time']
-        # sys.stderr.write("\nHTTPStatusCode: {} ServerProcTime {}s\n".format(r.status_code, processing_time))
+        sys.stderr.write("\nHTTPStatusCode: {} ServerProcTime {}s\n".format(r.status_code, processing_time))
 
         query_full(ret_data['data']['id'])
-        time.sleep(1)
+        #time.sleep(1)
 
-    pprnt("\r\n\n")
-    # sys.exit(0)
-    pprnt("\r\n\n")
+    print("\r\n\n")
+    sys.exit(0)
+    print("\r\n\n")
 
-    url = 'http://localhost:8080/api/v1/objects-detail-last'
+    url = 'http://localhost:8080/api/v1/objects'
     data = '''
     {
         "limit": 0,
@@ -222,17 +230,17 @@ after maintainable products.
 
     headers = {'Content-type': 'application/json', 'Accept': 'application/json'}
     r = requests.get(url, data=data, headers=headers)
-    pprnt("\nStatus Code:")
-    pprnt(r.status_code)
-    pprnt("\nRet Data:")
+    print("\nStatus Code:")
+    print(r.status_code)
+    print("\nRet Data:")
     data = r.json()
     pprnt(data)
     return r.status_code
 
 
 if __name__ == '__main__':
-    status = add_n(1)
+    status = add_n(10000)
     if status==200:
-        print("OK.")
+        print("OK")
     else:
         print("FAIL")
