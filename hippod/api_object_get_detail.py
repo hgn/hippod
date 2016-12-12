@@ -15,6 +15,7 @@ import asyncio
 import hippod.hasher
 import hippod.ex3000
 import hippod.api_shared
+import hippod.api_object_get_full
 
 from hippod.error_object import *
 
@@ -106,6 +107,20 @@ def get_last_attachment_data(app, sha_major, cont_obj):
 
 def container_obj_to_ret_obj(app, request_data, sha_major, cont_obj):
     ret_obj = dict()
+    buff_dict = dict()
+
+    # fetch latest subcontainer and related meta
+    for sub_cont in cont_obj['subcontainer-list']:
+        ok, full_sub_cont = hippod.api_shared.read_subcont_obj_by_id(app, sha_major, sub_cont['sha-minor'])
+        if not ok:
+            msg = "subcontainer {} not available, although entry in subcontainer-list"
+            msg = msg.format(sub_cont['sha-minor'])
+            raise ApiError(msg)
+        data = hippod.api_object_get_full.get_all_achievement_data(app, sha_major, sub_cont['sha-minor'], full_sub_cont)
+        buff_dict[sub_cont['sha-minor']] = data[0]['date-added']
+    latest_sha_minor = max(buff_dict, key=lambda key: buff_dict[key])
+    latest_subcont = next(d for (index,d) in enumerate(cont_obj['subcontainer-list']) if d['sha-minor']==latest_sha_minor)
+    latest_index = next(index for (index,d) in enumerate(cont_obj['subcontainer-list']) if d['sha-minor']==latest_sha_minor)
 
     # add object item ID
     ret_obj['object-item-id'] = sha_major
@@ -115,10 +130,12 @@ def container_obj_to_ret_obj(app, request_data, sha_major, cont_obj):
     ret_obj['object-item']['title'] = cont_obj['title']
     ret_obj['object-item']['categories'] = cont_obj['categories']
 
-    sub_cont_last = cont_obj['subcontainer-list'][-1]
+    # sub_cont_last = cont_obj['subcontainer-list'][-1]
+    sub_cont_last = cont_obj['subcontainer-list'][latest_index]
     ret_obj['object-item']['date'] = sub_cont_last['date-added']
     ret_obj['object-item']['last-submitter'] = sub_cont_last['submitter']
     ret_obj['object-item']['sha-minor'] = sub_cont_last['sha-minor']
+
     if len(cont_obj['subcontainer-list']) > 1:
         ret_obj['conflict'] = True
     else: ret_obj['conflict'] = False
@@ -130,12 +147,12 @@ def container_obj_to_ret_obj(app, request_data, sha_major, cont_obj):
 
     db_root_path = app['DB_OBJECT_PATH']
     subcntr_path = os.path.join(db_root_path, sha_major[0:2], sha_major,\
-                                sub_cont_last['sha-minor'], 'subcontainer.db')
+                                latest_sha_minor, 'subcontainer.db')
     with open(subcntr_path) as file:
         full_sub_cont_last = json.load(file)
 
     # add last achievement with basic information
-    data = get_last_achievement_data(app, sha_major, sub_cont_last['sha-minor'], full_sub_cont_last)
+    data = get_last_achievement_data(app, sha_major, latest_sha_minor, full_sub_cont_last)
     if data:
         ret_obj['object-achievements'] = data
         if request_data['filter-by-result'] != "all":

@@ -101,41 +101,76 @@
 			</div> <!-- row -->
 
 
-    </uib-tab>
-    <uib-tab heading="Achievements">
-					<div class="variety-container">
-				<div ng-repeat="variety in varieties">
+	</uib-tab>
+	<uib-tab heading="Achievements">
+		<div ng-switch on="conflict">
+			<div ng-switch-when="true">
+								<div class="variety-container">
+							<div ng-repeat="variety in varieties">
 
-						<div class="variety-entry">
-							<div class="variety-header-box">
-								<div class="variety-header-title">
-									Variety ID: {{variety['variety-id']}}
-								</div>
-				        <div ng-repeat="variety_data in variety['variety']">
-									{{variety_data[0]}} : {{variety_data[1]}}<br>
-								</div>
-							</div>
+									<div class="variety-entry">
+										<div class="variety-header-box">
+											<div class="variety-header-title">
+												Variety ID: {{variety['variety-id']}}
+											</div>
+							        <div ng-repeat="variety_data in variety['variety']">
+												{{variety_data[0]}} : {{variety_data[1]}}<br>
+											</div>
+										</div>
 
-							<div ng-repeat="achievement in variety['achievements']">
-								<a ng-href="#/item/{{id}}/{{achievement['id']}}">
-								<div class="achievement-box">
-									ID: {{ achievement['id'] }}<br>
-									Anchor: {{achievement['anchor'] }}<br>
-									Status: {{ achievement['result'] }}<br>
-									Submitter: {{ achievement['submitter'] }} <br>
-									Date Tested:  <span class="glyphicon glyphicon-time" aria-hidden="true"></span> {{ achievement['test-date'] }} <br>
-									Date Uploaded: <span class="glyphicon glyphicon-time" aria-hidden="true"></span> {{achievement['date-added'] }}<br>
-								</div>
-								</a>
-							</div>
+										<div ng-repeat="achievement in data['subcontainer'][index]['object-achievements']">
+											<a ng-href="#/item/{{id}}/{{data['subcontainer'][index]['sha-minor']}}/{{achievement['id']}}">
+											<div class="achievement-box">
+												ID: {{ achievement['id'] }}<br>
+												Anchor: {{achievement['anchor'] }}<br>
+												Status: {{ achievement['result'] }}<br>
+												Submitter: {{ achievement['submitter'] }} <br>
+												Date Tested:  <span class="glyphicon glyphicon-time" aria-hidden="true"></span> {{ achievement['test-date'] }} <br>
+												Date Uploaded: <span class="glyphicon glyphicon-time" aria-hidden="true"></span> {{achievement['date-added'] }}<br>
+											</div>
+											</a>
+										</div>
 
-						</div> <!-- variety-entry -->
-					</div> <!-- variety-container -->
+									</div>
+								</div> <!-- variety-entry -->
+							</div> <!-- variety-container -->
+			</div>
+			<div ng-switch-default>
+				<div class="variety-container">
+							<div ng-repeat="variety in varieties">
+
+									<div class="variety-entry">
+										<div class="variety-header-box">
+											<div class="variety-header-title">
+												Variety ID: {{variety['variety-id']}}
+											</div>
+							        <div ng-repeat="variety_data in variety['variety']">
+												{{variety_data[0]}} : {{variety_data[1]}}<br>
+											</div>
+										</div>
+										<!-- <div ng-repeat="subcontainer in data['subcontainer']"> -->
+										<div ng-repeat="achievement in data['subcontainer'][index]['object-achievements']">
+											<a ng-href="#/item/{{id}}/{{data['subcontainer'][index]['sha-minor']}}/{{achievement['id']}}">
+											<div class="achievement-box">
+												ID: {{ achievement['id'] }}<br>
+												Anchor: {{achievement['anchor'] }}<br>
+												Status: {{ achievement['result'] }}<br>
+												Submitter: {{ achievement['submitter'] }} <br>
+												Date Tested:  <span class="glyphicon glyphicon-time" aria-hidden="true"></span> {{ achievement['test-date'] }} <br>
+												Date Uploaded: <span class="glyphicon glyphicon-time" aria-hidden="true"></span> {{achievement['date-added'] }}<br>
+											</div>
+											</a>
+										</div>
+										<!-- </div> -->
+
+									</div>
+								</div> <!-- variety-entry -->
+							</div> <!-- variety-container -->
 				</div>
-
+			</div>
     </uib-tab>
 
-		<uib-tab heading="Settings">
+    <uib-tab heading="Settings">
 
     <h4>Change Maturity Level:</h4>
 
@@ -145,7 +180,42 @@
 				<button type="button" class="btn btn-default">Outdated</button>
 			</div>
 
-    </uib-tab>
+	</uib-tab>
+
+	<uib-tab heading="Conflicts" index="0" ng-if="conflict">
+    <!-- <div ng-switch on ="conflict"> -->
+		<!-- <div ng-switch-when="true"> -->
+		    <!-- <uib-tab heading="Conflicts"> -->
+						<div class="panel panel-default">
+							<div class="panel-heading"><h4> Multiple container content is detected</h4></div>
+							<div class="panel-body">
+								<p>Some tests obviously are in some aspects similiar.</p>
+							<table class="table">
+							<thead>
+							<tr>
+								<th>Subcontainer-ID</th>
+								<th>Last Submitter</th>
+								<th>Last Test Date</th>
+							</tr>
+							</thead>
+							<tr ng-repeat="container in data['subcontainer']">
+							<td>
+							<a ng-href="#/item-specific/{{id}}/{{container['sha-minor']}}">
+							{{container['sha-minor']}}
+							</a>
+							</td>
+							<!-- fetching last submitter and date by index 0 because reverse store process by API -->
+							<td>{{container['object-achievements'][0]['submitter']}}</td>
+							<td>{{container['object-achievements'][0]['test-date']}}</td>
+							</tr>
+							</table>
+						</div>
+						</div>
+			<!-- </uib-tab> -->
+		<!-- </div> -->
+		<!-- <div ng-switch-default></div> -->
+	<!-- </div> -->
+	</uib-tab>
   </uib-tabset>
 
 

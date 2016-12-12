@@ -126,6 +126,12 @@
     color: #000;
 }
 
+.alert{
+    padding: 3px;
+    margin-bottom: 5px;
+    margin-top: 5px;
+}
+
 .item-container > .status-area {
   flex-basis: 4px;
 }

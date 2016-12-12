@@ -132,7 +132,8 @@ def add_subcontainer_list(app, sha_major, sha_minor, submitter, date_added):
             cntr = json.load(file)
             new_sub_cntr = dict()
             new_sub_cntr['sha-minor'] = sha_minor
-            new_sub_cntr['submitter'] = submitter
+            user_data = hippod.users.get(app, submitter)
+            new_sub_cntr['submitter'] = user_data[0]['fullname']
             new_sub_cntr['date-added'] = date
             cntr['subcontainer-list'].append(new_sub_cntr)
         with open(container_file, 'w') as file:
@@ -180,6 +181,9 @@ def update_attachment_achievement(app, sha_major, sha_minor, xobj):
         msg = "cannot read object although it is an update!?"
         raise ApiError(msg)
 
+    user_data = hippod.users.get(app, xobj['submitter'])
+    submitter = user_data[0]['fullname']
+
     if 'attachment' in xobj:
         if type(xobj['attachment']) is not dict:
                 msg = "attachment data MUST be a dict - but isn't"
@@ -191,9 +195,12 @@ def update_attachment_achievement(app, sha_major, sha_minor, xobj):
             new_attachment_meta = dict()
             new_attachment_meta['id'] = current_attachments_no
             new_attachment_meta['date-added'] = date
-            new_attachment_meta['submitter'] = xobj['submitter']
+            new_attachment_meta['submitter'] = submitter
 
             current_attachments.append(new_attachment_meta)
+            user_data = hippod.users.get(app, xobj['attachment']['responsible'])
+            responsible = user_data[0]['fullname']
+            xobj['attachment']['responsible'] = responsible
             write_attachment_file(app, sha_major, current_attachments_no, xobj['attachment'])
             data['attachments'] = current_attachments
             rewrite_required = True
@@ -205,9 +212,12 @@ def update_attachment_achievement(app, sha_major, sha_minor, xobj):
                 new_attachment_meta = dict()
                 new_attachment_meta['id'] = current_attachments_no
                 new_attachment_meta['date-added'] = date
-                new_attachment_meta['submitter'] = xobj['submitter']
+                new_attachment_meta['submitter'] = submitter
 
                 current_attachments.append(new_attachment_meta)
+                user_data = hippod.users.get(app, xobj['attachment']['responsible'])
+                responsible = user_data[0]['fullname']
+                xobj['attachment']['responsible'] = responsible
                 write_attachment_file(app, sha_major, current_attachments_no, xobj['attachment'])
                 data['attachments'] = current_attachments
                 rewrite_required = True
@@ -228,7 +238,7 @@ def update_attachment_achievement(app, sha_major, sha_minor, xobj):
             current_achievements.append(new_data)
 
             # additionally, we add the submitter to the achievement
-            a['submitter'] = xobj['submitter']
+            a['submitter'] = submitter
 
             # now we save the achievement in a seperate file
             write_achievement_file(app, sha_major, sha_minor, current_achievements_no, a)
@@ -298,13 +308,13 @@ def try_adding_xobject(app, xobj):
     if not ok:
         # new entry, save to file
         # FULL update
-        hippod.store_container.save_new_object_container(app, sha_major, sha_minor, xobj, xobj['submitter'])
+        hippod.store_container.save_new_object_container(app, sha_major, sha_minor, xobj,)
         object_index_initial_add_major(app, sha_major, xobj)
 
     ok2 = is_obj_minor_already_in_db(app, sha_major, sha_minor)
     if not ok2:
         # new entry, save to file
-        date_added = hippod.store_container.save_new_object_minor_container(app, sha_major, sha_minor, xobj, xobj['submitter'])
+        date_added = hippod.store_container.save_new_object_minor_container(app, sha_major, sha_minor, xobj, )
         add_subcontainer_list(app, sha_major, sha_minor, xobj['submitter'], date_added)
 
     update_attachment_achievement(app, sha_major, sha_minor, xobj)

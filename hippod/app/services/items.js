@@ -52,12 +52,12 @@ hippoD.factory('DBService', function($http) {
                      headers: { "Content-Type": "application/json" }
                })
                  .then(function (response) {
+                     var latest_index = response.data.data['latest-subcontainer-index'];
                      var subcontainer = response.data.data['subcontainer'];
                      var achievements = response.data.data['object-achievements'];
                      for (var j = 0; j < subcontainer.length; j++) {
                          //for (var i = 0; i < achievements.length; i++) {
                          //}
-                         response.data.data['__attachments'] = attachments;
                          var item_data = subcontainer[j]['object-item']['data'];
                          var attachments = new Array();
                          for (var i = 0; i < item_data.length; i++) {
@@ -73,7 +73,8 @@ hippoD.factory('DBService', function($http) {
                     response.data.data['__attachments'] = attachments;
 
                      // fetch description
-                     item_data = subcontainer[subcontainer.length - 1]['object-item']['data'];
+                     response.data.data.latest_index = latest_index;
+                     item_data = subcontainer[latest_index]['object-item']['data'];
                      for (var i = 0; i < item_data.length; i++) {
                          if (item_data[i]['type'] == 'description') {
                              return $http(
@@ -93,12 +94,70 @@ hippoD.factory('DBService', function($http) {
                                      });
                          }
                      }
-
                      return response.data.data;
                  });
          return promise;
    }
      }
+});
+
+
+hippoD.factory('DBService_concrete', function($http) {
+    return {
+        getFooConcrete:  function(id, sub_id){
+                         var obj = {};
+                         var promise = $http(
+                                 {
+                                     url: '/api/v1/object/' + id + '/' +  sub_id,
+                                     dataType: 'json',
+                                     method: 'POST',
+                                     data: obj,
+                                     headers: { "Content-Type": "application/json" }
+                               })
+                                 .then(function(response){
+                                     var requested_index = response.data.data['requested-index'];
+                                     var subcontainer = response.data.data['subcontainer'];
+                                     var achievements = response.data.data['object-achievements'];
+                                     //for (var i = 0; i < achievements.length; i++) {
+                                     //}
+                                     var item_data = subcontainer[requested_index]['object-item']['data'];
+                                     var attachments = new Array();
+                                     for (var i = 0; i < item_data.length; i++) {
+                                         if (item_data[i]['type'] !== 'description') {
+                                             var entry = {};
+                                             entry['name'] = item_data[i]['name'];
+                                             //entry['size-real'] = item_data[i]['size-real'];
+                                             entry['data-id'] = item_data[i]['data-id'];
+                                             attachments.push(entry);
+                                         }
+                                     }
+
+                                    response.data.data['__attachments'] = attachments;
+
+                                     // fetch description
+                                     for (var i = 0; i < item_data.length; i++) {
+                                         if (item_data[i]['type'] == 'description') {
+                                             return $http(
+                                                     {
+                                                         url: '/api/v1/data/' + item_data[i]['data-id'],
+                                                         dataType: 'json',
+                                                         method: 'POST',
+                                                         data: obj,
+                                                         headers: { "Content-Type": "application/json" }
+                                                     })
+                                                 .then(function (response_enc) {
+                                                         var text = response_enc.data;
+                                                         item_data[i]['data'] = text;
+                                                         response.data.data['__description'] = text;
+                                                         return response.data.data;
+                                                     });
+                                         }
+                                     }
+                                     return response.data.data;
+                                 })
+        return promise
+     }
+    }
 });
 
 
@@ -117,8 +176,8 @@ hippoD.factory('HippodDataService', function($http) {
                })
                  .then(function (response) {
                      var subcontainer = response.data.data['subcontainer'];
-                     for (var i = 0; i < subcontainer.length; i++)
-                       return subcontainer[i]['object-achievements'];
+                     var latest_index = response.data.data['latest-subcontainer-index'];
+                       return subcontainer[latest_index]['object-achievements'];
                  })
 
                  return promise;
@@ -127,6 +186,34 @@ hippoD.factory('HippodDataService', function($http) {
 
     return {
         getAchievements: getAchievements
+    };
+});
+
+hippoD.factory('HippodDataServiceConcrete', function($http) {
+
+    var getAchievementsConcrete = function (core_id, sub_id) {
+
+             var obj = {};
+             var promise = $http(
+                 {
+                     url: '/api/v1/object/' + core_id + '/' + sub_id,
+                     dataType: 'json',
+                     method: 'POST',
+                     data: obj,
+                     headers: { "Content-Type": "application/json" }
+               })
+                 .then(function (response) {
+                     var requested_index = response.data.data['requested-index']
+                     var subcontainer = response.data.data['subcontainer'];
+                     return subcontainer[requested_index]['object-achievements'];
+                 })
+
+                 return promise;
+
+    };
+
+    return {
+        getAchievementsConcrete: getAchievementsConcrete
     };
 });
 

@@ -49,7 +49,7 @@ def random_result():
     return d[random.randint(0, len(d) - 1)]
 
 def random_submitter():
-    d = ['Albert Einstein', 'Isaac Newton', 'Nikola Tesla', 'Marie Curie', 'Charles Darwin']
+    d = ['albi', 'isac43', 'tesla_driver', 'maryy', 'charlie']
     return d[random.randint(0, len(d) - 1)]
 
 def query_full(id):

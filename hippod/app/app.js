@@ -18,16 +18,24 @@ hippoD.config(function($stateProvider, $urlRouterProvider) {
         })
 
         .state('achievement', {
-					url: '/item/:id/:achievement_id',
+					url: '/item/:id/:sub_id/:achievement_id',
             templateUrl: 'templates/achievement.html',
             controller: 'AchievementCtrl'
         })
 
         .state('item', {
-					url: '/item/:id',
+					url: '/item/:id/:sub_id',
             templateUrl: 'templates/item.html',
             controller: 'ItemCtrl'
         })
+
+
+        .state('item_specific', {
+                    url: '/item-specific/:id/:sub_id',
+            templateUrl: 'templates/item.html',
+            controller: 'Item_specificCntrl'
+        })
+
 
 
         .state('admin', {
