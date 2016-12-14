@@ -109,7 +109,7 @@ def container_obj_to_ret_obj(app, request_data, sha_major, cont_obj):
     ret_obj = dict()
     buff_dict = dict()
 
-    # fetch latest subcontainer and related meta
+    # fetch latest subcontainer (subcontainer with latest achievement) and related meta
     for sub_cont in cont_obj['subcontainer-list']:
         ok, full_sub_cont = hippod.api_shared.read_subcont_obj_by_id(app, sha_major, sub_cont['sha-minor'])
         if not ok:
@@ -117,10 +117,12 @@ def container_obj_to_ret_obj(app, request_data, sha_major, cont_obj):
             msg = msg.format(sub_cont['sha-minor'])
             raise ApiError(msg)
         data = hippod.api_object_get_full.get_all_achievement_data(app, sha_major, sub_cont['sha-minor'], full_sub_cont)
-        buff_dict[sub_cont['sha-minor']] = data[0]['date-added']
-    latest_sha_minor = max(buff_dict, key=lambda key: buff_dict[key])
-    latest_subcont = next(d for (index,d) in enumerate(cont_obj['subcontainer-list']) if d['sha-minor']==latest_sha_minor)
-    latest_index = next(index for (index,d) in enumerate(cont_obj['subcontainer-list']) if d['sha-minor']==latest_sha_minor)
+        if data:
+            buff_dict[sub_cont['sha-minor']] = data[0]['date-added']
+    if data:
+        latest_sha_minor = max(buff_dict, key=lambda key: buff_dict[key])
+        latest_subcont = next(d for (index,d) in enumerate(cont_obj['subcontainer-list']) if d['sha-minor']==latest_sha_minor)
+        latest_index = next(index for (index,d) in enumerate(cont_obj['subcontainer-list']) if d['sha-minor']==latest_sha_minor)
 
     # add object item ID
     ret_obj['object-item-id'] = sha_major
@@ -131,7 +133,11 @@ def container_obj_to_ret_obj(app, request_data, sha_major, cont_obj):
     ret_obj['object-item']['categories'] = cont_obj['categories']
 
     # sub_cont_last = cont_obj['subcontainer-list'][-1]
-    sub_cont_last = cont_obj['subcontainer-list'][latest_index]
+    if not data:
+        sub_cont_last = cont_obj['subcontainer-list'][0]
+        latest_sha_minor = sub_cont_last['sha-minor']
+    else:
+        sub_cont_last = cont_obj['subcontainer-list'][latest_index]
     ret_obj['object-item']['date'] = sub_cont_last['date-added']
     ret_obj['object-item']['last-submitter'] = sub_cont_last['submitter']
     ret_obj['object-item']['sha-minor'] = sub_cont_last['sha-minor']

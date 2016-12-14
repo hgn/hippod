@@ -321,6 +321,7 @@ def try_adding_xobject(app, xobj):
 
     ret_data = dict()
     ret_data['id'] = sha_major
+    ret_data['sub_id'] = sha_minor
     return ret_data
 
 def check_request_size_limit(app, request):

@@ -71,48 +71,7 @@ def get_last_attachment_data(app, sha_major, cont_obj):
     return r
 
 
-def container_obj_to_ret_obj(app, sha_major, cont_obj):
-    ret_obj = dict()
-    # add object item ID
-    ret_obj['object-item-id'] = sha_major
-
-    # add some object items
-    ret_obj['object-item'] = dict()
-    ret_obj['object-item']['title'] = cont_obj['title']
-    if len(cont_obj['subcontainer-list']) > 1:
-        ret_obj['conflict'] = True
-    else:
-        ret_obj['conflict'] = False
-    ret_obj['subcontainer'] = list()
-    buff_dict = dict()
-    for sub_cont in cont_obj['subcontainer-list']:
-        sub_dict = dict()
-        sub_dict['object-item'] = dict()
-        sub_dict['sha-minor'] = sub_cont['sha-minor']
-        ok, full_sub_cont = hippod.api_shared.read_subcont_obj_by_id(app, sha_major, sub_cont['sha-minor'])
-        if not ok:
-            msg = "subcontainer {} not available, although entry in subcontainer-list"
-            msg = msg.format(sub_cont['sha-minor'])
-            raise ApiError(msg)
-        data = get_all_achievement_data(app, sha_major, sub_cont['sha-minor'], full_sub_cont)
-        if data:
-            sub_dict['object-achievements'] = data
-        if 'data' in full_sub_cont['object-item']:
-            sub_dict['object-item']['data'] = full_sub_cont['object-item']['data']
-        # error handling not required?
-        buff_dict[sub_cont['sha-minor']] = data[0]['date-added']
-        ret_obj['subcontainer'].append(sub_dict)
-    latest_subcont = max(buff_dict, key=lambda key: buff_dict[key])
-    # ret_obj['latest-subcontainer'] = latest_subcont
-    ret_obj['latest-subcontainer-index'] = next(index for (index,d) in enumerate(ret_obj['subcontainer']) if d['sha-minor']==latest_subcont)
-    # add last attachment
-    data = get_last_attachment_data(app, sha_major, cont_obj)
-    if data:
-        ret_obj['object-attachment'] = data
-    return ret_obj
-
-
-def concrete_container_obj_to_ret_obj(app, sha_major, sha_minor, cont_obj):
+def container_obj_to_ret_obj(app, sha_major, sha_minor, cont_obj):
     ret_obj = dict()
 
     ret_obj['object-item-id'] = sha_major
@@ -154,35 +113,10 @@ def object_get_int(app, sha_major, sha_minor):
     if not ok:
         msg = "cannot read object by id: {}".format(sha_major)
         raise ApiError(msg)
-    if sha_minor == None:
-        return container_obj_to_ret_obj(app, sha_major, data)
-    else:
-        return concrete_container_obj_to_ret_obj(app, sha_major, sha_minor, data)
+    return container_obj_to_ret_obj(app, sha_major, sha_minor, data)
 
 
 def handle(request):
-    if request.method != "GET" and request.method != "POST":
-        msg = "Internal Error... request method: {} is not allowed".format(request.method)
-        raise hippod.error_object.ApiError(msg)
-    app = request.app
-    sha_major = request.match_info['sha_major']
-
-    try:
-        start = time.clock()
-        data = object_get_int(app, sha_major, None)
-        end = time.clock()
-    except ApiError as e:
-        return e.transform()
-    except Exception as e:                              # remove this exception handling?
-        return ApiError(str(e)).transform()
-
-    o = hippod.ex3000.Ex3000()
-    o['data'] = data
-    o['processing-time'] = "{0:.4f}".format(end - start)
-    o.http_code(200)
-    return o.transform()
-
-def handle_minor(request):
     if request.method != "GET" and request.method != "POST":
         msg = "Internal Error...request method: {} is not allowed".format(request.method)
         raise hippod.error_object.ApiError(msg)

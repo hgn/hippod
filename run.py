@@ -100,11 +100,8 @@ def setup_routes(app, conf):
                         '/api/v1/achievement/{sha_major}/{sha_minor}/{achievement_id}',
                         api_achievement_get.handle)
     app.router.add_route('*',
-                        '/api/v1/object/{sha_major}',
-                        api_object_get_full.handle)
-    app.router.add_route('*',
                         '/api/v1/object/{sha_major}/{sha_minor}',
-                        api_object_get_full.handle_minor)
+                        api_object_get_full.handle)
     app.router.add_route('*',
                         '/api/v1/data/{sha_sum}',
                         api_data_get.handle)
