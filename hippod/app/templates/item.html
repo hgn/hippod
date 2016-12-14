@@ -118,7 +118,7 @@
 											</div>
 										</div>
 
-										<div ng-repeat="achievement in data['subcontainer'][index]['object-achievements']">
+										<div ng-repeat="achievement in variety['achievements']">
 											<a ng-href="#/item/{{id}}/{{data['subcontainer'][index]['sha-minor']}}/{{achievement['id']}}">
 											<div class="achievement-box">
 												ID: {{ achievement['id'] }}<br>
@@ -200,7 +200,7 @@
 							</thead>
 							<tr ng-repeat="container in data['subcontainer']">
 							<td>
-							<a ng-href="#/item-specific/{{id}}/{{container['sha-minor']}}">
+							<a ng-href="#/item/{{id}}/{{container['sha-minor']}}">
 							{{container['sha-minor']}}
 							</a>
 							</td>

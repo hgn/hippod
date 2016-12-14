@@ -48,8 +48,8 @@ def random_submitter():
     d = ['john_doe']
     return d[random.randint(0, len(d) - 1)]
 
-def query_full(id):
-    url = 'http://localhost:8080/api/v1/object/{}'.format(id)
+def query_full(id, sub_id):
+    url = 'http://localhost:8080/api/v1/object/{}/{}'.format(id, sub_id)
     data = ''' '''
     headers = {'Content-type': 'application/json', 'Accept': 'application/json'}
     r = requests.get(url, data=data, headers=headers)
@@ -204,7 +204,7 @@ after maintainable products.
         processing_time = ret_data['processing-time']
         # sys.stderr.write("\nHTTPStatusCode: {} ServerProcTime {}s\n".format(r.status_code, processing_time))
 
-        query_full(ret_data['data']['id'])
+        query_full(ret_data['data']['id'], ret_data['data']['sub_id'])
         time.sleep(1)
 
     pprnt("\r\n\n")
