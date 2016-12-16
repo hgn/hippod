@@ -23,6 +23,7 @@ from hippod import api_object_get_detail
 from hippod import api_object_get_full
 from hippod import api_data_get
 from hippod import user_db
+from hippod import api_report
 
 APP_VERSION = "002"
 
@@ -105,6 +106,9 @@ def setup_routes(app, conf):
     app.router.add_route('*',
                         '/api/v1/data/{sha_sum}',
                         api_data_get.handle)
+    app.router.add_route('*',
+                        '/api/v1/report',
+                        api_report.handle)
     app.router.add_route('GET',
                         '/api/v1/ping',
                         api_ping.handle)
