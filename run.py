@@ -8,6 +8,7 @@ import json
 import random
 import argparse
 import addict
+import logging
 
 from aiohttp import web
 
@@ -33,6 +34,7 @@ EXIT_OK      = 0
 EXIT_FAILURE = 1
 
 
+log = logging.getLogger()
 
 
 def db_create_initial_statistics(path):
@@ -74,6 +76,7 @@ def check_conf_environment(app, path):
 
 def check_report_path(app, path):
     if not os.path.isdir(path):
+        log.warning("create report path: {}".format(path))
         os.makedirs(path)
 
 
@@ -180,9 +183,15 @@ def configuration_check(conf):
                          "a path in db section\n")
         sys.exit(EXIT_FAILURE)
 
+def init_logging(conf):
+    if conf.common.logging:
+        log.setLevel(conf.common.logging.upper())
+    log.error("log level: {}".format(log.getEffectiveLevel()))
+
 def conf_init():
     args = parse_args()
     conf = load_configuration_file(args)
+    init_logging(conf)
     return conf
 
 
