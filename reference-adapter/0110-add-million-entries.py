@@ -79,10 +79,8 @@ def add_n(n):
     return r.status_code
 
 if __name__ == '__main__':
-    status = add_n(100)
+    status = add_n(2000)
     if status==200:
         print("OK")
-        
     else:
         print("FAIL")
-        
