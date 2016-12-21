@@ -33,6 +33,8 @@ EXIT_OK      = 0
 EXIT_FAILURE = 1
 
 
+
+
 def db_create_initial_statistics(path):
     sys.stderr.write("create statistics db: {}\n".format(path))
     today = datetime.datetime.now().strftime('%Y-%m-%d')
@@ -70,6 +72,11 @@ def check_conf_environment(app, path):
     app['CONF_USER_FILEPATH'] = obj_path
 
 
+def check_report_path(app, path):
+    if not os.path.isdir(path):
+        os.makedirs(path)
+
+
 def set_config_defaults(app):
     app['MAX_REQUEST_SIZE'] = 5000000
 
@@ -88,6 +95,10 @@ def init_aiohttp(conf):
     conf_path_root = os.path.join(app["INSTANCE_PATH"], "conf")
     app['CONF_ROOT_PATH'] = conf_path_root
     check_conf_environment(app, conf_path_root)
+
+    report_path = os.path.join(app["INSTANCE_PATH"], "reports")
+    app['REPORT_PATH'] = report_path
+    check_report_path(app, report_path)
 
     user_db_path = os.path.join(conf_path_root, "user.db")
     ldap_db_path = os.path.join(conf_path_root, "ldap.db")
