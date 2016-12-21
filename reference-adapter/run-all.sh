@@ -2,7 +2,7 @@
 
 #set -x
 
-TEST=(0101-add-ten-entries.py 0110-add-million-entries.py)
+TEST=(0101-add-ten-entries.py 0110-add-2000-entries.py)
 TEST2=(check-when-title-changed.sh check-when-categories-changed.sh \
        check-when-title-and-categories-changed.sh \
        check-when-one-char-changed.sh check-when-object-twice.sh)
