@@ -22,9 +22,11 @@
     </div>
     <div class="col-sm-3">
             Create Report<br>
-                            <button type="button" class="btn btn-primary" onclick="ReportService.createReport({{report_filter}});">
+                        <div ng-controller="ReportCtrl">
+                            <button type="button" class="btn btn-primary" ng-click="create()">
                                 Report
                             </button>
+                        </div>
           </div> 
     </div>
     </div>

@@ -43,17 +43,16 @@ def generate_doc_later(app, report_filter):
     generate_doc(app, own_filter)
 
 
-# async def handle(request):
 async def handle(request):
-    if request.method != "GET":
-        msg = "Internal Error...request method: {} is not allowed".format(request.method)
-        raise ApiError(msg)
+    # if request.method != "GET":
+    #     msg = "Internal Error...request method: {} is not allowed".format(request.method)
+    #     raise ApiError(msg)
     app = request.app
-    # report_filter = await request.json()
-    # print(report_filter)
     try:
         start = time.clock()
-        generate_doc_later(app, 'Latest Tests')
+        report_filter = await request.json()
+        print(report_filter)
+        generate_doc_later(app, report_filter)
         end = time.clock()
     except ApiError as e:
         return e.transform()
@@ -61,5 +60,5 @@ async def handle(request):
     o = hippod.ex3000.Ex3000()
     o['data'] = None
     o['processing-time'] = "{0:.4f}".format(end - start)
-    o.http_code(204)
+    o.http_code(200)
     return o.transform()
