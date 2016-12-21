@@ -91,7 +91,7 @@ def init_aiohttp(conf):
 
     user_db_path = os.path.join(conf_path_root, "user.db")
     ldap_db_path = os.path.join(conf_path_root, "ldap.db")
-    app["userdb"] = user_db.UserDB(conf, user_db_path, ldap_db_path)
+    app["USER_DB"] = user_db.UserDB(conf, user_db_path, ldap_db_path)
 
     return app
 

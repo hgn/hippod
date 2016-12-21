@@ -40,5 +40,5 @@ def filter_data(userdb, username):
 
 
 def get(app, username):
-    userdb = app['userdb']
+    userdb = app['USER_DB']
     return filter_data(userdb, username)
