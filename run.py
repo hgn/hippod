@@ -78,14 +78,14 @@ def init_aiohttp(conf):
     app = web.Application(middlewares=[aiohttp_index.IndexMiddleware()])
 
     app["VERSION"] = APP_VERSION
-    app["instance_path"] = conf.db.path
+    app["INSTANCE_PATH"] = conf.db.path
     set_config_defaults(app)
 
-    db_path_root = os.path.join(app["instance_path"], "db")
+    db_path_root = os.path.join(app["INSTANCE_PATH"], "db")
     app["DB_ROOT_PATH"] = db_path_root
     check_db_environmet(app, db_path_root)
 
-    conf_path_root = os.path.join(app["instance_path"], "conf")
+    conf_path_root = os.path.join(app["INSTANCE_PATH"], "conf")
     app['CONF_ROOT_PATH'] = conf_path_root
     check_conf_environment(app, conf_path_root)
 
@@ -126,7 +126,7 @@ def setup_routes(app, conf):
                         api_object_post.handle)
     app.router.add_route('*',
                         '/api/v1/users',
-                        api_users.handle)    
+                        api_users.handle)
 
     absdir = os.path.dirname(os.path.realpath(__file__))
     app_path = os.path.join(absdir, 'hippod/app')
