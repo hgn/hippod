@@ -1,0 +1,32 @@
+<div class="mainbar">Report</div>
+
+<div class="main-content-container">
+    <div class="controll-container">
+
+    <div class="row">
+    <div class="col-xs-8 filter-display-box">
+    <div class="col-sm-3">
+    Filter <br>
+    <div class="btn-group" uib-dropdown>
+        <button id="single-button" type="button"
+                class="btn btn-default" uib-dropdown-toggle
+                                 ng-disabled="disabled">
+                                {{report_filter}} <span class="caret"></span>
+                            </button>
+                            <ul class="uib-dropdown-menu" role="menu" aria-labelledby="single-button">
+                                <li role="menuitem">
+                                    <a href="#" ng-click="filter_change(action)" ng-repeat="action in filter_actions">{{action}}</a>
+                                </li>
+                            </ul>
+    </div>
+    </div>
+    <div class="col-sm-3">
+            Create Report<br>
+                            <button type="button" class="btn btn-primary" onclick="ReportService.createReport({{report_filter}});">
+                                Report
+                            </button>
+          </div> 
+    </div>
+    </div>
+    </div>
+</div>
