@@ -98,6 +98,27 @@ hippoD.factory('DBService', function($http) {
 });
 
 
+hippoD.factory('ReportService', function($http) {
+    return {
+        createReport: function(filter){
+            var obj = {"type": filter}
+            var promise = $http(
+                {
+                    url: 'api/v1/report/',
+                    dataType: 'json',
+                    method: 'GET',
+                    data: obj,
+                    headers: {"Content-Type": "application/json"}
+                })
+            .then(function(response){
+
+            })
+        return promise
+        }
+    }
+});
+
+
 hippoD.factory('HippodDataService', function($http) {
 
     var getAchievements = function (core_id, sub_id) {
@@ -143,4 +164,5 @@ hippoD.filter('toHtmlSave', function($sce) {
         });
         return $sce.trustAsHtml(text);
     };
+
 });

@@ -33,6 +33,12 @@ hippoD.config(function($stateProvider, $urlRouterProvider) {
             url: '/admin',
             templateUrl: 'templates/admin.html',
             controller: 'AdminCtrl'
+        })
+
+        .state('report', {
+            url: '/report',
+            templateUrl: 'templates/report.html',
+            controller: 'ReportCtrl'
         });
         
 });
