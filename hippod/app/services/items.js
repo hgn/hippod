@@ -101,18 +101,17 @@ hippoD.factory('DBService', function($http) {
 hippoD.factory('ReportService', function($http) {
     return {
         createReport: function(filter){
+            console.log("Service active")
+            console.log(filter)
             var obj = {"type": filter}
             var promise = $http(
                 {
-                    url: 'api/v1/report/',
+                    url: '/api/v1/report',
                     dataType: 'json',
-                    method: 'GET',
+                    method: 'POST',
                     data: obj,
                     headers: {"Content-Type": "application/json"}
                 })
-            .then(function(response){
-
-            })
         return promise
         }
     }
