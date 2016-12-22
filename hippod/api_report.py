@@ -31,27 +31,25 @@ def generate_doc(app, own_filter):
 def generate_doc_later(app, report_filter):
     own_filter = dict()
 
-    if report_filter == 'Latest Tests':
+    if report_filter['type'] == 'Latest Tests':
         own_filter['filter-type'] = 'Latest Tests'
-    elif report_filter == 'Anchored Tests':
+    elif report_filter['type'] == 'Anchored Tests':
         own_filter['filter-type'] = 'Anchored Tests'
     else:
         msg = "No valid Filter"
         raise ApiError(msg)                                          # arrange filter check!
     loop = asyncio.get_event_loop()
     loop.call_soon(functools.partial(generate_doc, app, own_filter))
-    generate_doc(app, own_filter)
 
 
 async def handle(request):
-    # if request.method != "GET":
-    #     msg = "Internal Error...request method: {} is not allowed".format(request.method)
-    #     raise ApiError(msg)
+    if request.method != "POST":
+        msg = "Internal Error...request method: {} is not allowed".format(request.method)
+        raise ApiError(msg)
     app = request.app
     try:
         start = time.clock()
         report_filter = await request.json()
-        print(report_filter)
         generate_doc_later(app, report_filter)
         end = time.clock()
     except ApiError as e:
