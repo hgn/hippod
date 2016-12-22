@@ -5,8 +5,18 @@
 		"port"    : 8080
 	},
 
+	"achievements-validity-lifetime" : {
+		"achievements" : [ 30, "days" ],
+		"achievements-anchored" : [ 2, "months" ]
+	},
+
 	"db" : {
 		"path" : "/tmp/hippod-db"
+	},
+
+	"reports" : {
+		"export-formats" : [ "PDF" ],
+		"pandoc-pdf-template-path" : "/tmp/hippod/pandoc-pdf-template"
 	},
 
 	"userdb" : {
