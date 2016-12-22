@@ -10,6 +10,10 @@ Python 3.4 is required to run hippod.  After installing base packages please
 install the following python specific packages:
 
 ```
+sudo aptitude install libsasl2-dev
+```
+
+```
 pip3 install -r requirements.txt
 ```
 

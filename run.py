@@ -191,9 +191,14 @@ def configuration_check(conf):
         sys.exit(EXIT_FAILURE)
 
 def init_logging(conf):
+    log_level_conf = "warning"
     if conf.common.logging:
-        log.setLevel(conf.common.logging.upper())
-    log.error("log level: {}".format(log.getEffectiveLevel()))
+        log_level_conf = conf.common.logging
+    numeric_level = getattr(logging, log_level_conf.upper(), None)
+    if not isinstance(numeric_level, int):
+        raise ValueError('Invalid log level: {}'.format(numeric_level))
+    logging.basicConfig(level=numeric_level, format='%(message)s')
+    log.error("log level configuration: {}".format(log_level_conf))
 
 def conf_init():
     args = parse_args()
