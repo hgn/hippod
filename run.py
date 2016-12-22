@@ -156,6 +156,7 @@ def setup_routes(app, conf):
 
 def main(conf):
     app = init_aiohttp(conf)
+    conf_check_report(app, conf)
     setup_routes(app, conf)
     web.run_app(app, host=conf.common.host, port=conf.common.port)
 
@@ -199,6 +200,27 @@ def init_logging(conf):
         raise ValueError('Invalid log level: {}'.format(numeric_level))
     logging.basicConfig(level=numeric_level, format='%(message)s')
     log.error("log level configuration: {}".format(log_level_conf))
+
+def conf_check_report(app, conf):
+    assert(conf.reports.driver == "pandoc")
+    if conf.reports.export_formats:
+        if not isinstance(conf.reports.export_formats, list):
+            raise ValueError('Configuration error, export_formats must be array')
+        if len(conf.reports.export_formats) != 1:
+            raise ValueError('Configuration error, export_format must be PDF, nothing else')
+        if conf.reports.export_formats[0].upper() != "PDF":
+            raise ValueError('Configuration error, export_format must be PDF')
+    if conf.reports.pandoc_pdf_tex_template_path:
+        path = conf.reports.pandoc_pdf_tex_template_path
+        if not os.path.isfile(path):
+            raise ValueError('Pandoc template file not available: {}'.format(path))
+        app["REPORT-PDF-TEMPLATE"] = path
+
+    app["REPORT-TITLE"] = "Test Report"
+    if not conf.reports.title:
+        app["REPORT-TITLE"] = conf.reports.title
+
+
 
 def conf_init():
     args = parse_args()

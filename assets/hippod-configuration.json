@@ -5,9 +5,9 @@
 		"port"    : 8080
 	},
 
-	"achievements-validity-lifetime" : {
+	"achievements_validity_lifetime" : {
 		"achievements" : [ 30, "days" ],
-		"achievements-anchored" : [ 2, "months" ]
+		"achievements_anchored" : [ 2, "months" ]
 	},
 
 	"db" : {
@@ -15,8 +15,10 @@
 	},
 
 	"reports" : {
-		"export-formats" : [ "PDF" ],
-		"pandoc-pdf-template-path" : "/tmp/hippod/pandoc-pdf-template"
+        "title" : "Test Report",
+        "driver" : "pandoc",
+		"export_formats" : [ "PDF" ],
+		"pandoc_pdf_tex_template_path" : "/usr/share/hippod/data/pandoc-templates/pdf-template-modern.tex"
 	},
 
 	"userdb" : {

@@ -32,7 +32,7 @@ class ReportGenerator(object):
         pdf_out_path = os.path.join(reports_path, doc_name)
         rpd = ReportGenerator.ReportGeneratorDocument(list_of_lists, tmp_path)
         converted_data = rpd.convert(app)
-        rpd.generate_pdf(pdf_out_path, converted_data)
+        rpd.generate_pdf(app, pdf_out_path, converted_data)
 
 
     class ReportGeneratorDocument(object):
@@ -145,8 +145,21 @@ class ReportGenerator(object):
                     files_catalog[sub_dir].append(ReportGenerator.ReportGeneratorDocument.store_data(app, data, sub_dir))
             return files_catalog
 
+        def _pandoc_generate(self, app, markdown_in_path, pdf_out_path):
+            assert(os.path.isfile(markdown_in_path))
+            cmd  = "pandoc "
+            cmd += "--latex-engine xelatex "
+            if "REPORT-PDF-TEMPLATE" in app:
+                cmd += "--template {} ".format(app["REPORT-PDF-TEMPLATE"])
+            cmd += "--listings "
+            cmd += "--toc "
+            cmd += "{} ".format(markdown_in_path)
+            cmd += " -o \"{}\" ".format(pdf_out_path)
+            log.debug("executing: \"{}\"".format(cmd))
+            os.system(cmd)
 
-        def generate_pdf(self, pdf_out_path, converted_data):
+
+        def generate_pdf(self, app, pdf_out_path, converted_data):
             sub_reports = list()
             for key, item in converted_data.items():
                 for d in item:
@@ -173,7 +186,10 @@ class ReportGenerator(object):
                         description1 = str(description1) + '\n \n \n' + str(description2)
                     with open(sub_reports[0], 'w') as text1:
                         text1.write(description1)
-            pypandoc.convert_file(sub_reports[0], 'pdf', outputfile=pdf_out_path)
+            # FIXME, need arguments
+            self._pandoc_generate(app, sub_reports[0], pdf_out_path)
+
+
 
 
 

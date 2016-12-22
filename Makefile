@@ -17,6 +17,8 @@ install:
 	cp -r . $(EXEC_DIR)
 	cp assets/hippod.service /lib/systemd/system/
 	chmod 644 /lib/systemd/system/hippod.service
+	mkdir -p /usr/share/hippod/data/
+	cp -r assets/pandoc-templates /usr/share/hippod/data/
 	@echo "now call systemctl daemon-reload"
 	@echo ".. enable service via: systemctl enable hippod.service"
 	@echo ".. start service via: systemctl start hippod.service"
