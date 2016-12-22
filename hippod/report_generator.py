@@ -7,9 +7,12 @@ import datetime
 import json
 import re
 import tempfile
+import logging
 
 import hippod.api_shared
 import hippod.error_object
+
+log = logging.getLogger()
 
 
 class ReportGenerator(object):
@@ -55,7 +58,10 @@ class ReportGenerator(object):
                 elif data_type == '.pcap':
                     dst_path = os.path.join(sub_dir, 'trace.pcap')
                 else:
-                    print('type not supported')                                 # error handling, more types?
+                    # FIXME: not sure, but this function should return. If
+                    # not dst_path is undefined and will definitly crash some
+                    # lines later!
+                    log.error("data type not supported: {}".format(data_type))
 
                 with open(src_path, 'rb') as file:
                     data = file.read()
@@ -118,16 +124,24 @@ class ReportGenerator(object):
 
 
         def convert(self, app):
+            db_path = app['DB_OBJECT_PATH']
             files_catalog = dict()
             for j, item in enumerate(self.list_of_lists):
                 sub_dir = os.path.join(self.tmp_path, 'item{}'.format(j))
                 files_catalog[sub_dir] = list()
-                subcontainer = os.path.join(app['DB_OBJECT_PATH'], item[0][0:2], item[0], item[1], 'subcontainer.db')
-                achievement = os.path.join(app['DB_OBJECT_PATH'], item[0][0:2], item[0], item[1], 'achievements', '{}.db'.format(item[2]))
+                # FIXME item[0][0:2], and item[?] is a little bit hacky,
+                # save these in extra variables and name then accordingly:
+                # WHAT IS THE CONTENT OF THESE? item[0] can means all/nothing
+                subcontainer = os.path.join(db_path, item[0][0:2], item[0], item[1], 'subcontainer.db')
+                achievement = os.path.join(db_path, item[0][0:2], item[0], item[1], 'achievements', '{}.db'.format(item[2]))
                 with open(subcontainer, 'r') as subc:
                     content = json.load(subc)
                 data_list = content['object-item']['data']
                 for i, data in enumerate(data_list):
+                    # FIXME: the next line should be splitted into several
+                    # lines to make clear what happens here. The line is
+                    # doing tooo much. Split into several lines and save intermediate
+                    # results in local variables and name the variables accoringly
                     files_catalog[sub_dir].append(ReportGenerator.ReportGeneratorDocument.store_data(app, data, sub_dir))
             return files_catalog
 
