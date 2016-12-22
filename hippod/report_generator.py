@@ -194,15 +194,16 @@ class ReportGenerator(object):
             buff_dict = dict()
             # fetch latest subcontainer (subcontainer with latest achievement) and related meta
             for sub_cont in cont_obj['subcontainer-list']:
-                ok, full_sub_cont = hippod.api_shared.read_subcont_obj_by_id(app, sha_major, sub_cont['sha-minor'])
+                sc = sub_cont['sha-minor']
+                ok, full_sub_cont = hippod.api_shared.read_subcont_obj_by_id(app, sha_major, sc)
                 if not ok:
                     pass # what if? ---> no raise ApiError possible
-                data = hippod.api_object_get_full.get_all_achievement_data(app, sha_major, sub_cont['sha-minor'], full_sub_cont)
+                data = hippod.api_object_get_full.get_all_achievement_data(app, sha_major, sc, full_sub_cont)
                 if data:
-                    buff_dict[sub_cont['sha-minor']] = data[0]['date-added']
+                    buff_dict[sc] = data[0]['date-added']
             if data:
                 latest_sha_minor = max(buff_dict, key=lambda key: buff_dict[key])
-                latest_index = next(index for (index,d) in enumerate(cont_obj['subcontainer-list']) if d['sha-minor']==latest_sha_minor)
+                latest_index = next(index for (index,d) in enumerate(cont_obj['subcontainer-list']) if d['sha-minor'] == latest_sha_minor)
 
             ret_list.append(sha_major)
 
