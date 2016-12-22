@@ -19,26 +19,24 @@ class ReportGenerator(object):
 
     @staticmethod
     def generate(app, outputs, report_filter):
-        list_of_lists = ReportGenerator.ReportGeneratorCollector.search(app, report_filter)
-        # tmp_path = tempfile.TemporaryFile()
+        reports_path = app['REPORT_PATH']
         tmp_path = os.path.join(app['DB_ROOT_PATH'], 'tmp')
         if not os.path.isdir(tmp_path):
             os.mkdir(tmp_path)
+        list_of_lists = ReportGenerator.ReportGeneratorCollector.search(app, report_filter)
         date = str(datetime.datetime.now().replace(second=0, microsecond=0))
         doc_name = '{}-report.pdf'.format(date)
-        pdf_out_path = os.path.join(tmp_path, doc_name)
-        rpd = ReportGenerator.ReportGeneratorDocument(list_of_lists)
+        pdf_out_path = os.path.join(reports_path, doc_name)
+        rpd = ReportGenerator.ReportGeneratorDocument(list_of_lists, tmp_path)
         converted_data = rpd.convert(app)
         rpd.generate_pdf(pdf_out_path, converted_data)
 
 
     class ReportGeneratorDocument(object):
-        def __init__(self, list_of_lists):
+        def __init__(self, list_of_lists, tmp_path):
             self.list_of_lists = list_of_lists
             # self.tmp_path = tempfile.TemporaryFile()
-            self.tmp_path = 'ReportStorage'
-            if not os.path.isdir('ReportStorage'):
-                os.mkdir('ReportStorage')
+            self.tmp_path = tmp_path
 
 
         # def __del__(self):

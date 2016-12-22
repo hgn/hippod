@@ -1,34 +1,63 @@
 <div class="mainbar">Report</div>
 
 <div class="main-content-container">
-    <div class="controll-container">
-
-    <div class="row">
-    <div class="col-xs-8 filter-display-box">
-    <div class="col-sm-3">
-    Filter <br>
-    <div class="btn-group" uib-dropdown>
-        <button id="single-button" type="button"
-                class="btn btn-default" uib-dropdown-toggle
-                                 ng-disabled="disabled">
-                                {{report_filter}} <span class="caret"></span>
-                            </button>
-                            <ul class="uib-dropdown-menu" role="menu" aria-labelledby="single-button">
-                                <li role="menuitem">
-                                    <a href="#" ng-click="filter_change(action)" ng-repeat="action in filter_actions">{{action}}</a>
-                                </li>
-                            </ul>
-    </div>
-    </div>
-    <div class="col-sm-3">
-            Create Report<br>
-                        <div ng-controller="ReportCtrl">
-                            <button type="button" class="btn btn-primary" ng-click="create()">
-                                Report
-                            </button>
+<uib-tabset>
+    <uib-tab heading="Current Reports">
+        <div class="panel panel-default">
+                            <div class="panel-heading"><h4>Report List</h4></div>
+                            <div class="panel-body">
+                                <p>Here are the currently avaible reports listed.</p>
+                            <table class="table">
+                            <thead>
+                            <tr>
+                                <th>Report Name</th>
+                                <th>Size</th>
+                            </tr>
+                            </thead>
+                            <tr ng-repeat="report in reports_list">
+                            <!-- fetching last submitter and date by index 0 because reverse store process by API -->
+                            <td>
+                            <a ng-href="api/v1/get-reports/{{report['name']}}">
+                            {{report["name"]}}
+                            </a>
+                            </td>
+                            <td>{{report["size"]}}</td>
+                            </tr>
+                            </table>
                         </div>
-          </div> 
-    </div>
-    </div>
-    </div>
+                        </div>
+    </uib-tab>
+    <uib-tab heading="Create New Report">
+        <div class="controll-container">
+
+        <div class="row">
+        <div class="col-xs-8 filter-display-box">
+        <div class="col-sm-3">
+        Filter <br>
+        <div class="btn-group" uib-dropdown>
+            <button id="single-button" type="button"
+                    class="btn btn-default" uib-dropdown-toggle
+                                     ng-disabled="disabled">
+                                    {{report_filter}} <span class="caret"></span>
+                                </button>
+                                <ul class="uib-dropdown-menu" role="menu" aria-labelledby="single-button">
+                                    <li role="menuitem">
+                                        <a href="#" ng-click="filter_change(action)" ng-repeat="action in filter_actions">{{action}}</a>
+                                    </li>
+                                </ul>
+        </div>
+        </div>
+        <div class="col-sm-3">
+                Create Report<br>
+                            <div ng-controller="ReportCtrl">
+                                <button type="button" class="btn btn-primary" ng-click="create()">
+                                    Report
+                                </button>
+                            </div>
+              </div>
+        </div>
+        </div>
+        </div>
+    </uib-tab>
+</uib-tabset>
 </div>

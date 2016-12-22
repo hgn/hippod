@@ -101,8 +101,6 @@ hippoD.factory('DBService', function($http) {
 hippoD.factory('ReportService', function($http) {
     return {
         createReport: function(filter){
-            console.log("Service active")
-            console.log(filter)
             var obj = {"type": filter}
             var promise = $http(
                 {
@@ -113,6 +111,28 @@ hippoD.factory('ReportService', function($http) {
                     headers: {"Content-Type": "application/json"}
                 })
         return promise
+        }
+    }
+});
+
+
+hippoD.factory('GetReportsService', function($http) {
+    return {
+        getReports: function(filter){
+            var obj = {};
+            var promise = $http(
+                {
+                    url: '/api/v1/get-reports',
+                    dataType: 'json',
+                    method: 'GET',
+                    data: obj,
+                    headers: {"Content-Type": "application/json"}
+                })
+                .then(function (response) {
+                     var reports_list = response.data.data;
+                     return response.data.data;
+                 })
+        return promise;
         }
     }
 });
