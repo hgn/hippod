@@ -162,10 +162,10 @@ def timeout_daily(app):
 
 
 def seconds_to_midnight():
-    tomorrow = datetime.date.today() + datetime.timedelta(1)
-    midnight = datetime.datetime.combine(tomorrow, datetime.time())
     now = datetime.datetime.now()
-    seconds = (midnight - now).seconds
+    deltatime = datetime.timedelta(days=1)
+    tomorrow = datetime.datetime.replace(now + deltatime, hour=0, minute=0, second=0)
+    seconds = (tomorrow - now).seconds
     if seconds < 60: return 60.0 # sanity checks
     if seconds > 60 * 60 * 24: return 60.0 * 60 * 24
     return seconds
