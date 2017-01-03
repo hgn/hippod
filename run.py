@@ -27,6 +27,7 @@ from hippod import api_data_get
 from hippod import user_db
 from hippod import api_report
 from hippod import api_get_reports
+from hippod import garbage_handler
 
 APP_VERSION = "002"
 
@@ -157,9 +158,14 @@ def setup_routes(app, conf):
     app.router.add_static('/', app_path)
 
 
+def garbage(app):
+    garb_handler = garbage_handler.GarbageHandler()
+    garb_handler.handle_garbage(app)
+
+
 def timeout_daily(app):
     log.info("daily execution handler started")
-
+    garbage(app)
 
 def seconds_to_midnight():
     now = datetime.datetime.now()
