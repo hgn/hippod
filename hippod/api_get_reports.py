@@ -1,6 +1,7 @@
 import os
 import time
 import aiohttp
+import mimetypes
 
 import hippod.ex3000
 import hippod.error_object
@@ -23,8 +24,7 @@ def get_reports(app):
 def get_concrete_report(app, report_name):
     reports_path = app['REPORT_PATH']
     report_path = os.path.join(reports_path, report_name)
-    name, mime_type = os.path.splitext(report_path)
-    mime_type = mime_type.strip('.')
+    mime_type, enconding = mimetypes.guess_type(report_name)
     with open(report_path, 'rb') as file:
         data = file.read()
         return mime_type, data
