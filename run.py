@@ -9,6 +9,7 @@ import random
 import argparse
 import addict
 import logging
+import asyncio
 
 from aiohttp import web
 
@@ -88,6 +89,8 @@ def set_config_defaults(app):
 def init_aiohttp(conf):
     app = web.Application(middlewares=[aiohttp_index.IndexMiddleware()])
 
+    app["CONF"] = conf
+
     app["VERSION"] = APP_VERSION
     app["INSTANCE_PATH"] = conf.db.path
     set_config_defaults(app)
@@ -154,10 +157,41 @@ def setup_routes(app, conf):
     app.router.add_static('/', app_path)
 
 
+def timeout_daily(app):
+    log.info("daily execution handler started")
+
+
+def seconds_to_midnight():
+    tomorrow = datetime.date.today() + datetime.timedelta(1)
+    midnight = datetime.datetime.combine(tomorrow, datetime.time())
+    now = datetime.datetime.now()
+    seconds = (midnight - now).seconds
+    if seconds < 60: return 60.0 # sanity checks
+    if seconds > 60 * 60 * 24: return 60.0 * 60 * 24
+    return seconds
+
+
+def register_timeout_handler_daily(app):
+    loop = asyncio.get_event_loop()
+    midnight_sec = seconds_to_midnight()
+    call_time = loop.time() + midnight_sec
+    msg = "register daily timeout, scheduled in {} seconds"
+    log.warning(msg.format(midnight_sec))
+    loop.call_at(call_time, register_timeout_handler_daily, app)
+    timeout_daily(app)
+
+def register_timeout_handler(app):
+    # for now just a daily handler, called at midnight.
+    # later we can add additional handlers for weekly, hourly,
+    # ...
+    register_timeout_handler_daily(app)
+
+
 def main(conf):
     app = init_aiohttp(conf)
     conf_check_report(app, conf)
     setup_routes(app, conf)
+    register_timeout_handler(app)
     web.run_app(app, host=conf.common.host, port=conf.common.port)
 
 
@@ -191,6 +225,7 @@ def configuration_check(conf):
                          "a path in db section\n")
         sys.exit(EXIT_FAILURE)
 
+
 def init_logging(conf):
     log_level_conf = "warning"
     if conf.common.logging:
@@ -200,6 +235,7 @@ def init_logging(conf):
         raise ValueError('Invalid log level: {}'.format(numeric_level))
     logging.basicConfig(level=numeric_level, format='%(message)s')
     log.error("log level configuration: {}".format(log_level_conf))
+
 
 def conf_check_report(app, conf):
     assert(conf.reports.driver == "pandoc")
@@ -219,7 +255,6 @@ def conf_check_report(app, conf):
     app["REPORT-TITLE"] = "Test Report"
     if not conf.reports.title:
         app["REPORT-TITLE"] = conf.reports.title
-
 
 
 def conf_init():
