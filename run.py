@@ -158,14 +158,14 @@ def setup_routes(app, conf):
     app.router.add_static('/', app_path)
 
 
-def garbage(app):
-    garb_handler = garbage_handler.GarbageHandler()
+def gh_container_achievements(app):
+    garb_handler = garbage_handler.GHContainerAchievements()
     garb_handler.handle_garbage(app)
 
 
 def timeout_daily(app):
     log.info("daily execution handler started")
-    garbage(app)
+    gh_container_achievements(app)
 
 def seconds_to_midnight():
     now = datetime.datetime.now()
