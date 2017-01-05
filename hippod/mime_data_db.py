@@ -5,12 +5,15 @@ import inspect
 import time
 import zlib
 import sys
+import shutil
+import logging
 
 import hippod.hasher
 import hippod.api_shared
 
 from hippod.error_object import *
 
+log = logging.getLogger()
 
 
 def obj_available(app, sha_sum):
@@ -163,3 +166,20 @@ def save_object_item_data_list(app, object_item):
         return
     for data in object_item['data']:
         save_object_item_data(app, data)
+
+
+def get_saved_data(app):
+    db_path = app['DB_DATA_PATH']
+    data_list = os.listdir(db_path)
+    return data_list
+
+
+def remove_data(app, data_list):
+    db_path = app['DB_DATA_PATH']
+    for data in data_list:
+        data_path = os.path.join(db_path, data)
+        if os.path.isdir(data_path):
+            shutil.rmtree(data_path)
+        else:
+            log.error('data path {} is not a directory, ignore for now'.format(data_path))
+            continue
