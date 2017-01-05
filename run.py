@@ -27,7 +27,8 @@ from hippod import api_data_get
 from hippod import user_db
 from hippod import api_report
 from hippod import api_get_reports
-from hippod import garbage_handler
+from hippod import garbage_handler_container_achievements
+from hippod import garbage_handler_mime_db
 
 APP_VERSION = "002"
 
@@ -159,13 +160,20 @@ def setup_routes(app, conf):
 
 
 def gh_container_achievements(app):
-    garb_handler = garbage_handler.GHContainerAchievements()
-    garb_handler.handle_garbage(app)
+    garb_handler_ca = garbage_handler_container_achievements.GHContainerAchievements()
+    garb_handler_ca.handle_garbage(app)
+
+
+def gh_mime_data(app):
+    garb_handler_md = garbage_handler_mime_db.GHMimeData()
+    garb_handler_md.remove(app)
 
 
 def timeout_daily(app):
     log.info("daily execution handler started")
     gh_container_achievements(app)
+    gh_mime_data(app)
+
 
 def seconds_to_midnight():
     now = datetime.datetime.now()

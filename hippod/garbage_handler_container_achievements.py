@@ -60,6 +60,7 @@ class GHContainerAchievements(object):
                     shutil.rmtree(garbage_path)
                 else:
                     log.error("unexpected file format discovered, ignore for now")
+                    continue
 
 
     class GHContainerAchievementsCollect(object):
@@ -94,10 +95,12 @@ class GHContainerAchievements(object):
                 for i, achiev in enumerate(data['achievements']):
                     if achiev['id'] == achiev_id:
                         del data['achievements'][i]
+                ret_data = data
             with open(path, 'w') as data_file:
                 data = json.dumps(data, sort_keys=True,indent=4,
                       separators=(',', ': '))
                 data_file.write(data)
+            return ret_data
 
 
         def correct_container(self, app, sha_major, sha_minor):
@@ -110,10 +113,12 @@ class GHContainerAchievements(object):
                 for i, sc in enumerate(data['subcontainer-list']):
                     if sc['sha-minor'] == sha_minor:
                         del data['subcontainer-list'][i]
+                ret_data = data
             with open(path, 'w') as data_file:
                 data = json.dumps(data, sort_keys=True,indent=4,
                       separators=(',', ': '))
                 data_file.write(data)
+            return ret_data['subcontainer-list']
 
 
         def correct_object_index(self, app, sha_major):
@@ -124,10 +129,12 @@ class GHContainerAchievements(object):
                 for i, d in enumerate(data):
                     if d['object-item-id'] == sha_major:
                         del data[i]
+                ret_data = data
             with open(path, 'w') as data_file:
                 data = json.dumps(data, sort_keys=True,indent=4,
                       separators=(',', ': '))
                 data_file.write(data)
+            return ret_data
 
 
         # if the achievement added to the garbage_list was the last one in subcontainer,
@@ -147,37 +154,35 @@ class GHContainerAchievements(object):
 
 
         def check_achiev_lifetime(self, app, sha_major, sha_minor, sc_content, sc_list):
-            achiev_list = list()
+            garbage_list = list()
+            achiev_path = os.path.join(app['DB_OBJECT_PATH'], sha_major[0:2], sha_major, sha_minor, 'achievements')
             for achiev in sc_content['achievements']:
                 achiev_id = str(achiev['id'])
                 date_added = hippod.utils_date.string_to_datetime(achiev['date-added'])
                 achievement = hippod.api_shared.get_achievement_data_by_sha_id(app, sha_major, sha_minor, achiev_id)
+                # in case not readable?
                 deltatime = (datetime.datetime.now() - date_added).total_seconds()
                 diff = deltatime
-                # labled tests shouldn't be removed
+                # labled tests shouldn't be removed, so continue
                 if 'label' in achievement:
                     continue
                 elif 'anchor' in achievement and diff > self.lifetime_anchored:
                     path = os.path.join(sha_major[0:2], sha_major, sha_minor, 'achievements', '{}.db'.format(achiev_id))
-                    achiev_list.append(path)
-                    self.correct_subcontainer(app, sha_major, sha_minor, achiev)
-                    waste_list = self.check_for_last_element(app, sha_major, sha_minor, sc_content['achievements'], sc_list)
-                    for waste_path in waste_list:
-                        achiev_list.append(waste_path)
+                    garbage_list.append(path)
+                    sc_content = self.correct_subcontainer(app, sha_major, sha_minor, achiev['id'])
                 elif 'anchor' not in achievement and diff > self.lifetime_default:
                     path = os.path.join(sha_major[0:2], sha_major, sha_minor, 'achievements', '{}.db'.format(achiev_id))
-                    achiev_list.append(path)
-                    self.correct_subcontainer(app, sha_major, sha_minor, achiev['id'])
-                    waste_list = self.check_for_last_element(app, sha_major, sha_minor, sc_content['achievements'], sc_list)
-                    for waste_path in waste_list:
-                        achiev_list.append(waste_path)
+                    garbage_list.append(path)
+                    sc_content = self.correct_subcontainer(app, sha_major, sha_minor, achiev['id'])
                 else:
                     continue
             if len(sc_content['achievements']) == 0:
                 path = os.path.join(sha_major[0:2], sha_major, sha_minor)
-                achiev_list.append(path)
-                self.correct_container(app, sha_major, sha_minor)
-            return achiev_list
+                garbage_list.append(path)
+                sc_list = self.correct_container(app, sha_major, sha_minor)
+            # elif len(sc_content['achievements']) != 0 and len(os.listdir(achiev_path)) == 0:
+            #     log.error('meta data in subcontainer is not up to date with achievements directory')
+            return garbage_list, sc_list
 
 
         def check_subcontainer(self, app, sha_major, cont_obj):
@@ -189,7 +194,7 @@ class GHContainerAchievements(object):
                 if not ok:
                     log.error("cannot read container {} by sha, ignore for now".format(cont['object-item-id']))
                     continue
-                achiev_list = self.check_achiev_lifetime(app, sha_major, sha_minor, sc_content, sc_list)
+                achiev_list, sc_list = self.check_achiev_lifetime(app, sha_major, sha_minor, sc_content, sc_list)
                 for achievement in achiev_list:
                     ret_list.append(achievement)
             if len(sc_list) == 0:
