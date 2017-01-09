@@ -44,5 +44,7 @@ def handle(request):
         end = time.clock()
     except hippod.error_object.ApiError as e:
         return e.transform()
-    data = str(data)
-    return aiohttp.web.Response(body=data.encode('utf-8'), content_type=mime_type)
+    if mime_type == 'text/markdown':
+        data = str(data)
+        data = data.encode('utf-8')
+    return aiohttp.web.Response(body=data, content_type=mime_type)
