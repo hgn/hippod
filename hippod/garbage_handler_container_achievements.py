@@ -27,8 +27,8 @@ class GHContainerAchievements(object):
         elif unit == "months":
             seconds = figure * 2592000
         else:
-            log.error("incorrect time unit...choose between 'seconds', 'minutes', 'hours', \
-                      'days' and 'months'")
+            log.error("incorrect time unit...choose between 'seconds', 'minutes', 'hours',"
+                      "'days' and 'months'")
         return seconds
 
     @staticmethod

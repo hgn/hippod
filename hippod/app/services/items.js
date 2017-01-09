@@ -166,6 +166,61 @@ hippoD.factory('HippodDataService', function($http) {
     };
 });
 
+
+hippoD.factory('AchievementService', function($http) {
+    return{
+     getAchievement: function (core_id, sub_id, achievement_id){
+             var obj = {};
+             var promise = $http(
+                 {
+                     url: '/api/v1/achievement/' + core_id + '/' + sub_id + '/' + achievement_id,
+                     dataType: 'json',
+                     method: 'GET',
+                     data: obj,
+                     headers: { "Content-Type": "application/json" }
+               })
+                 .then(function (response) {
+                     return response;
+                 })
+
+                 return promise;
+        },
+
+    getAttachment:  function(id, sub_id){
+                 var obj = {};
+                 var promise = $http(
+                         {
+                             url: '/api/v1/object/' + id + '/' +  sub_id,
+                             dataType: 'json',
+                             method: 'POST',
+                             data: obj,
+                             headers: { "Content-Type": "application/json" }
+                       })
+                         .then(function(response){
+                             var requested_index = response.data.data['requested-index'];
+                             var subcontainer = response.data.data['subcontainer'];
+                             var achievements = response.data.data['object-achievements'];
+                             //for (var i = 0; i < achievements.length; i++) {
+                             //}
+                             var item_data = subcontainer[requested_index]['object-item']['data'];
+                             var attachments = new Array();
+                             for (var i = 0; i < item_data.length; i++) {
+                                 if (item_data[i]['type'] !== 'description') {
+                                     var entry = {};
+                                     entry['name'] = item_data[i]['name'];
+                                     entry['data-id'] = item_data[i]['data-id'];
+                                     attachments.push(entry);
+                                 }
+                             }
+                            response.data.data['__attachments'] = attachments;
+                        return response.data.data
+                        })
+                    return promise
+                    }
+    }
+});
+
+
 hippoD.filter('toHtmlSave', function($sce) {
 
     function replaceAll(str, find, replace) {
