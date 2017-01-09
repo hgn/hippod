@@ -20,7 +20,6 @@ from hippod.error_object import *
 def get_data_blob(app, sha_major, sha_minor, achievement_id):
     try:
         data = hippod.api_shared.get_achievement_data_by_sha_id(app, sha_major, sha_minor, achievement_id)
-        print(data)
         return data
     except:
         msg = "Achievment ID {} or {} is not available".format(sha_major, sha_minor)
@@ -44,7 +43,6 @@ async def handle(request):
     try:
         start = time.clock()
         data = get_achievement_int(app, sha_major, sha_minor, achievement_id)
-        print(data)
         end = time.clock()
     except ApiError as e:
         return e.transform()
