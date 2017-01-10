@@ -101,7 +101,7 @@ class ReportGenerator(object):
                 description = str(description) + '\n' + '![image caption here]({})'.format(file_path)
                 text.write(description)
 
-        def add_achievement(description_path, achievement_path):
+        def add_achievement(description_path, achievement_path, title):
             with open(achievement_path, 'r') as achievement:
                 content = json.load(achievement)
                 result = content['result']
@@ -110,9 +110,11 @@ class ReportGenerator(object):
             with open(description_path, 'w') as text:
                 description = str(description) + '\n' + '''
 -----------------------------------------------------------------------------------
-        **Test result:**    {}
+**Title of the test:** {}
 
------------------------------------------------------------------------------------'''.format(result)
+**Test result:**    {}
+
+-----------------------------------------------------------------------------------'''.format(title, result)
                 text.write(description)
 
 
@@ -161,12 +163,15 @@ class ReportGenerator(object):
                 sha_major = item[0]
                 sha_minor = item[1]
                 achievement_id = item[2]
+                title = item[3]
+                files_catalog[sub_dir]['title'] = title
                 subcontainer = os.path.join(db_path, sha_major[0:2], sha_major, sha_minor, 'subcontainer.db')
-                achievement = os.path.join(db_path, sha_major[0:2], sha_major, sha_minor, 'achievements', '{}.db'.format(achievement_id))
-                with open(achievement, 'r') as achiev:
-                    content = json.load(achiev)
-                stored_data_path = ReportGenerator.ReportGeneratorDocument.store_achievement(app, content, sub_dir)
-                files_catalog[sub_dir]['achievement'] = stored_data_path
+                if achievement_id != '':
+                    achievement = os.path.join(db_path, sha_major[0:2], sha_major, sha_minor, 'achievements', '{}.db'.format(achievement_id))
+                    with open(achievement, 'r') as achiev:
+                        content = json.load(achiev)
+                    stored_data_path = ReportGenerator.ReportGeneratorDocument.store_achievement(app, content, sub_dir)
+                    files_catalog[sub_dir]['achievement'] = stored_data_path
                 with open(subcontainer, 'r') as subc:
                     content = json.load(subc)
                 data_list = content['object-item']['data']
@@ -193,13 +198,15 @@ class ReportGenerator(object):
         def generate_pdf(self, app, pdf_out_path, converted_data):
             sub_reports = list()
             for key, item in converted_data.items():
+                title = item['title']
                 for d in item['data']:
                     name, data_type = os.path.splitext(d)
                     if data_type == '.md':
                         ReportGenerator.ReportGeneratorDocument.sanitize_description(d)
                         description_path = d
-                        achievement_path = item['achievement']
-                        ReportGenerator.ReportGeneratorDocument.add_achievement(description_path, achievement_path)
+                        if 'achievement' in item:
+                            achievement_path = item['achievement']
+                            ReportGenerator.ReportGeneratorDocument.add_achievement(description_path, achievement_path, title)
                     else:
                         continue
                 for d in item['data']:
@@ -245,10 +252,12 @@ class ReportGenerator(object):
             for cont in object_index_data:
                 ok, cont_obj = hippod.api_shared.read_cont_obj_by_id(app, cont['object-item-id'])
                 if not ok:
-                    pass # what if? ---> no raise ApiError possible
-                # if filter == 'ReportGenerator.LAST_ACHIEVEMENTS':
+                    continue # what if? ---> no raise ApiError possible
+                title = cont_obj['title']
                 if filter == ReportGenerator.LAST_ACHIEVEMENTS:
-                    search_list.append(ReportGenerator.ReportGeneratorCollector.search_last_achievements(app, cont['object-item-id'], cont_obj))
+                    last_achiev_list = ReportGenerator.ReportGeneratorCollector.search_last_achievements(app, cont['object-item-id'], cont_obj)
+                    last_achiev_list.append(title)
+                    search_list.append(last_achiev_list)
             return search_list
 
 
