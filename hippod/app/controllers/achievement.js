@@ -7,6 +7,7 @@ hippoD.controller("AchievementCtrl", function ($scope, $stateParams, Achievement
 	$scope.achievement = $stateParams.achievement_id;
 
     AchievementService.getAchievement($scope.id, $scope.sub_id, $scope.achievement).then(function(res){
+        $scope.response = res.data.data;
         $scope.data = res.data.data.data;
         var data = $scope.data;
         var data_ids = get_data_id(data);

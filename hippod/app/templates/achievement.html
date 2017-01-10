@@ -2,10 +2,19 @@
 </div>
 
 <div class="main-content-container">
-	<h5><a ng-href="#/item/{{id}}/{{sub_id}}">ID: {{ id }}/{{ sub_id }}</a>/{{ achievement }}</h5>
+	<h5><a ng-href="#/item/{{id}}/{{sub_id}}"><b>ID:</b>
+	<span class="glyphicon glyphicon-link"></span>
+	{{ id }} / {{ sub_id }}</a> / {{ achievement }}</h5>
+	<h5><b>Test-Result:</b> {{response['result']}}</h5>
 	<br>
 	<br>
-	<h4>Attachments:</h4>
+	<div ng-repeat="data_id in data_ids_scope track by $index">
+		<img data-ng-src="api/v1/data/{{data_id}}">
+		<br>
+	</div>
+	<br>
+	<br>
+	<h5>Attachments:</h5>
 	<ul class="list-group">
 		<div ng-repeat="attachments in data_attach['__attachments']">
 			<li class="list-group-item clearfix">
@@ -19,14 +28,5 @@
 			</li>
 		</div>
 	</ul>
-
-	<br>
-	<br>
-
-	<div ng-repeat="data_id in data_ids_scope track by $index">
-		<img data-ng-src="api/v1/data/{{data_id}}">
-		<br>
-	</div>
-
 </div> <!-- main-content-container -->
 
