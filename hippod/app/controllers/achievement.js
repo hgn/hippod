@@ -54,6 +54,8 @@ hippoD.controller("AchievementCtrl", function ($scope, $stateParams, Achievement
                 case 'jpg':
                     shown_data.push(true);
                     break;
+                case 'gif':
+                    shown_data.push(true);
                 default:
                     shown_data.push(false);
                     break;
