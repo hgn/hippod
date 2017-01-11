@@ -56,14 +56,18 @@ class ReportGenerator(object):
                 name, data_type = os.path.splitext(tail)
                 if data_type == '.png':
                     dst_path = os.path.join(sub_dir, '{}.png'.format(name))
-                elif data_type == '.pcap':
-                    dst_path = os.path.join(sub_dir, 'trace.pcap')
+                elif data_type == '.jpg':
+                    dst_path = os.path.join(sub_dir, '{}.jpg'.format(name))
+                elif data_type == '.jpeg':
+                    dst_path = os.path.join(sub_dir, '{}.jpeg'.format(name))
+                elif data_type == '.gif':
+                    dst_path = os.path.join(sub_dir, '{}.gif'.format(name))
                 else:
                     # FIXME: not sure, but this function should return. If
                     # not dst_path is undefined and will definitly crash some
                     # lines later!
                     log.error("data type not supported: {}".format(data_type))
-
+                    return None
                 with open(src_path, 'rb') as file:
                     data = file.read()
                     #data = zlib.decompress(data)
@@ -114,7 +118,7 @@ class ReportGenerator(object):
 # {} #
 
 -----------------------------------------------------------------------------------
-**Test result:**    {}
+**Test Result:**    {}
 
 -----------------------------------------------------------------------------------
 
@@ -132,7 +136,7 @@ class ReportGenerator(object):
 # {} #
 
 -----------------------------------------------------------------------------------
-**Test result:**    {}
+**Test Result:**    {}
 
 -----------------------------------------------------------------------------------
 
@@ -156,15 +160,18 @@ class ReportGenerator(object):
                         output_text.write(line)
 
 
-        def check_image_reference(description_path, attach_path):
+        def check_image_reference(description_path, attach_path, data_type):
+            data_type = data_type.replace(".","")
             reference_avaible = False
             head, tail = os.path.split(attach_path)
             with open(description_path, 'r') as input_text:
                 in_descr = input_text.readlines()
             with open(description_path, 'w') as output_text:
                 for line in in_descr:
-                    match = re.search(r'(\()(.*[.]png)', line)       # jpeg,...  # enough to assume there's a reference?
-                    p = re.compile(r'\(.*[.]png')
+                    regex = r'(\()(.*[.]' + '{})'.format(data_type)
+                    match = re.search(regex, line)       # jpeg,...
+                    regex_2 = r'\(.*[.]' + '{}'.format(data_type)
+                    p = re.compile(regex_2)
                     if match != None:
                         if match.group(2) == tail:
                             reference_avaible = True
@@ -202,6 +209,8 @@ class ReportGenerator(object):
                 data_list = content['object-item']['data']
                 for i, data in enumerate(data_list):
                     stored_data_path = ReportGenerator.ReportGeneratorDocument.store_data(app, data, sub_dir)
+                    if stored_data_path == None:
+                        continue
                     files_catalog[sub_dir]['data'].append(stored_data_path)
             print('here files catalog {}'.format(files_catalog))
             return files_catalog
@@ -245,11 +254,17 @@ class ReportGenerator(object):
                         continue
                 for d in item['data']:
                     name, data_type = os.path.splitext(d)
-                    if data_type == '.png':                                 # what about other formats?
+                    if data_type == '.png':
+                        attach_path = d
+                    elif data_type == '.jpg':
+                        attach_path = d
+                    elif data_type == '.jpeg':
+                        attach_path = d
+                    elif data_type == '.gif':
                         attach_path = d
                     else:
                         continue
-                    ok = ReportGenerator.ReportGeneratorDocument.check_image_reference(description_path, attach_path)
+                    ok = ReportGenerator.ReportGeneratorDocument.check_image_reference(description_path, attach_path, data_type)
                     if not ok:
                         ReportGenerator.ReportGeneratorDocument.add_data(description_path, attach_path)
                 if len(item['data']) == 0:
