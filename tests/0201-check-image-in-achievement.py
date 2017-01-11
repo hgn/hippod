@@ -31,10 +31,19 @@ def pprnt(data):
         pp.pprint(data)
 
 
-def random_image():
-    with open("data/plot.png", "rb") as f:
-        content = f.read()
-        return base64.b64encode(content)
+def random_image(number):
+    scrip_path = os.path.dirname(os.path.realpath(__file__))
+    if number == 1:
+        image_path = os.path.join(scrip_path, 'data', 'plot.png')
+        with open(image_path, "rb") as f:
+            content = f.read()
+            return base64.b64encode(content)
+    elif number == 2:
+        scrip_path = os.path.dirname(os.path.realpath(__file__))
+        image_path = os.path.join(scrip_path, 'data', 'image2.jpg')
+        with open(image_path, "rb") as f:
+            content = f.read()
+            return base64.b64encode(content)
 
 def random_id():
     return str(uuid.uuid4())[0:5]
@@ -153,7 +162,7 @@ after maintainable products.
         img_data = dict()
         img_data['name'] = 'image.png'
         img_data['mime-type'] = 'image/png'
-        img_data['data'] = random_image().decode("utf-8") 
+        img_data['data'] = random_image(1).decode("utf-8") 
         data['object-item']['data'].append(img_data)
 
         img_data = dict()
@@ -182,8 +191,12 @@ after maintainable products.
         log_data = dict()
         log_data['name'] = 'image.png'
         log_data['mime-type'] = 'image/png'
-        log_data['data'] = random_image().decode("utf-8")
+        log_data['data'] = random_image(1).decode("utf-8")
         achievement['data'].append(log_data)
+        log_data = dict()
+        log_data['name'] = 'image2.jpg'
+        log_data['mime-type'] = 'image/jpg'
+        log_data['data'] = random_image(2).decode("utf-8")
         achievement['data'].append(log_data)
         log_data = dict()
         log_data['name'] = 'result-trace.pcap'

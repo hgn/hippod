@@ -32,7 +32,9 @@ def pprnt(data):
 
 
 def random_image():
-    with open("data/plot.png", "rb") as f:
+    scrip_path = os.path.dirname(os.path.realpath(__file__))
+    image_path = os.path.join(scrip_path, 'data', 'plot.png')
+    with open(image_path, "rb") as f:
         content = f.read()
         return base64.b64encode(content)
 
