@@ -102,20 +102,44 @@ class ReportGenerator(object):
                 text.write(description)
 
         def add_achievement(description_path, achievement_path, title):
-            with open(achievement_path, 'r') as achievement:
-                content = json.load(achievement)
-                result = content['result']
-            with open(description_path, 'r') as text:
-                description = text.read()
-            with open(description_path, 'w') as text:
-                description = str(description) + '\n' + '''
------------------------------------------------------------------------------------
-**Title of the test:** {}
+            if description_path == None:
+                # remove '/achievement.db' of the path and create a 'description.md' file in this directory
+                tmp_item_path = os.path.dirname(achievement_path)
+                description_path = os.path.join(tmp_item_path, 'description.md')
+                with open(achievement_path, 'r') as achievement:
+                    content = json.load(achievement)
+                    result = content['result']
+                with open(description_path, 'w') as text:
+                    description = '''
+# {} #
 
+-----------------------------------------------------------------------------------
 **Test result:**    {}
 
------------------------------------------------------------------------------------'''.format(title, result)
-                text.write(description)
+-----------------------------------------------------------------------------------
+
+                    '''.format(title, result)
+                    text.write(description)
+                return description_path
+            else:
+                with open(achievement_path, 'r') as achievement:
+                    content = json.load(achievement)
+                    result = content['result']
+                with open(description_path, 'r') as text:
+                    description = text.read()
+                with open(description_path, 'w') as text:
+                    description = '''
+# {} #
+
+-----------------------------------------------------------------------------------
+**Test result:**    {}
+
+-----------------------------------------------------------------------------------
+
+                    '''.format(title, result) +\
+                    '\n' + str(description)
+                    text.write(description)
+                    return description_path
 
 
         def sanitize_description(description_path):
@@ -166,18 +190,20 @@ class ReportGenerator(object):
                 title = item[3]
                 files_catalog[sub_dir]['title'] = title
                 subcontainer = os.path.join(db_path, sha_major[0:2], sha_major, sha_minor, 'subcontainer.db')
-                if achievement_id != '':
-                    achievement = os.path.join(db_path, sha_major[0:2], sha_major, sha_minor, 'achievements', '{}.db'.format(achievement_id))
-                    with open(achievement, 'r') as achiev:
-                        content = json.load(achiev)
-                    stored_data_path = ReportGenerator.ReportGeneratorDocument.store_achievement(app, content, sub_dir)
-                    files_catalog[sub_dir]['achievement'] = stored_data_path
+                achievement = os.path.join(db_path, sha_major[0:2], sha_major, sha_minor, 'achievements', '{}.db'.format(achievement_id))
+                with open(achievement, 'r') as achiev:
+                    content = json.load(achiev)
+                stored_data_path = ReportGenerator.ReportGeneratorDocument.store_achievement(app, content, sub_dir)
+                files_catalog[sub_dir]['achievement'] = stored_data_path
                 with open(subcontainer, 'r') as subc:
                     content = json.load(subc)
+                if 'data' not in content['object-item']:
+                    continue
                 data_list = content['object-item']['data']
                 for i, data in enumerate(data_list):
                     stored_data_path = ReportGenerator.ReportGeneratorDocument.store_data(app, data, sub_dir)
                     files_catalog[sub_dir]['data'].append(stored_data_path)
+            print('here files catalog {}'.format(files_catalog))
             return files_catalog
 
 
@@ -199,7 +225,9 @@ class ReportGenerator(object):
             sub_reports = list()
             for key, item in converted_data.items():
                 title = item['title']
+                counter = 0
                 for d in item['data']:
+                    counter += 1
                     name, data_type = os.path.splitext(d)
                     if data_type == '.md':
                         ReportGenerator.ReportGeneratorDocument.sanitize_description(d)
@@ -207,6 +235,12 @@ class ReportGenerator(object):
                         if 'achievement' in item:
                             achievement_path = item['achievement']
                             ReportGenerator.ReportGeneratorDocument.add_achievement(description_path, achievement_path, title)
+                        counter = 0
+                    # if no '.md' found --> use at least title and test result for the report
+                    elif counter == len(item['data']):
+                        if 'achievement' in item:
+                            achievement_path = item['achievement']
+                            description_path = ReportGenerator.ReportGeneratorDocument.add_achievement(None, achievement_path, title)
                     else:
                         continue
                 for d in item['data']:
@@ -218,6 +252,9 @@ class ReportGenerator(object):
                     ok = ReportGenerator.ReportGeneratorDocument.check_image_reference(description_path, attach_path)
                     if not ok:
                         ReportGenerator.ReportGeneratorDocument.add_data(description_path, attach_path)
+                if len(item['data']) == 0:
+                    achievement_path = item['achievement']
+                    description_path = ReportGenerator.ReportGeneratorDocument.add_achievement(None, achievement_path, title)
                 sub_reports.append(description_path)
             for i in range(len(sub_reports) - 1):
                     with open(sub_reports[i+1], 'r') as text2:
@@ -229,6 +266,7 @@ class ReportGenerator(object):
                         text1.write(description1)
             # FIXME, need arguments
             self._pandoc_generate(app, sub_reports[0], pdf_out_path)
+            shutil.rmtree(self.tmp_path)
 
 
 
