@@ -32,6 +32,7 @@ def pprnt(data):
 
 
 def random_image(number):
+    assert(number == 1 or number == 2)
     scrip_path = os.path.dirname(os.path.realpath(__file__))
     if number == 1:
         image_path = os.path.join(scrip_path, 'data', 'plot.png')
