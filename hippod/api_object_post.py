@@ -223,8 +223,8 @@ def update_attachment_achievement(app, sha_major, sha_minor, xobj):
                 rewrite_required = True
 
     if 'achievements' in xobj:
-        if type(xobj['achievements']) is not list:
-                msg = "achievements data MUST be a list - but isn't"
+        if type(xobj['achievements']) is not list or len(xobj['achievements']) == 0:
+                msg = "achievements data MUST be a list - but isn't or is empty"
                 raise ApiError(msg)
         current_achievements = data_sub["achievements"]
         current_achievements_no = len(current_achievements)

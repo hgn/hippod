@@ -50,6 +50,7 @@ class ReportGenerator(object):
             src_path = os.path.join(app['DB_DATA_PATH'], data['data-id'], 'blob.bin')
             if not os.path.isdir(sub_dir):
                 os.mkdir(sub_dir)
+            # check whether data is a image or description
             if 'type' not in data:
                 head, tail = os.path.split(data['name'])
                 name, data_type = os.path.splitext(tail)
@@ -72,12 +73,25 @@ class ReportGenerator(object):
                     file.write(decoded)
                 with open(dst_path, 'wb') as dst:
                     shutil.copyfile(src_path, dst_path)
-
             else:
                 dst_path = os.path.join(sub_dir, 'description.md')
                 with open(dst_path, 'wb') as dst:
                     shutil.copyfile(src_path, dst_path)
             return dst_path
+
+        def store_achievement(app, data, sub_dir):
+            if not os.path.isdir(sub_dir):
+                os.mkdir(sub_dir)
+            # check whether data is achievement like
+            if 'result' in data:
+                dst_path = os.path.join(sub_dir, 'achievement.db')
+                with open(dst_path, 'w') as dst:
+                    data = json.dumps(data, sort_keys=True,indent=4,
+                      separators=(',', ': '))
+                    dst.write(data)
+                return dst_path
+            else:
+                return None
 
 
         def add_data(description_path, file_path):
@@ -85,6 +99,22 @@ class ReportGenerator(object):
                 description = text.read()
             with open(description_path, 'w') as text:
                 description = str(description) + '\n' + '![image caption here]({})'.format(file_path)
+                text.write(description)
+
+        def add_achievement(description_path, achievement_path, title):
+            with open(achievement_path, 'r') as achievement:
+                content = json.load(achievement)
+                result = content['result']
+            with open(description_path, 'r') as text:
+                description = text.read()
+            with open(description_path, 'w') as text:
+                description = str(description) + '\n' + '''
+-----------------------------------------------------------------------------------
+**Title of the test:** {}
+
+**Test result:**    {}
+
+-----------------------------------------------------------------------------------'''.format(title, result)
                 text.write(description)
 
 
@@ -128,22 +158,28 @@ class ReportGenerator(object):
             files_catalog = dict()
             for j, item in enumerate(self.list_of_lists):
                 sub_dir = os.path.join(self.tmp_path, 'item{}'.format(j))
-                files_catalog[sub_dir] = list()
-                # FIXME item[0][0:2], and item[?] is a little bit hacky,
-                # save these in extra variables and name then accordingly:
-                # WHAT IS THE CONTENT OF THESE? item[0] can means all/nothing
-                subcontainer = os.path.join(db_path, item[0][0:2], item[0], item[1], 'subcontainer.db')
-                achievement = os.path.join(db_path, item[0][0:2], item[0], item[1], 'achievements', '{}.db'.format(item[2]))
+                files_catalog[sub_dir] = dict()
+                files_catalog[sub_dir]['data'] = list()
+                sha_major = item[0]
+                sha_minor = item[1]
+                achievement_id = item[2]
+                title = item[3]
+                files_catalog[sub_dir]['title'] = title
+                subcontainer = os.path.join(db_path, sha_major[0:2], sha_major, sha_minor, 'subcontainer.db')
+                if achievement_id != '':
+                    achievement = os.path.join(db_path, sha_major[0:2], sha_major, sha_minor, 'achievements', '{}.db'.format(achievement_id))
+                    with open(achievement, 'r') as achiev:
+                        content = json.load(achiev)
+                    stored_data_path = ReportGenerator.ReportGeneratorDocument.store_achievement(app, content, sub_dir)
+                    files_catalog[sub_dir]['achievement'] = stored_data_path
                 with open(subcontainer, 'r') as subc:
                     content = json.load(subc)
                 data_list = content['object-item']['data']
                 for i, data in enumerate(data_list):
-                    # FIXME: the next line should be splitted into several
-                    # lines to make clear what happens here. The line is
-                    # doing tooo much. Split into several lines and save intermediate
-                    # results in local variables and name the variables accoringly
-                    files_catalog[sub_dir].append(ReportGenerator.ReportGeneratorDocument.store_data(app, data, sub_dir))
+                    stored_data_path = ReportGenerator.ReportGeneratorDocument.store_data(app, data, sub_dir)
+                    files_catalog[sub_dir]['data'].append(stored_data_path)
             return files_catalog
+
 
         def _pandoc_generate(self, app, markdown_in_path, pdf_out_path):
             assert(os.path.isfile(markdown_in_path))
@@ -162,18 +198,23 @@ class ReportGenerator(object):
         def generate_pdf(self, app, pdf_out_path, converted_data):
             sub_reports = list()
             for key, item in converted_data.items():
-                for d in item:
+                title = item['title']
+                for d in item['data']:
                     name, data_type = os.path.splitext(d)
                     if data_type == '.md':
                         ReportGenerator.ReportGeneratorDocument.sanitize_description(d)
                         description_path = d
+                        if 'achievement' in item:
+                            achievement_path = item['achievement']
+                            ReportGenerator.ReportGeneratorDocument.add_achievement(description_path, achievement_path, title)
                     else:
                         continue
-                for d in item:
+                for d in item['data']:
                     name, data_type = os.path.splitext(d)
                     if data_type == '.png':                                 # what about other formats?
                         attach_path = d
-                    else: continue
+                    else:
+                        continue
                     ok = ReportGenerator.ReportGeneratorDocument.check_image_reference(description_path, attach_path)
                     if not ok:
                         ReportGenerator.ReportGeneratorDocument.add_data(description_path, attach_path)
@@ -193,7 +234,7 @@ class ReportGenerator(object):
 
 
 
-    class ReportGeneratorCollector(object):         # filter at first simply 'ALL_ACHIEVEMENTS_LAST'
+    class ReportGeneratorCollector(object):
 
         @staticmethod
         def null_func(data):
@@ -211,10 +252,12 @@ class ReportGenerator(object):
             for cont in object_index_data:
                 ok, cont_obj = hippod.api_shared.read_cont_obj_by_id(app, cont['object-item-id'])
                 if not ok:
-                    pass # what if? ---> no raise ApiError possible
-                # if filter == 'ReportGenerator.LAST_ACHIEVEMENTS':
+                    continue # what if? ---> no raise ApiError possible
+                title = cont_obj['title']
                 if filter == ReportGenerator.LAST_ACHIEVEMENTS:
-                    search_list.append(ReportGenerator.ReportGeneratorCollector.search_last_achievements(app, cont['object-item-id'], cont_obj))
+                    last_achiev_list = ReportGenerator.ReportGeneratorCollector.search_last_achievements(app, cont['object-item-id'], cont_obj)
+                    last_achiev_list.append(title)
+                    search_list.append(last_achiev_list)
             return search_list
 
 
