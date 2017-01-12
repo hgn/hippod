@@ -193,7 +193,7 @@ after maintainable products.
         log_data['name'] = 'image.png'
         log_data['mime-type'] = 'image/png'
         log_data['data'] = random_image(1).decode("utf-8")
-        achievement['data'].append(log_data)
+        # achievement['data'].append(log_data)
         log_data = dict()
         log_data['name'] = 'image2.jpg'
         log_data['mime-type'] = 'image/jpg'
