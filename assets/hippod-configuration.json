@@ -11,12 +11,12 @@
 	},
 
 	"db" : {
-		"path" : "/tmp/hippod-db"
+		"path" : "/var/lib/hippod"
 	},
 
 	"reports" : {
-        "title" : "Test Report",
-        "driver" : "pandoc",
+    "title" : "Test Report",
+    "driver" : "pandoc",
 		"export_formats" : [ "PDF" ],
 		"pandoc_pdf_tex_template_path" : "/usr/share/hippod/data/pandoc-templates/pdf-template-modern.tex"
 	},

@@ -3,7 +3,7 @@ Description=HippoD Service to Collect Test Statistics
 
 [Service]
 Type=forking
-ExecStart=/usr/bin/python3 /var/www/hippod/run.py
+ExecStart=/usr/bin/python3 /usr/share/hippod/run.py -f /etc/hippod/hippod-configuration.json
 
 [Install]
 WantedBy=multi-user.target

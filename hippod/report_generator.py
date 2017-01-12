@@ -1,5 +1,4 @@
 import os
-import pypandoc
 import shutil
 import markdown
 import tempfile
