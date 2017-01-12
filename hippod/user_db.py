@@ -83,7 +83,7 @@ class UserDB:
     def _init_user_db(self):
         if  os.path.isfile(self.user_db_path):
             return
-        print("initialize new user database in {}".format(self.user_db_path))
+        print("initialize new enpty user database in {}".format(self.user_db_path))
         entry = dict()
         entry_sub = dict()
         entry["john_doe"] = entry_sub
@@ -99,7 +99,7 @@ class UserDB:
     def _init_ldap_db(self):
         if  os.path.isfile(self.ldap_db_path):
             return
-        print("initialize new LDAP database in {}".format(self.ldap_db_path))
+        print("initialize new enpty LDAP database in {}".format(self.ldap_db_path))
         entry = dict()
         entry_sub = dict()
         entry["john_doe"] = entry_sub
