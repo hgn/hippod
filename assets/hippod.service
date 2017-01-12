@@ -1,8 +1,8 @@
 [Unit]
-Description=HippoD Service to Collect Test Statistics
+Description=HippoD Service to Collect Test Data
 
 [Service]
-Type=forking
+Type=simple
 ExecStart=/usr/bin/python3 /usr/share/hippod/run.py -f /etc/hippod/hippod-configuration.json
 
 [Install]
