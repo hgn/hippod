@@ -45,10 +45,10 @@ install:
 	mkdir -p /usr/share/hippod/data/
 	cp -r assets/pandoc-templates /usr/share/hippod/data/
 	@echo "now call systemctl daemon-reload"
-	@echo ".. enable service via: systemctl enable hippod.service"
-	@echo ".. start service via: systemctl start hippod.service"
-	@echo ".. status via: systemctl status hippod.service"
-	@echo ".. logging via: journalctl -u hippod.service"
+	@echo ".. enable service via: systemctl enable hippod"
+	@echo ".. start service via: systemctl start hippod"
+	@echo ".. status via: systemctl status hippod"
+	@echo ".. logging via: journalctl -u hippod"
 	@echo ""
 	@echo "Don't forget to install required python modules (for root): \"sudo pip3 install -r requirements.txt\""
 
