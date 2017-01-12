@@ -8,14 +8,18 @@ log = logging.getLogger()
 def check_subcontainer(app, sha_major, sha_minor, sc_content):
     ref_list = list()
     achievements = sc_content['achievements']
-    data_list = sc_content['object-item']['data']
-    for data in data_list:
-        ref_list.append(data['data-id'])
     for achiev in achievements:
         id_no = str(achiev['id'])
         achievement = hippod.api_shared.get_achievement_data_by_sha_id(app, sha_major, sha_minor, id_no)
+        if 'data' not in achievement:
+            continue
         for data in achievement['data']:
             ref_list.append(data['data-id'])
+    if 'data' not in sc_content['object-item']:
+        return ref_list
+    data_list = sc_content['object-item']['data']
+    for data in data_list:
+        ref_list.append(data['data-id'])
     return ref_list
 
 

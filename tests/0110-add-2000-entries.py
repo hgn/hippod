@@ -9,6 +9,7 @@ import unittest
 import string
 import random
 import argparse
+import datetime
 
 pp = pprint.PrettyPrinter(depth=6)
 
@@ -39,6 +40,10 @@ def add_n(n):
     data["object-item"]['version'] = 0
     #data["attachment"] = dict()
     data["achievements"] = list()
+    achievement = dict()
+    achievement['result'] = 'passed'
+    achievement['test-date'] = datetime.datetime.now().isoformat('T')
+    data['achievements'].append(achievement)
 
     headers = {'Content-type': 'application/json', 'Accept': 'application/json'}
     for i in range(n):

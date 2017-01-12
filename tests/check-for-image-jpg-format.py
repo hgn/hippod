@@ -33,7 +33,7 @@ def pprnt(data):
 
 def random_image():
     scrip_path = os.path.dirname(os.path.realpath(__file__))
-    image_path = os.path.join(scrip_path, 'data', 'plot.png')
+    image_path = os.path.join(scrip_path, 'data', 'image2.jpg')
     with open(image_path, "rb") as f:
         content = f.read()
         return base64.b64encode(content)
@@ -42,7 +42,7 @@ def random_id():
     return str(uuid.uuid4())[0:5]
 
 def random_title(words):
-    words = ['Foo', 'Bar']
+    words = ['Foo', 'Bar', 'Linux', 'Something', 'Yeah', 'Nope', 'Random', "REST", "IPv6"]
     s = ' '.join(random.choice(words) for _ in range(1))
     return s
 
@@ -74,7 +74,7 @@ def add_n(n):
         data["submitter"] = random_submitter()
         data["object-item"] = dict()
         data["object-item"]['categories'] = [ "team:orange", "topic:ip", "subtopic:route-cache" ]
-        data["object-item"]['version'] = random.randint(0,1)
+        data["object-item"]['version'] = 0
         data['object-item']['title'] = "{}".format(random_title(3))
 
         data['object-item']['data'] = list()
@@ -92,7 +92,7 @@ Dynamically procrastinate __B2C users__ after installed base benefits. Dramatica
 visualize customer directed convergence without **revolutionary ROI**.
 
     int foo(void) {
-	    abort(0);
+        abort(0);
     }
 
 * Item1

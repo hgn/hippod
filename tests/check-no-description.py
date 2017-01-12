@@ -15,6 +15,7 @@ import datetime
 import base64
 import uuid
 import argparse
+import string
 
 pp = pprint.PrettyPrinter(depth=6)
 
@@ -51,7 +52,7 @@ def random_result():
     return d[random.randint(0, len(d) - 1)]
 
 def random_submitter():
-    d = ['albi', 'isac43', 'tesla_driver', 'maryy', 'charlie']
+    d = ['john_doe']
     return d[random.randint(0, len(d) - 1)]
 
 def query_full(id, sub_id):
@@ -79,78 +80,8 @@ def add_n(n):
 
         data['object-item']['data'] = list()
         desc_data = dict()
-        desc_data['type'] = 'description'
-        desc_data['mime-type'] = 'text/markdown'
         # base64 requires a byte array for encoding -> .encode('utf-8')
-        # json requires a string -> convert to UTF-8
-        desc_data['data'] = base64.b64encode(
-                """
-# Rooter: A Methodology for the Typical Unification of Access Points and Redundancy #
-
-Collaboratively administrate empowered **markets** via plug-and-play networks.
-Dynamically procrastinate __B2C users__ after installed base benefits. Dramatically
-visualize customer directed convergence without **revolutionary ROI**.
-
-    int foo(void) {
-	    abort(0);
-    }
-
-* Item1
-* Item2
-* Item3
-
-Proctively envisioned multimedia based expertise and cross-media growth
-strategies. Seamlessly visualize quality intellectual capital without superior
-collaboration and idea-sharing. Holistically pontificate installed base portals
-after maintainable products.
-
-![Description](image.png)
-
-
-## Harnessing Byzantine Fault Tolerance Using Classical Theory ##
-
-Efficiently unleash cross-media information without cross-media value. Quickly
-maximize **timely deliverables** for real-time schemas. Dramatically maintain
-clicks-and-mortar __solutions__ without functional solutions.
-
-
-Completely synergize resource taxing relationships via premier niche markets.
-Professionally cultivate one-to-one customer service with robust ideas.
-Dynamically innovate resource-leveling customer service for state of the art
-customer service.
-
-    +---------+
-    |         |                        +--------------+
-    |   NFS   |--+                     |              |
-    |         |  |                 +-->|   CacheFS    |
-    +---------+  |   +----------+  |   |  /dev/hda5   |
-                 |   |          |  |   +--------------+
-    +---------+  +-->|          |  |
-    |         |      |          |--+
-    |   AFS   |----->| FS-Cache |
-    |         |      |          |--+
-    +---------+  +-->|          |  |
-                 |   |          |  |   +--------------+
-    +---------+  |   +----------+  |   |              |
-    |         |  |                 +-->|  CacheFiles  |
-    |  ISOFS  |--+                     |  /var/cache  |
-    |         |                        +--------------+
-    +---------+
-
-Proctively envisioned multimedia based expertise and cross-media growth
-strategies. Seamlessly visualize quality intellectual capital without superior
-collaboration and idea-sharing. Holistically pontificate installed base portals
-after maintainable products.
-
-## Shizzle Dizzle Header Second Order ##
-
-Proctively envisioned multimedia based expertise and cross-media growth
-strategies. Seamlessly visualize quality intellectual capital without superior
-collaboration and idea-sharing. Holistically pontificate installed base portals
-after maintainable products.
-
-                """.encode('utf-8')).decode("utf-8") 
-        data['object-item']['data'].append(desc_data)
+        # json requires a string -> convert to UTF-8 
 
         img_data = dict()
         img_data['name'] = 'image.png'
@@ -237,7 +168,7 @@ after maintainable products.
 
 
 if __name__ == '__main__':
-    status = add_n(100)
+    status = add_n(10000)
     if status==200:
         print("OK")
     else:

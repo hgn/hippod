@@ -56,14 +56,18 @@ class ReportGenerator(object):
                 name, data_type = os.path.splitext(tail)
                 if data_type == '.png':
                     dst_path = os.path.join(sub_dir, '{}.png'.format(name))
-                elif data_type == '.pcap':
-                    dst_path = os.path.join(sub_dir, 'trace.pcap')
+                elif data_type == '.jpg':
+                    dst_path = os.path.join(sub_dir, '{}.jpg'.format(name))
+                elif data_type == '.jpeg':
+                    dst_path = os.path.join(sub_dir, '{}.jpeg'.format(name))
+                elif data_type == '.gif':
+                    dst_path = os.path.join(sub_dir, '{}.gif'.format(name))
                 else:
                     # FIXME: not sure, but this function should return. If
                     # not dst_path is undefined and will definitly crash some
                     # lines later!
                     log.error("data type not supported: {}".format(data_type))
-
+                    return None
                 with open(src_path, 'rb') as file:
                     data = file.read()
                     #data = zlib.decompress(data)
@@ -102,20 +106,44 @@ class ReportGenerator(object):
                 text.write(description)
 
         def add_achievement(description_path, achievement_path, title):
-            with open(achievement_path, 'r') as achievement:
-                content = json.load(achievement)
-                result = content['result']
-            with open(description_path, 'r') as text:
-                description = text.read()
-            with open(description_path, 'w') as text:
-                description = str(description) + '\n' + '''
+            if description_path == None:
+                # remove '/achievement.db' of the path and create a 'description.md' file in this directory
+                tmp_item_path = os.path.dirname(achievement_path)
+                description_path = os.path.join(tmp_item_path, 'description.md')
+                with open(achievement_path, 'r') as achievement:
+                    content = json.load(achievement)
+                    result = content['result']
+                with open(description_path, 'w') as text:
+                    description = '''
+# {} #
+
 -----------------------------------------------------------------------------------
-**Title of the test:** {}
+**Test Result:**    {}
 
-**Test result:**    {}
+-----------------------------------------------------------------------------------
 
------------------------------------------------------------------------------------'''.format(title, result)
-                text.write(description)
+                    '''.format(title, result)
+                    text.write(description)
+                return description_path
+            else:
+                with open(achievement_path, 'r') as achievement:
+                    content = json.load(achievement)
+                    result = content['result']
+                with open(description_path, 'r') as text:
+                    description = text.read()
+                with open(description_path, 'w') as text:
+                    description = '''
+# {} #
+
+-----------------------------------------------------------------------------------
+**Test Result:**    {}
+
+-----------------------------------------------------------------------------------
+
+                    '''.format(title, result) +\
+                    '\n' + str(description)
+                    text.write(description)
+                    return description_path
 
 
         def sanitize_description(description_path):
@@ -132,15 +160,18 @@ class ReportGenerator(object):
                         output_text.write(line)
 
 
-        def check_image_reference(description_path, attach_path):
+        def check_image_reference(description_path, attach_path, data_type):
+            data_type = data_type.replace(".","")
             reference_avaible = False
             head, tail = os.path.split(attach_path)
             with open(description_path, 'r') as input_text:
                 in_descr = input_text.readlines()
             with open(description_path, 'w') as output_text:
                 for line in in_descr:
-                    match = re.search(r'(\()(.*[.]png)', line)       # jpeg,...  # enough to assume there's a reference?
-                    p = re.compile(r'\(.*[.]png')
+                    regex = r'(\()(.*[.]' + '{})'.format(data_type)
+                    match = re.search(regex, line)       # jpeg,...
+                    regex_2 = r'\(.*[.]' + '{}'.format(data_type)
+                    p = re.compile(regex_2)
                     if match != None:
                         if match.group(2) == tail:
                             reference_avaible = True
@@ -166,18 +197,22 @@ class ReportGenerator(object):
                 title = item[3]
                 files_catalog[sub_dir]['title'] = title
                 subcontainer = os.path.join(db_path, sha_major[0:2], sha_major, sha_minor, 'subcontainer.db')
-                if achievement_id != '':
-                    achievement = os.path.join(db_path, sha_major[0:2], sha_major, sha_minor, 'achievements', '{}.db'.format(achievement_id))
-                    with open(achievement, 'r') as achiev:
-                        content = json.load(achiev)
-                    stored_data_path = ReportGenerator.ReportGeneratorDocument.store_achievement(app, content, sub_dir)
-                    files_catalog[sub_dir]['achievement'] = stored_data_path
+                achievement = os.path.join(db_path, sha_major[0:2], sha_major, sha_minor, 'achievements', '{}.db'.format(achievement_id))
+                with open(achievement, 'r') as achiev:
+                    content = json.load(achiev)
+                stored_data_path = ReportGenerator.ReportGeneratorDocument.store_achievement(app, content, sub_dir)
+                files_catalog[sub_dir]['achievement'] = stored_data_path
                 with open(subcontainer, 'r') as subc:
                     content = json.load(subc)
+                if 'data' not in content['object-item']:
+                    continue
                 data_list = content['object-item']['data']
                 for i, data in enumerate(data_list):
                     stored_data_path = ReportGenerator.ReportGeneratorDocument.store_data(app, data, sub_dir)
+                    if stored_data_path == None:
+                        continue
                     files_catalog[sub_dir]['data'].append(stored_data_path)
+            print('here files catalog {}'.format(files_catalog))
             return files_catalog
 
 
@@ -199,7 +234,9 @@ class ReportGenerator(object):
             sub_reports = list()
             for key, item in converted_data.items():
                 title = item['title']
+                counter = 0
                 for d in item['data']:
+                    counter += 1
                     name, data_type = os.path.splitext(d)
                     if data_type == '.md':
                         ReportGenerator.ReportGeneratorDocument.sanitize_description(d)
@@ -207,17 +244,32 @@ class ReportGenerator(object):
                         if 'achievement' in item:
                             achievement_path = item['achievement']
                             ReportGenerator.ReportGeneratorDocument.add_achievement(description_path, achievement_path, title)
+                        counter = 0
+                    # if no '.md' found --> use at least title and test result for the report
+                    elif counter == len(item['data']):
+                        if 'achievement' in item:
+                            achievement_path = item['achievement']
+                            description_path = ReportGenerator.ReportGeneratorDocument.add_achievement(None, achievement_path, title)
                     else:
                         continue
                 for d in item['data']:
                     name, data_type = os.path.splitext(d)
-                    if data_type == '.png':                                 # what about other formats?
+                    if data_type == '.png':
+                        attach_path = d
+                    elif data_type == '.jpg':
+                        attach_path = d
+                    elif data_type == '.jpeg':
+                        attach_path = d
+                    elif data_type == '.gif':
                         attach_path = d
                     else:
                         continue
-                    ok = ReportGenerator.ReportGeneratorDocument.check_image_reference(description_path, attach_path)
+                    ok = ReportGenerator.ReportGeneratorDocument.check_image_reference(description_path, attach_path, data_type)
                     if not ok:
                         ReportGenerator.ReportGeneratorDocument.add_data(description_path, attach_path)
+                if len(item['data']) == 0:
+                    achievement_path = item['achievement']
+                    description_path = ReportGenerator.ReportGeneratorDocument.add_achievement(None, achievement_path, title)
                 sub_reports.append(description_path)
             for i in range(len(sub_reports) - 1):
                     with open(sub_reports[i+1], 'r') as text2:
@@ -229,6 +281,7 @@ class ReportGenerator(object):
                         text1.write(description1)
             # FIXME, need arguments
             self._pandoc_generate(app, sub_reports[0], pdf_out_path)
+            shutil.rmtree(self.tmp_path)
 
 
 
