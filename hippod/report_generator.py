@@ -125,11 +125,11 @@ class ReportGenerator(object):
 
 
         def add_data(self, description_path, file_path):
-            with open(description_path, 'r') as text:
-                description = text.read()
-            with open(description_path, 'w') as text:
+            with open(description_path, 'r') as file:
+                description = file.read()
+            with open(description_path, 'w') as file:
                 description = str(description) + '\n' + '![image caption here]({})'.format(file_path)
-                text.write(description)
+                file.write(description)
 
 
         def add_achievement(self, description_path, achievement_path, title, achievement_data, attachment_path):
@@ -144,7 +144,7 @@ class ReportGenerator(object):
                 submitter = achievement_content['submitter']
                 test_date = achievement_content['test-date']
 
-                with open(description_path, 'w') as text:
+                with open(description_path, 'w') as file:
                     description  = '# {} #\n\n'.format(title)
                     description += '-----------------------   ----------\n'
                     description += '**Test Result**           {}\n'.format(result)
@@ -156,7 +156,7 @@ class ReportGenerator(object):
                     for data in achievement_data:
                         description += '![Description]({})\n'.format(data)
                     description += str(description_only)
-                    text.write(description)
+                    file.write(description)
                 return description_path
             else:
                 result = achievement_content['result']
@@ -165,9 +165,9 @@ class ReportGenerator(object):
                 categories = attach_content['categories']
                 responsible = attach_content['responsible']
 
-                with open(description_path, 'r') as text:
-                    description_only = text.read()
-                with open(description_path, 'w') as text:
+                with open(description_path, 'r') as file:
+                    description_only = file.read()
+                with open(description_path, 'w') as file:
                     description  = '# {} #\n\n'.format(title)
                     description += '-----------------------   ----------\n'
                     description += '**Test Result**           {}\n'.format(result)
@@ -179,22 +179,22 @@ class ReportGenerator(object):
                     for data in achievement_data:
                         description += '![Description]({})\n'.format(data)
                     description += str(description_only)
-                    text.write(description)
+                    file.write(description)
                 return description_path
 
 
         def sanitize_description(self, description_path):
-            with open(description_path, 'r') as input_text:
-                in_descr = input_text.readlines()
-            with open(description_path, 'w') as output_text:
-                for line in in_descr:
+            with open(description_path, 'r') as input_file:
+                descr_lines = input_file.readlines()
+            with open(description_path, 'w') as output_file:
+                for line in descr_lines:
                     match = re.search(r'^#[#]*', line)
                     p = re.compile(r'(#[#]*)')
                     if match != None:
                         newline = p.sub('{}#'.format(match.group(0)), line)
-                        output_text.write(newline)
+                        output_file.write(newline)
                     else:
-                        output_text.write(line)
+                        output_file.write(line)
 
 
         def adjust_image_reference(self, description_path, attach_path, data_type):
@@ -203,9 +203,9 @@ class ReportGenerator(object):
             data_type = data_type.replace(".", "")
             reference_available = False
             head, tail = os.path.split(attach_path)
-            with open(description_path, 'r') as input_text:
-                in_descr = input_text.readlines()
-            with open(description_path, 'w') as output_text:
+            with open(description_path, 'r') as input_file:
+                in_descr = input_file.readlines()
+            with open(description_path, 'w') as output_file:
                 # search for 'xxx(xxx.data_type)'
                 regex = r'(\()(.*[.]' + '{})'.format(data_type)
                 # regex_compile is a pattern which only looks for the part after the caption
@@ -221,11 +221,11 @@ class ReportGenerator(object):
                             # exchange only the file path in the refernce(after the caption) with the
                             # new tmp file path
                             newline = p.sub('({}'.format(attach_path), line)
-                            output_text.write(newline)
+                            output_file.write(newline)
                         else:
-                            output_text.write(line)
+                            output_file.write(line)
                     else:
-                        output_text.write(line)
+                        output_file.write(line)
             return reference_available
 
 
@@ -351,13 +351,13 @@ class ReportGenerator(object):
                     description_path = self.add_achievement(None, achievement_path, title, achievement_data, attachment_path)
                 sub_reports.append(description_path)
             for i in range(len(sub_reports) - 1):
-                    with open(sub_reports[i+1], 'r') as text2:
-                        description2 = text2.read()
-                    with open(sub_reports[0], 'r') as text1:
-                        description1 = text1.read()
+                    with open(sub_reports[i+1], 'r') as file2:
+                        description2 = file2.read()
+                    with open(sub_reports[0], 'r') as file1:
+                        description1 = file1.read()
                         description1 = str(description1) + '\n \n \n' + str(description2)
-                    with open(sub_reports[0], 'w') as text1:
-                        text1.write(description1)
+                    with open(sub_reports[0], 'w') as file1:
+                        file1.write(description1)
             # FIXME, need arguments
             self._pandoc_generate(app, sub_reports[0], pdf_out_path)
             # shutil.rmtree(self.tmp_path)
