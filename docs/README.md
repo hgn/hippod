@@ -44,10 +44,15 @@ sudo journalctl -f -u hippod
 
 Point you webbrowser to localhost:8080 - that's all.
 
+# Licence
+
+Simple MIT licensed! Install where you want and how often you want. If you make
+a product out of Hippod - great! The only request is that the LICENSE file must
+be intact and the copyright notice list myself as the author.
+
 # Privacy Statement
 
 Hippod will never query external resources like Java Script libraries or Google
-Fonts. All resources are stored within hippod. Hippod can be operated behind
+Fonts. All resources are stored within hippod. This was one major design
+decision: never leak data to third party sides. Hippod can be operated behind
 cooperate firewalls/proxies.
-
-
