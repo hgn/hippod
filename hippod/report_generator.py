@@ -143,6 +143,8 @@ class ReportGenerator(object):
                 result = achievement_content['result']
                 submitter = achievement_content['submitter']
                 test_date = achievement_content['test-date']
+                categories = "FIXME"
+                responsible = "FIXME"
 
                 with open(description_path, 'w') as file:
                     description  = '# {} #\n\n'.format(title)
@@ -155,14 +157,13 @@ class ReportGenerator(object):
                     description += '-----------------------   ----------\n\n'
                     for data in achievement_data:
                         description += '![Description]({})\n'.format(data)
-                    description += str(description_only)
                     file.write(description)
                 return description_path
             else:
                 result = achievement_content['result']
                 submitter = achievement_content['submitter']
                 test_date = achievement_content['test-date']
-                categories = attach_content['categories']
+                categories = "FIXME"
                 responsible = attach_content['responsible']
 
                 with open(description_path, 'r') as file:
@@ -428,6 +429,8 @@ class ReportGenerator(object):
                 full_sub_cont_last = json.load(file)
 
             data = hippod.api_object_get_detail.get_last_achievement_data(app, sha_major, latest_sha_minor, full_sub_cont_last)
+            print(sha_major)
+            print(latest_sha_minor)
             ret_list.append(data['id'])
             return ret_list
 

@@ -14,10 +14,10 @@ all:
 uninstall:
 	@echo "remove runtime data in $(EXEC_DIR)"
 	@rm -rf $(EXEC_DIR)
-	@if [ -f "$(CONF_DIR)" ] ; \
+	@if [ -d "$(CONF_DIR)" ] ; \
 	then \
-		@echo "did NOT remove configuration file in $(CONF_DIR) - remove manually if required:" ; \
-		@echo "e.g. rm -rf $(CONF_DIR)" ; \
+		echo "did NOT remove configuration file in $(CONF_DIR) - remove manually if required:" ; \
+		echo "e.g. rm -rf $(CONF_DIR)" ; \
 	fi
 	@echo "uninstallation completed"
 	@echo "NOTE: runtime data was NOT deleted"
@@ -29,15 +29,14 @@ install:
 		echo "e.g. \"make uninstall\"" ; \
 		exit 1 ; \
 	fi
-
-	@if [ -f "$(CONF_DIR)" ] ; \
+	@if [ -d "$(CONF_DIR)" ] ; \
 	then \
 		echo "$(CONF_DIR) present, did not overwrite convfiguration" ; \
 	else \
-	  mkdir -p $(CONF_DIR) ; \
-	  cp $(ROOT_DIR)/assets/hippod-configuration.json $(CONF_DIR)/ ; \
+		echo "create dir $(CONF_DIR)" ; \
+		mkdir -p $(CONF_DIR) ; \
+		cp $(ROOT_DIR)/assets/hippod-configuration.json $(CONF_DIR)/ ; \
 	fi
-
 	mkdir -p $(EXEC_DIR)
 	cp -r $(ROOT_DIR)/* $(EXEC_DIR)
 	cp assets/hippod.service /lib/systemd/system/

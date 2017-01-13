@@ -346,6 +346,7 @@ async def handle(request):
         hippod.statistic.update_global_db_stats(app)
         end = time.clock()
     except ApiError as e:
+        print(e)
         return e.transform()
 
     o = hippod.ex3000.Ex3000()
