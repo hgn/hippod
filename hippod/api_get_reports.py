@@ -11,7 +11,7 @@ def get_reports(app):
     reports_path = app['REPORT_PATH']
     # dir_list = os.listdir(reports_path)
     mtime = lambda f: os.stat(os.path.join(reports_path, f)).st_mtime
-    dir_list = list(sorted(os.listdir(reports_path), key=mtime))
+    dir_list = list(sorted(os.listdir(reports_path), key=mtime, reverse=True))
     for file in dir_list:
         report = dict()
         report_file_path = os.path.join(reports_path, file)
