@@ -54,14 +54,14 @@ hippo_url = 'http://localhost:8080/api/v1/object'
 test_data = """
 {
   "submitter" : "john_doe",
-	"object-item" " {
-		"title" : "This is my first test",
-		"categories" : [ "team:orange", "topic:ip", "subtopic:route-cache" ],
-		"tags" : [ "ip", "route", "network" ],
-	}
-	"achievements" : [
-	  { 'result' : 'passed', 'test-date' : '2016-01-01' }
-	]
+  "object-item" " {
+    "title" : "This is my first test",
+    "categories" : [ "team:orange", "topic:ip", "subtopic:route-cache" ],
+    "tags" : [ "ip", "route", "network" ],
+  }
+  "achievements" : [
+    { 'result' : 'passed', 'test-date' : '2016-01-01' }
+  ]
 }
 """
 headers = {'Content-type': 'application/json', 'Accept': 'application/json'}
