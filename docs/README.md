@@ -4,8 +4,8 @@
 Larger software projects often utilizes many different test systems. Each test
 system/product comes with it own reporting tool making it difficult to get an
 unified view across this heterogeneous landscape for specific software
-versions. Hippod is a generic framework to unify the view in one common
-application.
+versions. With Hippod tests are still executed with the best suited tools,
+Hippod just collects the results in one generic framework to unify the view.
 
 ![alt text](images/hippod-test-system-interaction.png "Architecture")
 
@@ -55,9 +55,11 @@ what not.
 
 ## How Traceability Works
 
-Tests are grouped by Hippod by *title* and *category*. Both information is
+Tests are grouped and identified by *title* and *category*. Both information is
 mandatory. The category is a list can be defined by you, a suggestion is that
 you form the categories hierarchical:
+
+![alt text](images/hippod-component-hierarchy.png "Category Hierarchy")
 
 
 Hippod calculates a SHA1 sum over all provided information. The more
