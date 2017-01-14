@@ -33,20 +33,53 @@ application.
 
 # Traceability
 
+Traceability, trust & non-modifiable results are one of the most important
+characteristics of a test database. If you cannot connect a given test result
+with a given test your data is pointless. Hippod provides mechanism to attach
+as much environment data as possible to uniquely identify a test. It is up to
+you what you decide what is important, some examples:
 
-# Integration Into Existing Test Inrastructure
+- **Test scripts/program**, for example, for Unit Tests you want to attach the
+	complete Unit Test file.
+- **Test Environment**, if using a Test Simulator you want to attach specific
+	version information. E.g. the simulation program version. Another example is
+	the Operating System version. For some test it indispensable to distinguish
+	between Windows and Linux (e.g. compiler tests). For Web Gui Tests the
+	Operating system do not interest so much, rather the Browser version is
+	important here.
+- **Source Code**, sure, *what* was tested, the version, is important. This can
+	be specified by specifying so called *anchors*.
+
+Hippod is really flexible and leave the decision to you what is important and
+what not.
+
+## How Traceability Works
+
+Tests are grouped by Hippod by *title* and *category*. Both information is
+mandatory. The category is a list can be defined by you, a suggestion is that
+you form the categories hierarchical:
+
+
+Hippod calculates a SHA1 sum over all provided information. The more
+information you provide about the test & test environment the tighter the
+definition of a test.
+
+
+# Integration Into Existing Test Infrastructure
 
 Hippod speaks REST - so you can use your programming language of choice to feed
-Hippod with test data and results. If your test system is written in Python/Swift/Go
-with build-in HTTP/JSON support it is a trivial to connect your testsystem and
-Hippod. If you use plain C you probably want to use one of our existing Python
-based adapter.
+Hippod with test data and results. If your test system is written in
+Python/Swift/Go with build-in HTTP/JSON support it is a trivial to connect your
+test-system and Hippod. If you use plain C you probably want to use one of our
+existing Python based adapter.
 
-A minimal example including title, description, category, tags and result is
-illustrated in the next lines (be aware: normally you will hide these details
-in a separate library so that you have even fewer hippod specific code):
+A minimal - but complete - example including title, description, category, tags
+and result is illustrated in the next lines (be aware: normally you will hide
+these details in a separate library so that you have even fewer hippod specific
+code):
 
 ```
+#!/usr/bin/env python
 import json
 import requests
 
@@ -105,17 +138,18 @@ sudo systemctl enable hippod
 sudo journalctl -f -u hippod
 ```
 
-Point you webbrowser to localhost:8080 - that's all.
+Point you web browser to http://localhost:8080/ - that's all.
 
 # Licence
 
 Simple MIT licensed. Install where you want and how often you want. If you make
 a product out of Hippod - great! The only request is that the LICENSE file must
-be intact, that's all.
+be intact, that's all. Don't be afraid to operate Hippod in your company.
 
 # Privacy Statement
 
 Hippod will never query external resources like Java Script libraries or Google
 Fonts. All resources are stored within hippod. This was one major design
 decision: never leak data to third party sides. Hippod can be operated behind
-cooperate firewalls/proxies.
+cooperate firewalls/proxies. Your privacy is important to us!
+
