@@ -1,11 +1,12 @@
 
-# Hippod - Problem Statement
+# Problem Statement
 
 Larger software projects often utilizes many different test systems. Each test
 system/product comes with it own reporting tool making it difficult to get an
 unified view across this heterogeneous landscape for specific software
-versions. With Hippod tests are still executed with the best suited tools,
-Hippod just collects the results in one generic framework to unify the view.
+versions. With Hippod tests are still executed with the your current best
+suited tools, Hippod collects & manage tests and the particular results in one
+generic framework to unify the view.
 
 ![alt text](images/hippod-test-system-interaction.png "Architecture")
 
@@ -56,10 +57,27 @@ what not.
 ## How Traceability Works
 
 Tests are grouped and identified by *title* and *category*. Both information is
-mandatory. The category is a list can be defined by you, a suggestion is that
+mandatory. The category is a list can be freely defined, a suggestion is that
 you form the categories hierarchical:
 
 ![alt text](images/hippod-component-hierarchy.png "Category Hierarchy")
+
+On a concrete example:
+
+```
+[ "team:a", "os", "network" ]            <- network tests, not firewall/routing related
+[ "team:a", "os", "network", "firwall" ] <- tests for firwall component
+[ "team:a", "os", "network", "routing" ] <- routing related tests
+[ "team:b", "web-gui" ]                  <- overall web-gui tests
+[ "team:b", "web-gui", "portal" ]        <- web-gui but in the area of portal component
+```
+
+The advantage in define categories in this way is an easy identifcation:
+
+- which sub-system has good/bad test coverage?
+- which sub-system is frequently tested, which not?
+- actual status of test results (failed/passed) limited to sub-systems?
+- ...
 
 
 Hippod calculates a SHA1 sum over all provided information. The more
@@ -104,7 +122,44 @@ r = requests.post(hippo_url, data=test_data, headers=headers)
 print("Result {}".format(r.json()))
 ```
 
-# What is a Test?
+# What is a Test - Hippod Test Object Anatomy?
+
+Hippod tests are devided in three components, determines the structure of tests:
+
+- Test Object
+- Test Attachments
+- Test Achievements
+
+Test objects determine the identifyable, unique part of tests. If values change
+here the test ID will change. Test Attachmanets are modifyable and enrich the
+test with additinal information. If test attachments change this do not change
+the test id. So attachments like *tags* or *responsible* can change at any time.
+Test achievements represent the test result (passed, failed, ...) and
+additional information related to the particular test run. For example, if log
+files are generated or PCAP files captured this can be added to the test
+achievements.Each new test will add a new achievement and after 1000 test runs
+a test will have 1000 achievements.
+
+Required attributes:
+
+- title
+- category
+- submitter
+- author
+- test result
+
+Optional attributes:
+
+- tags
+- requirements
+
+
+# Requirement Engineering
+
+If a more formal process is required that Hippod provides the possibility to
+add Requirement information to tests. If a test failed, these formal
+requirements are not fulfilled. The requirements field is freely defineable and
+interact nicely with you Requirement System.
 
 
 # Installation
