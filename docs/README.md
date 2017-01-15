@@ -197,11 +197,18 @@ sudo journalctl -f -u hippod
 
 Point you web browser to http://localhost:8080/ - that's all.
 
+# Bug Reports? Further questions? Contact?
+
+Open a new issue at GitHub directly: https://github.com/hgn/hippod/issues
+
+For all other requests you can contact the author: Hagen Paul Pfeifer <hagen@jauu.net>
+
+
 # Licence
 
-Simple MIT licensed. Install where you want and how often you want. If you make
-a product out of Hippod - great! The only request is that the LICENSE file must
-be intact, that's all. Don't be afraid to operate Hippod in your company.
+Simple MIT licensed. Install where you want and how often you want. Don't be
+afraid to operate Hippod in your company. If you make a product out of Hippod -
+great! The only request is that the LICENSE file must be intact, that's all.
 
 # Privacy Statement
 
