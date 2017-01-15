@@ -5,8 +5,7 @@ Larger software projects often utilizes many different test systems. Each test
 system/product comes with it own reporting tool making it difficult to get an
 unified view across this heterogeneous test landscape for specific software
 versions. With Hippod tests are still executed with your current best suited
-tools. Hippod collects, harmonize & manage tests and results in one generic
-framework.
+tools. Hippod collects, harmonize & manage your tests!
 
 ![alt text](images/hippod-test-system-interaction.png "Architecture")
 
