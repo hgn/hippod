@@ -3,10 +3,10 @@
 
 Larger software projects often utilizes many different test systems. Each test
 system/product comes with it own reporting tool making it difficult to get an
-unified view across this heterogeneous landscape for specific software
-versions. With Hippod tests are still executed with your current best
-suited tools, Hippod collects, harmonize & manage tests and the particular
-results in one generic framework.
+unified view across this heterogeneous test landscape for specific software
+versions. With Hippod tests are still executed with your current best suited
+tools. Hippod collects, harmonize & manage tests and results in one generic
+framework.
 
 ![alt text](images/hippod-test-system-interaction.png "Architecture")
 
@@ -41,15 +41,18 @@ as much environment data as possible to uniquely identify a test. It is up to
 you what you decide what is important, some examples:
 
 - **Test scripts/program**, for example, for Unit Tests you want to attach the
-	complete Unit Test file.
-- **Test Environment**, if using a Test Simulator you want to attach specific
+	complete Unit Test file. Even after years it is possible to check what
+	exactly was tested and how. This additional layer of traceability is unique
+	to Hippod.
+- **Test Environment**, e.g. if using a Simulator you want to attach specific
 	version information. E.g. the simulation program version. Another example is
 	the Operating System version. For some test it indispensable to distinguish
 	between Windows and Linux (e.g. compiler tests). For Web Gui Tests the
 	Operating system do not interest so much, rather the Browser version is
-	important here.
-- **Source Code**, sure, *what* was tested, the version, is important. This can
-	be specified by specifying so called *anchors*.
+	important here. Another example is hardware tests: if you test includes a
+	bunch of different hardware architectures you should account this too.
+- **Source Code**, sure, *what* software version was tested is
+	important. This can be specified by specifying so called *anchors*.
 
 Hippod is really flexible and leave the decision to you what is important and
 what not.
