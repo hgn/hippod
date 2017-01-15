@@ -156,6 +156,9 @@ Optional attributes:
 - requirements
 
 
+![alt text](images/object-elements.png "Object Elements")
+
+
 # Requirement Engineering
 
 If a more formal process is required that Hippod provides the possibility to
