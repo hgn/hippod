@@ -56,11 +56,19 @@ async def handle(request):
     try:
         start = time.clock()
         report_filter = await request.json()
+<<<<<<< 2df69c45086088ec222488907bc1f0b369052014
+        # report_filter = dict()
+        # report_filter['type'] = 'Special Tests'
+        # report_filter['filter-meta'] = dict()
+        # report_filter['filter-meta']['anchors'] = ['c4a8c', 'a5adb']
+        # report_filter['filter-meta']['submitter'] = ['John Doe', 'Marie Curie', 'Charles Darwin']
+=======
         #report_filter = dict()
         #report_filter['type'] = 'Special Tests'
         #report_filter['filter-meta'] = dict()
         #report_filter['filter-meta']['anchors'] = ['c4a8c', 'a5adb']
         #report_filter['filter-meta']['submitter'] = ['John Doe', 'Marie Curie', 'Charles Darwin']
+>>>>>>> temp use hard coded filter for now
         generate_doc_later(app, report_filter)
         end = time.clock()
     except ApiError as e:
