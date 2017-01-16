@@ -182,7 +182,6 @@ function formatReferences(ref_arr) {
 
 DBService.getFoo($scope.id, $scope.sub_id).then(function(res) {
     $scope.data = res;
-    console.log(res)
     if ('object-attachment' in res){
         $scope.responsible = res['object-attachment']['responsible'];
         $scope.tags        = formatTags(res['object-attachment']['tags']);
