@@ -143,11 +143,11 @@ function updateVaritiesData(res) {
             var_container['achievements'] = new Array();
             var_container['achievements'].push(achievment);
 
-
             var_data.push(var_container);
         }
 
         $scope.varieties = var_data;
+        console.log($scope.varieties)
     });
 };
 
@@ -182,14 +182,18 @@ function formatReferences(ref_arr) {
 
 DBService.getFoo($scope.id, $scope.sub_id).then(function(res) {
     $scope.data = res;
-    $scope.responsible = res['object-attachment']['responsible'];
-    $scope.categories  = formatCategories(res['object-attachment']['categories']);
-    $scope.tags        = formatTags(res['object-attachment']['tags']);
-    $scope.references  = formatReferences(res['object-attachment']['references']);
-    $scope.date_added  = humanFormatDateYYYYMMDDHHMM(res['object-attachment']['date-added']);
+    console.log(res)
+    if ('object-attachment' in res){
+        $scope.responsible = res['object-attachment']['responsible'];
+        $scope.tags        = formatTags(res['object-attachment']['tags']);
+        $scope.references  = formatReferences(res['object-attachment']['references']);
+        $scope.date_added  = humanFormatDateYYYYMMDDHHMM(res['object-attachment']['date-added']);
+        }
+    $scope.categories  = formatCategories(res['object-item']['categories']);
     $scope.conflict = res['conflict'];
     $scope.latest_index = res['latest_index'];
     $scope.index = res['requested-index']
+    console.log($scope.index)
 });
 
 $scope.graphTestResultOptions = {
