@@ -24,7 +24,6 @@ def filter_data(userdb, username):
     # probably sensitive data, we opt-in here explicetly
     publ_data = ['department', 'fullname', 'email', 'telephone']
     for i, item in enumerate(publ_data):
-        print(data)
         if item in data:
             # patch entries
             if item == "full_name":

@@ -23,9 +23,11 @@ from hippod.error_object import *
 def generate_doc(app, own_filter):
     rep_gen = hippod.report_generator.ReportGenerator()
     if own_filter['filter-type'] == 'Latest Tests':
-        rep_gen.generate(app, outputs=[rep_gen.PDF], report_filter=rep_gen.LAST_ACHIEVEMENTS)
-    if own_filter['filter-type'] == 'Anchored Tests':
-        rep_gen.generate(app, outputs=[rep_gen.PDF], report_filter=rep_gen.FILTER_BY_ANCHOR)
+        rep_gen.generate(app, outputs=[rep_gen.PDF], report_filter=rep_gen.LAST_ACHIEVEMENTS, report_meta=None)
+    elif own_filter['filter-type'] == 'Anchored Tests':
+        rep_gen.generate(app, outputs=[rep_gen.PDF], report_filter=rep_gen.FILTER_BY_ANCHOR, report_meta=None)
+    elif own_filter['filter-type'] == 'Special Tests':
+        rep_gen.generate(app, outputs=[rep_gen.PDF], report_filter=rep_gen.FILTER_BY_SPECIAL, report_meta=own_filter['filter-meta'])
 
 
 def generate_doc_later(app, report_filter):
@@ -35,6 +37,10 @@ def generate_doc_later(app, report_filter):
         own_filter['filter-type'] = 'Latest Tests'
     elif report_filter['type'] == 'Anchored Tests':
         own_filter['filter-type'] = 'Anchored Tests'
+    elif report_filter['type'] == 'Special Tests':
+        own_filter['filter-type'] = 'Special Tests'
+        own_filter['filter-meta'] = report_filter['filter-meta']
+        # FIXME: filter check for keys here!
     else:
         msg = "No valid Filter"
         raise ApiError(msg)                                          # arrange filter check!
@@ -50,6 +56,11 @@ async def handle(request):
     try:
         start = time.clock()
         report_filter = await request.json()
+        # report_filter = dict()
+        # report_filter['type'] = 'Special Tests'
+        # report_filter['filter-meta'] = dict()
+        # report_filter['filter-meta']['anchors'] = ['c4a8c', 'a5adb']
+        # report_filter['filter-meta']['submitter'] = ['John Doe', 'Marie Curie', 'Charles Darwin']
         generate_doc_later(app, report_filter)
         end = time.clock()
     except ApiError as e:

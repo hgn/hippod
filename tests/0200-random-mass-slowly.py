@@ -167,8 +167,7 @@ after maintainable products.
         data["attachment"] = dict()
         data["attachment"]['references'] = [ "doors:234236", "your-tool:4391843" ]
         data["attachment"]['tags'] = [ "ip", "route", "cache", "performance" ]
-        data["attachment"]['categories'] = [ "team:orange", "topic:ip", "subtopic:route-cache" ]
-        data["attachment"]['responsible'] = data["submitter"]
+        data["attachment"]['responsible'] = random_submitter()
 
         achievement = dict()
         achievement["test-date"] = datetime.datetime.now().isoformat('T')

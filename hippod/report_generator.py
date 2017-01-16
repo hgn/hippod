@@ -7,6 +7,7 @@ import json
 import re
 import tempfile
 import logging
+import glob
 
 import hippod.api_shared
 import hippod.error_object
@@ -17,15 +18,16 @@ log = logging.getLogger()
 class ReportGenerator(object):
     LAST_ACHIEVEMENTS = 1
     FILTER_BY_ANCHOR = 2
-    PDF = 3
+    FILTER_BY_SPECIAL = 3
+    PDF = 4
 
     @staticmethod
-    def generate(app, outputs, report_filter):
+    def generate(app, outputs, report_filter, report_meta):
         reports_path = app['REPORT_PATH']
         tmp_path = os.path.join(app['DB_ROOT_PATH'], 'tmp')
         if not os.path.isdir(tmp_path):
             os.mkdir(tmp_path)
-        list_of_lists = ReportGenerator.ReportGeneratorCollector.search(app, report_filter)
+        list_of_lists = ReportGenerator.ReportGeneratorCollector.search(app, report_filter, report_meta)
         date = str(datetime.datetime.now().replace(second=0, microsecond=0))
         doc_name = '{}-report.pdf'.format(date)
         pdf_out_path = os.path.join(reports_path, doc_name)
@@ -132,7 +134,8 @@ class ReportGenerator(object):
                 file.write(description)
 
 
-        def add_achievement(self, description_path, achievement_path, title, achievement_data, attachment_path):
+        def add_achievement(self, description_path, achievement_path, title, \
+                            achievement_data, attachment_path, categories):
             attach_content = self.get_attachment_content(attachment_path)
             achievement_content = self.get_achievement_content(achievement_path)
             if description_path == None:
@@ -143,8 +146,8 @@ class ReportGenerator(object):
                 result = achievement_content['result']
                 submitter = achievement_content['submitter']
                 test_date = achievement_content['test-date']
-                categories = "FIXME"
-                responsible = "FIXME"
+                categories = categories
+                responsible = attach_content['responsible']
 
                 with open(description_path, 'w') as file:
                     description  = '# {} #\n\n'.format(title)
@@ -163,7 +166,7 @@ class ReportGenerator(object):
                 result = achievement_content['result']
                 submitter = achievement_content['submitter']
                 test_date = achievement_content['test-date']
-                categories = "FIXME"
+                categories = categories
                 responsible = attach_content['responsible']
 
                 with open(description_path, 'r') as file:
@@ -263,8 +266,11 @@ class ReportGenerator(object):
                 achievement_id = item[2]
                 title = item[3]
                 last_attachment = item[4]
+                categories = item[5]
+
 
                 files_catalog[sub_dir]['title'] = title
+                files_catalog[sub_dir]['categories'] = categories
                 
                 subcontainer = os.path.join(db_path, sha_major[0:2], sha_major, sha_minor, 'subcontainer.db')
                 achievement = os.path.join(db_path, sha_major[0:2], sha_major, sha_minor, 'achievements', '{}.db'.format(achievement_id))
@@ -312,6 +318,7 @@ class ReportGenerator(object):
             sub_reports = list()
             for key, item in tmp_data.items():
                 title = item['title']
+                categories = item['categories']
                 achievement_data = item['data']['achievements']
                 attachment_path = item['attachment']
                 counter = 0
@@ -323,13 +330,15 @@ class ReportGenerator(object):
                         description_path = d
                         if 'achievement' in item:
                             achievement_path = item['achievement']
-                            self.add_achievement(description_path, achievement_path, title, achievement_data, attachment_path)
+                            self.add_achievement(description_path, achievement_path, title, \
+                                                achievement_data, attachment_path, categories)
                         counter = 0
                     # if no '.md' found --> use at least title and test result for the report
                     elif counter == len(item['data']['subcontainer']):
                         if 'achievement' in item:
                             achievement_path = item['achievement']
-                            description_path = self.add_achievement(None, achievement_path, title, achievement_data, attachment_path)
+                            description_path = self.add_achievement(None, achievement_path, title, \
+                                                    achievement_data, attachment_path, categories)
                     else:
                         continue
                 for d in item['data']['subcontainer']:
@@ -349,7 +358,8 @@ class ReportGenerator(object):
                         self.add_data(description_path, attach_path)
                 if len(item['data']['subcontainer']) == 0:
                     achievement_path = item['achievement']
-                    description_path = self.add_achievement(None, achievement_path, title, achievement_data, attachment_path)
+                    description_path = self.add_achievement(None, achievement_path, title, \
+                                            achievement_data, attachment_path, categories)
                 sub_reports.append(description_path)
             for i in range(len(sub_reports) - 1):
                     with open(sub_reports[i+1], 'r') as file2:
@@ -374,7 +384,7 @@ class ReportGenerator(object):
             pass
 
         @staticmethod
-        def search(app, filter):
+        def search(app, filter_type, filter_meta):
             object_index_data = hippod.api_shared.object_index_read(app)
             if not object_index_data:
                 return None
@@ -387,12 +397,27 @@ class ReportGenerator(object):
                 if not ok:
                     continue # what if? ---> no raise ApiError possible
                 title = cont_obj['title']
-                if filter == ReportGenerator.LAST_ACHIEVEMENTS:
+                categories = cont_obj['categories']
+                if filter_type == ReportGenerator.LAST_ACHIEVEMENTS:
                     last_achiev_list = ReportGenerator.ReportGeneratorCollector.search_last_achievements(app, cont['object-item-id'], cont_obj)
                     last_attach = ReportGenerator.ReportGeneratorCollector.search_last_attachment(app, cont['object-item-id'])
                     last_achiev_list.append(title)
                     last_achiev_list.append(last_attach)
+                    last_achiev_list.append(categories)
                     search_list.append(last_achiev_list)
+                elif filter_type == ReportGenerator.FILTER_BY_ANCHOR:
+                    ReportGenerator.ReportGeneratorCollector.search_anchored_achievements(app, cont['object-item-id'], cont_obj)
+                elif filter_type == ReportGenerator.FILTER_BY_SPECIAL:
+                    special_achiev_list = ReportGenerator.ReportGeneratorCollector.search_special_achievements(app, cont['object-item-id'], cont_obj, filter_meta)
+                    if not special_achiev_list:
+                        continue
+                    for sub_list in special_achiev_list:
+                        last_attach = ReportGenerator.ReportGeneratorCollector.search_last_attachment(app, cont['object-item-id'])
+                        # last attachment?
+                        sub_list.append(title)
+                        sub_list.append(last_attach)
+                        sub_list.append(categories)
+                        search_list.append(sub_list)
             return search_list
 
 
@@ -429,17 +454,71 @@ class ReportGenerator(object):
                 full_sub_cont_last = json.load(file)
 
             data = hippod.api_object_get_detail.get_last_achievement_data(app, sha_major, latest_sha_minor, full_sub_cont_last)
-            print(sha_major)
-            print(latest_sha_minor)
             ret_list.append(data['id'])
             return ret_list
+
+
+        @staticmethod
+        def search_special_achievements(app, sha_major, cont_obj, filter_meta):
+            ret_list = list()
+            if 'anchors' in filter_meta:
+                anchors_filter = filter_meta['anchors']
+            if 'submitter' in filter_meta:
+                submitter_filter = filter_meta['submitter']
+            # FIXME: multiple entries shouldn't be in the ret_list!
+            for sub_cont in cont_obj['subcontainer-list']:
+                sub_ret_list = list()
+                sha_minor = sub_cont['sha-minor']
+                ok, full_sub_cont = hippod.api_shared.read_subcont_obj_by_id(app, sha_major, sha_minor)
+                achievements = full_sub_cont['achievements']
+                achievement_data_list = hippod.api_object_get_full.get_all_achievement_data(app, sha_major, sha_minor, full_sub_cont)
+                for achievement in achievement_data_list:
+                    sub_ret_list1 = list()
+                    submitter = achievement['submitter']
+                    if 'anchors' in filter_meta and 'submitter' in filter_meta:
+                        if 'anchor' in achievement:
+                            anchor = achievement['anchor']
+                            if submitter in submitter_filter and anchor in anchors_filter:
+                                sub_ret_list1.append(sha_major)
+                                sub_ret_list1.append(sha_minor)
+                                sub_ret_list1.append(str(achievement['id']))
+                            else:
+                                continue
+                        else:
+                            continue
+                    elif 'anchors' in filter_meta:
+                        if 'anchor' in achievement:
+                            anchor = achievement['anchor']
+                            if anchor in anchors_filter:
+                                sub_ret_list1.append(sha_major)
+                                sub_ret_list1.append(sha_minor)
+                                sub_ret_list1.append(str(achievement['id']))
+                            else:
+                                continue
+                        else:
+                            continue
+                    elif 'submitter' in filter_meta and submitter in submitter_filter:
+                        sub_ret_list1.append(sha_major)
+                        sub_ret_list1.append(sha_minor)
+                        sub_ret_list1.append(str(achievement['id']))
+                    else:
+                        continue
+                    sub_ret_list.append(sub_ret_list1)
+                for sub in sub_ret_list:
+                    ret_list.append(sub)
+            return ret_list
+
+
+        @staticmethod
+        def search_anchored_achievements(app, sha_major, cont_obj):
+            pass
 
 
         @staticmethod
         def search_last_attachment(app, sha_major):
             obj_path = os.path.join(app['DB_OBJECT_PATH'])
             attach_path = os.path.join(obj_path, sha_major[0:2], sha_major, 'attachments')
-            attach_list = os.listdir(attach_path)
-            last_attach = attach_list[0]
-            # last_attach = max([f for f in os.listdir(attach_path)], key=os.path.getctime)
+            attach_files = os.path.join(attach_path, '*')
+            attach_list = glob.glob(attach_files)
+            last_attach = max(attach_list, key=os.path.getctime)
             return last_attach
