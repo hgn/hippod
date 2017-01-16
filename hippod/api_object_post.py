@@ -8,6 +8,7 @@ import inspect
 import time
 import zlib
 import sys
+import logging
 
 import aiohttp
 import asyncio
@@ -20,6 +21,8 @@ import hippod.mime_data_db
 import hippod.store_container
 
 from hippod.error_object import *
+
+log = logging.getLogger()
 
 
 
@@ -188,6 +191,8 @@ def update_attachment_achievement(app, sha_major, sha_minor, xobj):
         if type(xobj['attachment']) is not dict:
                 msg = "attachment data MUST be a dict - but isn't"
                 raise ApiError(msg)
+        if 'categories' in xobj['attachment']:
+            log.warning("Categories shouldn't be part of attachments, they belong to object-item")
 
         current_attachments = data['attachments']
         current_attachments_no = len(current_attachments)
