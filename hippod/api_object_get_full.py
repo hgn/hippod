@@ -78,6 +78,7 @@ def container_obj_to_ret_obj(app, sha_major, sha_minor, cont_obj):
 
     ret_obj['object-item'] = dict()
     ret_obj['object-item']['title'] = cont_obj['title']
+    ret_obj['object-item']['categories'] = cont_obj['categories']
     if len(cont_obj['subcontainer-list']) > 1:
         ret_obj['conflict'] = True
     for i,v in enumerate(cont_obj['subcontainer-list']):
