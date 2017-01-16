@@ -134,7 +134,8 @@ class ReportGenerator(object):
                 file.write(description)
 
 
-        def add_achievement(self, description_path, achievement_path, title, achievement_data, attachment_path):
+        def add_achievement(self, description_path, achievement_path, title, \
+                            achievement_data, attachment_path, categories):
             attach_content = self.get_attachment_content(attachment_path)
             achievement_content = self.get_achievement_content(achievement_path)
             if description_path == None:
@@ -145,8 +146,8 @@ class ReportGenerator(object):
                 result = achievement_content['result']
                 submitter = achievement_content['submitter']
                 test_date = achievement_content['test-date']
-                categories = "FIXME"
-                responsible = "FIXME"
+                categories = categories
+                responsible = attach_content['responsible']
 
                 with open(description_path, 'w') as file:
                     description  = '# {} #\n\n'.format(title)
@@ -165,7 +166,7 @@ class ReportGenerator(object):
                 result = achievement_content['result']
                 submitter = achievement_content['submitter']
                 test_date = achievement_content['test-date']
-                categories = "FIXME"
+                categories = categories
                 responsible = attach_content['responsible']
 
                 with open(description_path, 'r') as file:
@@ -253,7 +254,6 @@ class ReportGenerator(object):
         def store_data_in_tmp(self, app):
             db_path = app['DB_OBJECT_PATH']
             files_catalog = dict()
-            print(self.list_of_lists)
             for j, item in enumerate(self.list_of_lists):
                 sub_dir = os.path.join(self.tmp_path, 'item{}'.format(j))
                 files_catalog[sub_dir] = dict()
@@ -266,9 +266,11 @@ class ReportGenerator(object):
                 achievement_id = item[2]
                 title = item[3]
                 last_attachment = item[4]
+                categories = item[5]
 
 
                 files_catalog[sub_dir]['title'] = title
+                files_catalog[sub_dir]['categories'] = categories
                 
                 subcontainer = os.path.join(db_path, sha_major[0:2], sha_major, sha_minor, 'subcontainer.db')
                 achievement = os.path.join(db_path, sha_major[0:2], sha_major, sha_minor, 'achievements', '{}.db'.format(achievement_id))
@@ -316,6 +318,7 @@ class ReportGenerator(object):
             sub_reports = list()
             for key, item in tmp_data.items():
                 title = item['title']
+                categories = item['categories']
                 achievement_data = item['data']['achievements']
                 attachment_path = item['attachment']
                 counter = 0
@@ -327,13 +330,15 @@ class ReportGenerator(object):
                         description_path = d
                         if 'achievement' in item:
                             achievement_path = item['achievement']
-                            self.add_achievement(description_path, achievement_path, title, achievement_data, attachment_path)
+                            self.add_achievement(description_path, achievement_path, title, \
+                                                achievement_data, attachment_path, categories)
                         counter = 0
                     # if no '.md' found --> use at least title and test result for the report
                     elif counter == len(item['data']['subcontainer']):
                         if 'achievement' in item:
                             achievement_path = item['achievement']
-                            description_path = self.add_achievement(None, achievement_path, title, achievement_data, attachment_path)
+                            description_path = self.add_achievement(None, achievement_path, title, \
+                                                    achievement_data, attachment_path, categories)
                     else:
                         continue
                 for d in item['data']['subcontainer']:
@@ -353,7 +358,8 @@ class ReportGenerator(object):
                         self.add_data(description_path, attach_path)
                 if len(item['data']['subcontainer']) == 0:
                     achievement_path = item['achievement']
-                    description_path = self.add_achievement(None, achievement_path, title, achievement_data, attachment_path)
+                    description_path = self.add_achievement(None, achievement_path, title, \
+                                            achievement_data, attachment_path, categories)
                 sub_reports.append(description_path)
             for i in range(len(sub_reports) - 1):
                     with open(sub_reports[i+1], 'r') as file2:
@@ -391,11 +397,13 @@ class ReportGenerator(object):
                 if not ok:
                     continue # what if? ---> no raise ApiError possible
                 title = cont_obj['title']
+                categories = cont_obj['categories']
                 if filter_type == ReportGenerator.LAST_ACHIEVEMENTS:
                     last_achiev_list = ReportGenerator.ReportGeneratorCollector.search_last_achievements(app, cont['object-item-id'], cont_obj)
                     last_attach = ReportGenerator.ReportGeneratorCollector.search_last_attachment(app, cont['object-item-id'])
                     last_achiev_list.append(title)
                     last_achiev_list.append(last_attach)
+                    last_achiev_list.append(categories)
                     search_list.append(last_achiev_list)
                 elif filter_type == ReportGenerator.FILTER_BY_ANCHOR:
                     ReportGenerator.ReportGeneratorCollector.search_anchored_achievements(app, cont['object-item-id'], cont_obj)
@@ -408,6 +416,7 @@ class ReportGenerator(object):
                         # last attachment?
                         sub_list.append(title)
                         sub_list.append(last_attach)
+                        sub_list.append(categories)
                         search_list.append(sub_list)
             return search_list
 
@@ -445,8 +454,6 @@ class ReportGenerator(object):
                 full_sub_cont_last = json.load(file)
 
             data = hippod.api_object_get_detail.get_last_achievement_data(app, sha_major, latest_sha_minor, full_sub_cont_last)
-            print(sha_major)
-            print(latest_sha_minor)
             ret_list.append(data['id'])
             return ret_list
 
