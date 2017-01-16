@@ -1,4 +1,4 @@
-\documentclass[11pt,german,titlepage]{scrbook}
+\documentclass[10pt,german,a4,titlepage]{scrbook}
 \usepackage[T1]{fontenc}
 \usepackage{textcomp}
 \usepackage{lmodern}
@@ -9,6 +9,11 @@
 \usepackage{tocloft}
 \usepackage{avant}
 \usepackage{helvet}
+
+% less margin, see the following link for some tips how
+% to make it right: https://de.sharelatex.com/learn/Page_size_and_margins
+\usepackage[top=0.5in, bottom=1in, left=1in, right=1in]{geometry}
+
 % use microtype if available
 \IfFileExists{microtype.sty}{\usepackage{microtype}}{}
 % use upquote if available, for straight quotes in verbatim environments
@@ -112,14 +117,36 @@ $for(header-includes)$
 $header-includes$
 $endfor$
 
+% do not add a page break after a chapter
+\makeatletter
+\renewcommand\chapter{\thispagestyle{plain}%
+\global\@topnum\z@
+\@afterindentfalse
+\secdef\@chapter\@schapter}
+\makeatother 
+
 \makeindex
 
 \providecommand{\tightlist}{%
 \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
 
 
-\definecolor{titlepagecolor}{cmyk}{1.0,0.60,0.0,0.40}
+\definecolor{titlepagecolor}{cmyk}{1.0,0.27,0.0,0.06}
+\definecolor{chaptercolor}{cmyk}{1.0,0.24,0.0,0.25}
 \definecolor{namecolor}{cmyk}{1,.50,0,.10}
+
+\usepackage{titlesec}
+\titleformat{\chapter}[display]
+%  {\normalfont\sffamily\huge\color{namecolor}}
+%  {\thechapter}{20pt}{\Large}
+   {\Large\normalfont\sffamily}
+   {}
+   {0pt}
+   {\normalfont\sffamily\huge\color{namecolor}}
+\titleformat{\section}
+  {\normalfont\sffamily\Large\color{namecolor}}
+  {\thesection}{1em}{}
+
 
 \usepackage{fontspec}
 \usepackage{helvet}
