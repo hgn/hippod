@@ -47,7 +47,7 @@ def all_referenced_mime_ids(app):
     for container in object_index_data:
         ok, cont_obj = hippod.api_shared.read_cont_obj_by_id(app, container['object-item-id'])
         if not ok:
-            log.error("cannot read container {} by sha, ignore for now".format(container['object-item-id']))
+            log.error("cannot read container {} by sha, ignore for now")
             continue
         ref_container_list = check_container(app, cont_obj)
         for reference in ref_container_list:
