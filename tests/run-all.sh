@@ -11,7 +11,7 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 for i in "${TEST[@]}"; do
     echo -n "$i.. "
-    rm -rf /tmp/hippod-db
+    rm -rf /tmp/hippod
     $DIR/../run.py -f $DIR/../assets/hippod-configuration.json 1>/dev/null 2>&1 &
     disown
     pid=$!
@@ -22,7 +22,7 @@ done
 
 for j in "${TEST2[@]}"; do
     echo -n "$j.. "
-    rm -rf /tmp/hippod-db
+    rm -rf /tmp/hippod
     $DIR/../run.py -f $DIR/../assets/hippod-configuration.json 1>/dev/null 2>&1 &
     disown
     pid=$!
