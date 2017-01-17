@@ -28,7 +28,7 @@ class ReportGenerator(object):
         if not os.path.isdir(tmp_path):
             os.mkdir(tmp_path)
         list_of_lists = ReportGenerator.ReportGeneratorCollector.search(app, report_filter, report_meta)
-        date = str(datetime.datetime.now().replace(second=0, microsecond=0))
+        date = str(datetime.datetime.now().replace(second=0, microsecond=0).isoformat(sep='-'))
         doc_name = '{}-report.pdf'.format(date)
         pdf_out_path = os.path.join(reports_path, doc_name)
         rpd = ReportGenerator.ReportGeneratorDocument(list_of_lists, tmp_path)
