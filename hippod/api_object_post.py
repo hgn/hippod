@@ -303,6 +303,10 @@ def try_adding_xobject(app, xobj):
     if 'object-item' in xobj:
         # calculate the ID now
         sha_major, sha_minor = hippod.hasher.check_sum_object_issue(xobj['object-item'])
+
+    if type(xobj['achievements']) is not list or len(xobj['achievements']) == 0:
+                msg = "achievements data MUST be a list - but isn't or is empty"
+                raise ApiError(msg)
     else:
         msg = "Need at least a Full Object Item or Object Item ID"
         raise ApiError(msg)
