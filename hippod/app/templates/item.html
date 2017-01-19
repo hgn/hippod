@@ -32,9 +32,18 @@
 								<span class="glyphicon glyphicon-file"></span>
 								{{ attachments['name'] }} ({{ attachments['size-real'] }} byte)
 								<span class="pull-right">
-									<a ng-href="api/v1/data/{{ attachments['data-id'] }}" class="btn btn-xs" role="button">
-										<span class="glyphicon glyphicon-download"></span>
-									</a>
+								<div ng-switch on="attachments.type">
+									<div ng-switch-when="undefined">
+										<a ng-href="api/v1/data/{{ attachments['data-id'] }}" class="btn btn-xs" role="button">
+											<span class="glyphicon glyphicon-download"></span>
+										</a>
+									</div>
+									<div ng-switch-default>
+										<a ng-href="api/v1/data-snippet/{{ attachments['data-id'] }}" class="btn btn-xs" role="button">
+											<span class="glyphicon glyphicon-download"></span>
+										</a>
+									</div>
+								</div>
 								</span>
 							</li>
 							</a>

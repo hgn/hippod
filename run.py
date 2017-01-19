@@ -65,6 +65,11 @@ def check_db_environmet(app, path):
     if not os.path.isdir(obj_path):
         os.makedirs(obj_path)
 
+    obj_path = os.path.join(path, 'snippets')
+    app['DB_SNIPPET_PATH'] = obj_path
+    if not os.path.isdir(obj_path):
+        os.makedirs(obj_path)
+
     obj_path = os.path.join(path, 'statistics.db')
     app['DB_STATISTICS_FILEPATH'] = obj_path
     if not os.path.isfile(obj_path):
@@ -126,6 +131,9 @@ def setup_routes(app, conf):
     app.router.add_route('*',
                         '/api/v1/data/{sha_sum}',
                         api_data_get.handle)
+    app.router.add_route('*',
+                        '/api/v1/data-snippet/{sha_sum}',
+                        api_data_get.handle_snippet)
     app.router.add_route('POST',
                         '/api/v1/report',
                         api_report.handle)
