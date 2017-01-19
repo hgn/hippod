@@ -33,10 +33,19 @@ def pprnt(data):
 
 def random_image():
     scrip_path = os.path.dirname(os.path.realpath(__file__))
-    image_path = os.path.join(scrip_path, 'data', 'image2.jpg')
+    image_path = os.path.join(scrip_path, 'data', 'plot.png')
     with open(image_path, "rb") as f:
         content = f.read()
         return base64.b64encode(content)
+
+
+def encode_snippet():
+    script_path = os.path.dirname(os.path.realpath(__file__))
+    snippet_path = os.path.join(script_path, 'data', 'snippet.py')
+    with open(snippet_path, "rb") as f:
+        content = f.read()
+        return base64.b64encode(content)
+
 
 def random_id():
     return str(uuid.uuid4())[0:5]
@@ -164,27 +173,26 @@ after maintainable products.
         img_data['data'] = "R0lGODlhDwAPAKECAAAAzxzM/////wAAACwAAAAADwAPAAACIISPeQHsrZ5ModrLlN48CXF8m2iQ3YmmKqVlRtW4MLwWACH+H09wdGltaXplZCBieSBVbGVhZCBTbWFydFNhdmVyIQAAOw=="
         data['object-item']['data'].append(img_data)
 
+        snippet_data = dict()
+        snippet_data['name'] = 'snippet.py'
+        snippet_data['image-name'] = None
+        # how name for snippet-image implement?
+        # snippet_data['image-name'] = None
+        snippet_data['mime-type'] = 'x-snippet-python-matlplotlib-png'
+        snippet_data['data'] = encode_snippet().decode('utf-8')
+        data['object-item']['data'].append(snippet_data)
+
         data["attachment"] = dict()
         data["attachment"]['references'] = [ "doors:234236", "your-tool:4391843" ]
         data["attachment"]['tags'] = [ "ip", "route", "cache", "performance" ]
-        data["attachment"]['responsible'] = data["submitter"]
+        data["attachment"]['responsible'] = random_submitter()
 
-        achievement = dict()
-        achievement["test-date"] = datetime.datetime.now().isoformat('T')
-        achievement["result"] = random_result()
 
         # 1/4 of all achievements are anchored
-        if random.randint(0, 3) == 0:
-            achievement["anchor"] = random_id()
 
         # add data entry to achievement, can be everything
         # starting from images, over log files to pcap files, ...
-        achievement['data'] = list()
-        log_data = dict()
-        log_data['name'] = 'result-trace.pcap'
-        log_data['mime-type'] = 'application/vnd.tcpdump.pcap'
-        log_data['data'] = "R0lGODlhDwAPAKECAAABzMzM/////wAAACwAAAAADwAPAAACIISPeQHsrZ5ModrLlN48CXF8m2iQ3YmmKqVlRtW4MLwWACH+H09wdGltaXplZCBieSBVbGVhZCBTbWFydFNhdmVyIQAAOw=="
-        achievement['data'].append(log_data)
+        
 
         if random.randint(0, 3) == 0:
             variety = dict()
@@ -193,7 +201,6 @@ after maintainable products.
             achievement["variety"] = variety
 
         data["achievements"] = list()
-        data["achievements"].append(achievement)
 
         #os.system('cls' if os.name == 'nt' else 'clear')
         print("New Data:\n-----------\n")
@@ -236,7 +243,7 @@ after maintainable products.
 
 
 if __name__ == '__main__':
-    status = add_n(100)
+    status = add_n(1)
     if status==200:
         print("OK")
     else:

@@ -66,11 +66,15 @@ hippoD.factory('DBService', function($http) {
                                      var entry = {};
                                      entry['name'] = item_data[i]['name'];
                                      //entry['size-real'] = item_data[i]['size-real'];
+                                     if ('type' in item_data[i]) {
+                                        entry['type'] = item_data[i]['type'];
+                                    } else {
+                                        entry['type'] = 'undefined'
+                                    }
                                      entry['data-id'] = item_data[i]['data-id'];
                                      attachments.push(entry);
                                  }
                              }
-
                             response.data.data['__attachments'] = attachments;
 
                              // fetch description
@@ -188,7 +192,7 @@ hippoD.factory('AchievementService', function($http) {
                  return promise;
         },
 
-    getAttachment:  function(id, sub_id){
+    getAttachment:  function(id, sub_id, achiev_id){
                  var obj = {};
                  var promise = $http(
                          {
@@ -204,12 +208,17 @@ hippoD.factory('AchievementService', function($http) {
                              var achievements = response.data.data['object-achievements'];
                              //for (var i = 0; i < achievements.length; i++) {
                              //}
-                             var item_data = subcontainer[requested_index]['object-item']['data'];
+                             var item_data = subcontainer[requested_index]['object-achievements'][achiev_id]['data'];
                              var attachments = new Array();
                              for (var i = 0; i < item_data.length; i++) {
                                  if (item_data[i]['type'] !== 'description') {
                                      var entry = {};
                                      entry['name'] = item_data[i]['name'];
+                                     if ('type' in item_data[i]) {
+                                        entry['type'] = item_data[i]['type'];
+                                    } else {
+                                        entry['type'] = 'undefined'
+                                    }
                                      entry['data-id'] = item_data[i]['data-id'];
                                      attachments.push(entry);
                                  }

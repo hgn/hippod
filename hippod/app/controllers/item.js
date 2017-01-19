@@ -147,7 +147,6 @@ function updateVaritiesData(res) {
         }
 
         $scope.varieties = var_data;
-        console.log($scope.varieties)
     });
 };
 
@@ -192,7 +191,6 @@ DBService.getFoo($scope.id, $scope.sub_id).then(function(res) {
     $scope.conflict = res['conflict'];
     $scope.latest_index = res['latest_index'];
     $scope.index = res['requested-index']
-    console.log($scope.index)
 });
 
 $scope.graphTestResultOptions = {

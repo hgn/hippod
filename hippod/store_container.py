@@ -38,6 +38,8 @@ def create_container_data_merge_issue_new(app, sha_major, sha_minor, object_item
 
 # init token reflects whether first subcontainer created or not
 def create_subcontainer_data_merge_issue_new(app, sha_major, sha_minor, object_item):
+    obj_path = os.path.join(app['DB_OBJECT_PATH'])
+    path = os.path.join(obj_path, sha_major[0:2], sha_major, sha_minor, 'subcontainer.db')
     date = datetime.datetime.now().isoformat('T')
     obj_root_path = app['DB_OBJECT_PATH']
     cntr_path = os.path.join(obj_root_path, sha_major[0:2], sha_major, 'container.db')
@@ -51,7 +53,7 @@ def create_subcontainer_data_merge_issue_new(app, sha_major, sha_minor, object_i
         # for i, v in enumerate(d_sub['object-item']['data']):
         #     if 'size-real' in d_sub['object-item']['data'][i]:
         #         del d_sub['object-item']['data'][i]['size-real']
-    hippod.mime_data_db.save_object_item_data_list(app, object_item['object-item'])
+    hippod.mime_data_db.save_object_item_data_list(app, object_item['object-item'], path, 'subcontainer')
     
     return json.dumps(d_sub, sort_keys=True,indent=4, separators=(',', ': '))
 

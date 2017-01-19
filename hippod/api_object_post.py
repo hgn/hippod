@@ -98,9 +98,12 @@ def write_subcont_obj_by_id(app, sha_major, sha_minor, py_object):
 
 
 def write_achievement_file(app, sha_major, sha_minor, id_no, achievement):
+    obj_path = os.path.join(app['DB_OBJECT_PATH'])
+    path = os.path.join(obj_path, sha_major[0:2], sha_major, sha_minor, 'achievements',
+                         '{}.db'.format(str(id_no)))
     # swap out data if mime types say so and modify
     # achievement inplace to reflect changes
-    hippod.mime_data_db.save_object_item_data_list(app, achievement)
+    hippod.mime_data_db.save_object_item_data_list(app, achievement, path, 'achievement')
 
     path = os.path.join(app['DB_OBJECT_PATH'],
                         sha_major[0:2],
@@ -297,9 +300,14 @@ def try_adding_xobject(app, xobj):
               " or object-item-id given"
         raise ApiError(msg)
 
+    if type(xobj['achievements']) is not list or len(xobj['achievements']) == 0:
+        msg = "achievements data MUST be a list - but isn't or is empty"
+        raise ApiError(msg)
+
     if 'object-item' in xobj:
         # calculate the ID now
         sha_major, sha_minor = hippod.hasher.check_sum_object_issue(xobj['object-item'])
+
     else:
         msg = "Need at least a Full Object Item or Object Item ID"
         raise ApiError(msg)

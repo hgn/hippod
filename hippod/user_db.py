@@ -164,6 +164,7 @@ class UserDB:
                     msg = msg.format(username, data)
                     raise ApiError(msg)
                 self._local_ldap_db_add_entry(data, username)
+                data_local_ldap = data
             return data_local_ldap
         if not data_local_db and not self.ldap_method:
             msg = "user {} not known in local user database. Please add" \

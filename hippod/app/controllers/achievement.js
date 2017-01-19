@@ -11,18 +11,17 @@ hippoD.controller("AchievementCtrl", function ($scope, $stateParams, Achievement
         $scope.data = res.data.data.data;
         var data = $scope.data;
         var data_ids = get_data_id(data);
-        var types = get_type(data);
-        var shown_data = check_data_types(types);
+        var formats = get_format(data);
+        var shown_data = check_data_types(formats);
         $scope.data_ids_scope = sanitize_ids(data_ids, shown_data);
-        $scope.types_scope = sanitize_types(types, shown_data);
+        $scope.types_scope = sanitize_formats(formats, shown_data);
     })
 
-    AchievementService.getAttachment($scope.id, $scope.sub_id).then(function(res){
+    AchievementService.getAttachment($scope.id, $scope.sub_id, $scope.achievement).then(function(res){
         $scope.data_attach = res;
-        console.log(res)
     })
 
-    function get_type(data) {
+    function get_format(data) {
         var extensions = new Array();
         for (var i=0; i < data.length; i++){
             var filename = data[i]['name'];
@@ -36,15 +35,17 @@ hippoD.controller("AchievementCtrl", function ($scope, $stateParams, Achievement
         var data_ids = new Array();
         for (var i=0; i < data.length; i++){
             var data_id = data[i]['data-id'];
-            data_ids.push(data_id)
+            var type = data[i]['type']
+            data_ids.push({'data-id': data_id,
+                            'type': type });
         }
         return data_ids
     }
 
-    function check_data_types(types){
+    function check_data_types(formats){
         var shown_data = new Array()
-        for (var i=0; i < types.length; i++){
-            switch(types[i]){
+        for (var i=0; i < formats.length; i++){
+            switch(formats[i]){
                 case 'png':
                     shown_data.push(true);
                     break;
@@ -68,19 +69,20 @@ hippoD.controller("AchievementCtrl", function ($scope, $stateParams, Achievement
         var sanitized_ids = new Array()
         for(var i=0; i < data_ids.length; i++){
             if (shown_data[i] == true){
-                sanitized_ids.push(data_ids[i])
+                sanitized_ids.push({'data-id': data_ids[i]['data-id'],
+                                    'type': data_ids[i]['type'] })
             }
         }
         return sanitized_ids
     }
 
-    function sanitize_types(types, shown_data) {
-        var sanitized_types = new Array()
-        for(var i=0; i < types.length; i++){
+    function sanitize_formats(formats, shown_data) {
+        var sanitized_formats = new Array()
+        for(var i=0; i < formats.length; i++){
             if (shown_data[i] == true){
-                sanitized_types.push(types[i])
+                sanitized_formats.push(formats[i])
             }
         }
-        return sanitized_types
+        return sanitized_formats
     }
 });
