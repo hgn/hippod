@@ -18,7 +18,7 @@ log = logging.getLogger()
 class ReportGenerator(object):
     LAST_ACHIEVEMENTS = 1
     FILTER_BY_ANCHOR = 2
-    FILTER_BY_SPECIAL = 3
+    FILTER_BY_CHOICE = 3
     PDF = 4
 
     @staticmethod
@@ -49,6 +49,8 @@ class ReportGenerator(object):
 
         def store_data(self, app, data, sub_dir):
             src_path = os.path.join(app['DB_DATA_PATH'], data['data-id'], 'blob.bin')
+            # FIXME: hardcoded {}.png format!
+            src_path_snippet = os.path.join(app['DB_SNIPPET_PATH'], '{}.png'.format(data['data-id']))
             if not os.path.isdir(sub_dir):
                 os.mkdir(sub_dir)
             # check whether data is a image or description
@@ -78,10 +80,17 @@ class ReportGenerator(object):
                     file.write(decoded)
                 with open(dst_path, 'wb') as dst:
                     shutil.copyfile(src_path, dst_path)
-            else:
+            elif data['type'] == 'description':
                 dst_path = os.path.join(sub_dir, 'description.md')
                 with open(dst_path, 'wb') as dst:
                     shutil.copyfile(src_path, dst_path)
+            else:
+                name = data['name']
+                # head, tail = os.path.split(data['name'])
+                # name, data_type = os.path.split(tail)
+                dst_path = os.path.join(sub_dir, name)
+                with open(dst_path, 'wb') as dst:
+                    shutil.copyfile(src_path_snippet, dst_path)
             return dst_path
 
         def store_achievement(self, app, achievement_path, sub_dir):
@@ -371,7 +380,7 @@ class ReportGenerator(object):
                         file1.write(description1)
             # FIXME, need arguments
             self._pandoc_generate(app, sub_reports[0], pdf_out_path)
-            # shutil.rmtree(self.tmp_path)
+            shutil.rmtree(self.tmp_path)
 
 
 
@@ -407,11 +416,11 @@ class ReportGenerator(object):
                     search_list.append(last_achiev_list)
                 elif filter_type == ReportGenerator.FILTER_BY_ANCHOR:
                     ReportGenerator.ReportGeneratorCollector.search_anchored_achievements(app, cont['object-item-id'], cont_obj)
-                elif filter_type == ReportGenerator.FILTER_BY_SPECIAL:
-                    special_achiev_list = ReportGenerator.ReportGeneratorCollector.search_special_achievements(app, cont['object-item-id'], cont_obj, filter_meta)
-                    if not special_achiev_list:
+                elif filter_type == ReportGenerator.FILTER_BY_CHOICE:
+                    choiced_achiev_list = ReportGenerator.ReportGeneratorCollector.search_choiced_achievements(app, cont['object-item-id'], cont_obj, filter_meta)
+                    if not choiced_achiev_list:
                         continue
-                    for sub_list in special_achiev_list:
+                    for sub_list in choiced_achiev_list:
                         last_attach = ReportGenerator.ReportGeneratorCollector.search_last_attachment(app, cont['object-item-id'])
                         # last attachment?
                         sub_list.append(title)
@@ -459,7 +468,7 @@ class ReportGenerator(object):
 
 
         @staticmethod
-        def search_special_achievements(app, sha_major, cont_obj, filter_meta):
+        def search_choiced_achievements(app, sha_major, cont_obj, filter_meta):
             ret_list = list()
             if 'anchors' in filter_meta:
                 anchors_filter = filter_meta['anchors']
