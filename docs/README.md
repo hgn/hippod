@@ -1,29 +1,29 @@
 
 # Problem Statement
 
-Larger software projects often utilizes many different test systems. Each test
-system/product comes with it own reporting tool making it difficult to get an
+Larger software projects often utilize many different test systems. Each test
+system/product comes with its own reporting tool, making it difficult to get an
 unified view across this heterogeneous test landscape for specific software
-versions. With Hippod tests are still executed with your current best suited
-tools. Hippod collects, harmonize & manage your tests!
+versions. With Hippod tests are still executed with your currently best suited
+tools. Hippod collects, harmonizes & manages your tests!
 
 ![alt text](images/hippod-test-system-interaction.png "Architecture")
 
 # Features
 
-- **Simplicity**, number one design decision was that interaction with hippod are
+- **Simplicity**, number one design decision was that interactions with hippod are
 	nearly invisible. You even need no unique test number, a title & category are
 	enough.
-- **Traceability**, unlike any known test system Hippod identify tests based on
-	the content, not on "unique numbers". If a test change, e.g. a variable in
-	the test change, hippod detects this. If a test is stored in hippod you will
-	exactly know what the test was including the exact test environment and used
+- **Traceability**, unlike any known test system Hippod identifies tests based on
+	the content, not on "unique numbers". If a test changes, e.g. a variable in
+	the test, hippod detects this. If a test is stored in hippod you will
+	exactly know what the test was, including the exact test environment and used
 	source code. See more in the Traceability section.
-- **Manageable**, manage test databases is cumbersome. Outdated & invalid tests
-	still in the database requires human ressourcs. Hippod inculded gardbage
-	mechanism try to remove outdated entries automatically.
+- **Manageable**, managing test databases is cumbersome. Outdated & invalid tests
+	still in the database requires human ressourcs. Hippod includes a garbage
+	mechanism, trying to remove outdated entries automatically.
 - **Scalability**, larger test systems can contain thousands of tests. Hippod
-	was designed with this requirement in mind. Where possible the complexity of
+	was designed with this requirement in mind. Where possible, the complexity of
 	algorithms was designed to be O(1) - so running in constant time no matter
 	how many entries are in the database.
 - **Powerful export capabilities**, the integrated web-gui is the management
@@ -33,27 +33,27 @@ tools. Hippod collects, harmonize & manage your tests!
 
 # Traceability
 
-Traceability, trust & non-modifiable results are one of the most important
+Traceability, trust & non-modifiable results are some of the most important
 characteristics of a test database. If you cannot connect a given test result
-with a given test your data is pointless. Hippod provides mechanism to attach
+with a given test, your data is pointless. Hippod provides mechanisms to attach
 as much environment data as possible to uniquely identify a test. It is up to
-you what you decide what is important, some examples:
+you to you decide which is important. Some examples:
 
 - **Test scripts/program**, for example, for Unit Tests you want to attach the
 	complete Unit Test file. Even after years it is possible to check what
 	exactly was tested and how. This additional layer of traceability is unique
 	to Hippod.
-- **Test Environment**, e.g. if using a Simulator you want to attach specific
+- **Test Environment**, e.g. when using a Simulator you want to attach specific
 	version information. E.g. the simulation program version. Another example is
 	the Operating System version. For some test it indispensable to distinguish
 	between Windows and Linux (e.g. compiler tests). For Web Gui Tests the
-	Operating system do not interest so much, rather the Browser version is
+	Operating system is not of interest that much, rather the Browser version is
 	important here. Another example is hardware tests: if you test includes a
-	bunch of different hardware architectures you should account this too.
-- **Source Code**, sure, *what* software version was tested is
+	bunch of different hardware architectures, you should account this too.
+- **Source Code**, sure, *which* software version was tested is
 	important. This can be specified by specifying so called *anchors*.
 
-Hippod is really flexible and leave the decision to you what is important and
+Hippod is really flexible and leaves the decision to you what is important and
 what not.
 
 ## How Traceability Works
@@ -74,16 +74,16 @@ On a concrete example:
 [ "team:b", "web-gui", "portal" ]        <- web-gui but in the area of portal component
 ```
 
-The advantage in define categories in this way is an easy identifcation:
+The advantage in defining categories in this way is an easy identifcation:
 
 - which sub-system has good/bad test coverage?
 - which sub-system is frequently tested, which not?
-- actual status of test results (failed/passed) limited to sub-systems?
+- current status of test results (failed/passed) limited to sub-systems?
 - ...
 
 
 Hippod calculates a SHA1 sum over all provided information. The more
-information you provide about the test & test environment the tighter the
+information you provide about the test & test environment, the tighter the
 definition of a test.
 
 
@@ -91,8 +91,8 @@ definition of a test.
 
 Hippod speaks REST - so you can use your programming language of choice to feed
 Hippod with test data and results. If your test system is written in
-Python/Swift/Go with build-in HTTP/JSON support it is a trivial to connect your
-test-system and Hippod. If you use plain C you probably want to use one of our
+Python/Swift/Go with built-in HTTP/JSON support it is a trivial to connect your
+test-system and Hippod. If you use plain C, you probably want to use one of our
 existing Python based adapter.
 
 A minimal - but complete - example including title, description, category, tags
@@ -126,20 +126,20 @@ print("Result {}".format(r.json()))
 
 # What is a Test - Hippod Test Object Anatomy?
 
-Hippod tests are devided in three components, determines the structure of tests:
+Hippod tests are divided in three components, determining the structure of tests:
 
 - Test Object
 - Test Attachments
 - Test Achievements
 
-Test objects determine the identifyable, unique part of tests. If values change
-here the test ID will change. Test Attachmanets are modifyable and enrich the
-test with additinal information. If test attachments change this do not change
-the test id. So attachments like *tags* or *responsible* can change at any time.
-Test achievements represent the test result (passed, failed, ...) and
+Test Objects determine the identifyable, unique part of tests. If values change
+here the test ID will change. Test Attachments are modifyable and enrich the
+test with additinal information. If Test Attachments change, this do not change
+the test ID. So attachments like *tags* or *responsible* can change at any time.
+Test Achievements represent the test result (passed, failed, ...) and
 additional information related to the particular test run. For example, if log
-files are generated or PCAP files captured this can be added to the test
-achievements.Each new test will add a new achievement and after 1000 test runs
+files are generated or PCAP files are captured, this can be added to the Test
+Achievements. Each new test will add a new achievement and after 1000 test runs
 a test will have 1000 achievements.
 
 Required attributes:
@@ -162,9 +162,9 @@ Optional attributes:
 # Requirement Engineering
 
 If a more formal process is required that Hippod provides the possibility to
-add Requirement information to tests. If a test failed, these formal
+add requirement information to tests. If a test failed, these formal
 requirements are not fulfilled. The requirements field is freely defineable and
-interact nicely with you Requirement System.
+interacts nicely with your requirement system.
 
 
 # Installation
