@@ -51,7 +51,7 @@ def random_result():
     return d[random.randint(0, len(d) - 1)]
 
 def random_submitter():
-    d = ['albi', 'isac43', 'tesla_driver', 'maryy', 'charlie']
+    d = ['john_doe']
     return d[random.randint(0, len(d) - 1)]
 
 def query_full(id, sub_id):
