@@ -98,9 +98,12 @@ def write_subcont_obj_by_id(app, sha_major, sha_minor, py_object):
 
 
 def write_achievement_file(app, sha_major, sha_minor, id_no, achievement):
+    obj_path = os.path.join(app['DB_OBJECT_PATH'])
+    path = os.path.join(obj_path, sha_major[0:2], sha_major, sha_minor, 'achievements',
+                         '{}.db'.format(str(id_no)))
     # swap out data if mime types say so and modify
     # achievement inplace to reflect changes
-    hippod.mime_data_db.save_object_item_data_list(app, achievement)
+    hippod.mime_data_db.save_object_item_data_list(app, achievement, path, 'achievement')
 
     path = os.path.join(app['DB_OBJECT_PATH'],
                         sha_major[0:2],

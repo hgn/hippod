@@ -10,6 +10,7 @@ import logging
 
 import hippod.hasher
 import hippod.api_shared
+import hippod.snippet_db
 
 from hippod.error_object import *
 
@@ -53,6 +54,15 @@ def get_data(app, sha_sum, decompress=None, encode_base64=False):
     raise ApiError(msg)
 
 
+def get_snippet_data(app, sha_sum, mimetype):
+    snippet_db = app['DB_SNIPPET_PATH']
+    d_type = mimetype.split('-')[-1]
+    image_path = os.path.join(snippet_db, '{}.{}'.format(sha_sum, d_type))
+    with open(image_path, 'rb') as f:
+        data = f.read()
+        return data
+    msg = "failed to open {}".format(obj_path)
+
 
 def is_compressable_size(data):
     # smaller files will not benefit from compression. The CPU overhead is not
@@ -90,6 +100,7 @@ def decode_and_compress(data):
 
 def decode_and_write_file(app, sha_sum, data, compress=False):
     size_stats = dict()
+    snippet_available = False
     path = app['DB_DATA_PATH']
     obj_path = os.path.join(path, sha_sum)
     if not os.path.isdir(obj_path):
@@ -108,7 +119,6 @@ def decode_and_write_file(app, sha_sum, data, compress=False):
         byte_array = data['data'].encode(encoding='UTF-8')
         bin_data = hippod.hasher.decode_base64_data(byte_array)
         size_real = len(bin_data)
-
     size_stats['size-stored'] = len(bin_data)
     size_stats['size-real'] = size_real
     hippod.statistic.update_mimetype_data_store(app,
@@ -131,7 +141,7 @@ def decode_and_write_file(app, sha_sum, data, compress=False):
     return d
 
 
-def save_object_item_data(app, data):
+def save_object_item_data(app, data, source_path, source_type):
     # we need at least some data now:
     # - mimetype
     # - name
@@ -147,9 +157,12 @@ def save_object_item_data(app, data):
         msg = "a data section is required at least: {}".format(str(data))
         raise ApiError(msg)
 
-
     # ok, data stuff
     sha = hippod.hasher.hash_data(data['data'])
+    if data['mime-type'].startswith('x-snippet'):
+        hippod.snippet_db.register_snippet(app, data, sha, source_path, source_type)
+        del data['image-name']
+
     compressable = False
     if is_compressable(data):
         compressable = True
@@ -161,11 +174,11 @@ def save_object_item_data(app, data):
     # data['size-real'] = attr_data['statistics']['size-real']
 
 
-def save_object_item_data_list(app, object_item):
+def save_object_item_data_list(app, object_item, source_path, source_type):
     if not 'data' in object_item:
         return
     for data in object_item['data']:
-        save_object_item_data(app, data)
+        save_object_item_data(app, data, source_path, source_type)
 
 
 def get_saved_data(app):
