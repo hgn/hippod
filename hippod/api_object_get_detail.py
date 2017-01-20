@@ -142,8 +142,6 @@ def get_latest_obj_by_achievement(app):
         full_list.append((sha_major, latest_achiev_date))
     full_list_sorted = sorted(full_list, key=lambda x: x[1])
     sha_majors, dates = zip(*full_list_sorted)
-    print(list(sha_majors))
-    print(dates)
     return list(sha_majors)
 
 
