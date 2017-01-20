@@ -136,6 +136,8 @@ hippoD.controller("ItemsCtrl", function ($scope, ItemService, $uibModal, $log, $
 					}
 
 					var test_date = new Date(value['object-achievements']['test-date']);
+					$scope.test_date_relative = humanRelativeDate(test_date)
+					$scope.test_date_rel_long = humanFormatDateYYYYMMDDHHMM(test_date)
 					if (!test_date_found_once) {
 						test_date_oldest = test_date;
 						test_date_youngest = test_date;

@@ -110,17 +110,17 @@ function humanRelativeDate(date) {
 					 prev_date.getUTCFullYear() + ")";
 	}
 
-	return prev_date.getUTCDate() + "-" +
-		     (prev_date.getUTCMonth() + 1) + "-" +
-				 prev_date.getUTCFullYear();
+	// return prev_date.getUTCDate() + "-" +
+	// 	     (prev_date.getUTCMonth() + 1) + "-" +
+	// 			 prev_date.getUTCFullYear();
 }
 
 function humanFormatDateYYYYMMDD(date) {
-	return humanRelativeDate(date) + " (" + formatDateYYYYMMDD(date) + ")";
+	return humanRelativeDate(date) + " - " + formatDateYYYYMMDD(date) ;
 }
 
 function humanFormatDateYYYYMMDDHHMM(date) {
-	return humanRelativeDate(date) + " (" + formatDateYYYYMMDDHHMM(date) + ")";
+	return humanRelativeDate(date) + " - " + formatDateYYYYMMDDHHMM(date);
 }
 
 Date.prototype.getWeek = function (dowOffset) {

@@ -26,24 +26,6 @@
 
           </div> <!-- col-sm-3 -->
 					<div class="col-sm-3">
-            Maturity Level<br>
-
-						<div class="btn-group" uib-dropdown>
-							<button id="single-button" type="button"
-																	class="btn btn-default" uib-dropdown-toggle
-								 ng-disabled="disabled">
-								{{maturity_button}} <span class="caret"></span>
-							</button>
-							<ul class="uib-dropdown-menu" role="menu" aria-labelledby="single-button">
-								<li role="menuitem">
-									<a href="#" ng-click="maturity_change(action)" ng-repeat="action in maturity_actions">{{action}}</a>
-								</li>
-							</ul>
-						</div>
-
-
-          </div> <!-- col-sm-3 -->
-					<div class="col-sm-3">
             Submitter<br>
 
 						<div class="btn-group" uib-dropdown>
@@ -163,7 +145,7 @@
 												<div class="achievements">
 													<b>Last Submitter:</b> {{ items['object-achievements']['submitter'] }}<br>
 													<b>Submitter Date:</b> {{ items['object-achievements']['date-added'] }}<br>
-													<b>Test Date:</b> {{ items['object-achievements']['test-date'] }}<br>
+													<b>Test Date:</b> {{ test_date_rel_long }}<br>
 													<b>Result:</b> {{ items['object-achievements']['test-result'] }}<br>
 													<div ng-switch on='items["conflict"]'>
 														<div ng-switch-when="true">
@@ -180,7 +162,6 @@
 													<b>References:</b> {{ items['object-attachment']['references'] }}<br>
 													<b>Responsible:</b> {{ items['object-attachment']['responsible'] }}<br>
 													<b>Tags:</b> {{ items['object-attachment']['tags'] }}<br>
-													<b>Maturity Level:</b> {{ items['maturity-level']['level'] }}<br>
 												</div>
 											</div>
 										</div>
@@ -203,7 +184,7 @@
 												<div class="achievements">
 													<b>Last Submitter:</b> {{ items['object-achievements']['submitter'] }}<br>
 													<b>Submitter Date:</b> {{ items['object-achievements']['date-added'] }}<br>
-													<b>Test Date:</b> {{ items['object-achievements']['test-date'] }}<br>
+													<b>Test Date:</b> {{ test_date_rel_long }}<br>
 													<b>Result:</b> {{ items['object-achievements']['test-result'] }}<br>
 													<div ng-switch on='items["conflict"]'>
 														<div ng-switch-when="true">
@@ -220,7 +201,6 @@
 													<b>References:</b> {{ items['object-attachment']['references'] }}<br>
 													<b>Responsible:</b> {{ items['object-attachment']['responsible'] }}<br>
 													<b>Tags:</b> {{ items['object-attachment']['tags'] }}<br>
-													<b>Maturity Level:</b> {{ items['maturity-level']['level'] }}<br>
 												</div>
 											</div>
 										</div>
@@ -242,7 +222,7 @@
 												<div class="achievements">
 													<b>Last Submitter:</b> {{ items['object-achievements']['submitter'] }}<br>
 													<b>Submitter Date:</b> {{ items['object-achievements']['date-added'] }}<br>
-													<b>Test Date:</b> {{ items['object-achievements']['test-date'] }}<br>
+													<b>Test Date:</b> {{ test_date_rel_long }}<br>
 													<b>Result:</b> {{ items['object-achievements']['test-result'] }}<br>
 													<div ng-switch on='items["conflict"]'>
 														<div ng-switch-when="true">
@@ -259,7 +239,6 @@
 													<b>References:</b> {{ items['object-attachment']['references'] }}<br>
 													<b>Responsible:</b> {{ items['object-attachment']['responsible'] }}<br>
 													<b>Tags:</b> {{ items['object-attachment']['tags'] }}<br>
-													<b>Maturity Level:</b> {{ items['maturity-level']['level'] }}<br>
 												</div>
 											</div>
 										</div>
@@ -282,7 +261,7 @@
 												<div class="achievements">
 													<b>Last Submitter:</b> {{ items['object-achievements']['submitter'] }}<br>
 													<b>Submitter Date:</b> {{ items['object-achievements']['date-added'] }}<br>
-													<b>Test Date:</b> {{ items['object-achievements']['test-date'] }}<br>
+													<b>Test Date:</b> {{ test_date_rel_long }}<br>
 													<b>Result:</b> {{ items['object-achievements']['test-result'] }}<br>
 													<div ng-switch on='items["conflict"]'>
 														<div ng-switch-when="true">
@@ -299,7 +278,6 @@
 													<b>References:</b> {{ items['object-attachment']['references'] }}<br>
 													<b>Responsible:</b> {{ items['object-attachment']['responsible'] }}<br>
 													<b>Tags:</b> {{ items['object-attachment']['tags'] }}<br>
-													<b>Maturity Level:</b> {{ items['maturity-level']['level'] }}<br>
 												</div>
 											</div>
 										</div>
@@ -328,7 +306,7 @@
 										<div style="clear: both;"></div>
 										<div class="header-seperator"></div>
 										<b>Last Submitter:</b> {{ items['object-achievements']['submitter'] }}<br>
-										<b>Date:</b> {{ items['object-achievements']['date-added'] }}<br>
+										<b>Date:</b> {{ test_date_relative }}<br>
 										<b>Result:</b> {{ items['object-achievements']['test-result'] }}<br>
 										<div ng-switch on='items["conflict"]'>
 														<div ng-switch-when="true">
@@ -350,7 +328,7 @@
 										<div style="clear: both;"></div>
 										<div class="header-seperator"></div>
 										<b>Last Submitter:</b> {{ items['object-achievements']['submitter'] }}<br>
-										<b>Date:</b> {{ items['object-achievements']['date-added'] }}<br>
+										<b>Date:</b> {{ test_date_relative }}<br>
 										<b>Result:</b> {{ items['object-achievements']['test-result'] }}<br>
 										<div ng-switch on='items["conflict"]'>
 														<div ng-switch-when="true">
@@ -372,7 +350,7 @@
 										<div style="clear: both;"></div>
 										<div class="header-seperator"></div>
 										<b>Last Submitter:</b> {{ items['object-achievements']['submitter'] }}<br>
-										<b>Date:</b> {{ items['object-achievements']['date-added'] }}<br>
+										<b>Date:</b> {{ test_date_relative }}<br>
 										<b>Result:</b> {{ items['object-achievements']['test-result'] }}<br>
 										<div ng-switch on='items["conflict"]'>
 														<div ng-switch-when="true">
@@ -394,7 +372,7 @@
 										<div style="clear: both;"></div>
 										<div class="header-seperator"></div>
 										<b>Last Submitter:</b> {{ items['object-achievements']['submitter'] }}<br>
-										<b>Date:</b> {{ items['object-achievements']['date-added'] }}<br>
+										<b>Date:</b> {{ test_date_relative }}<br>
 										<b>Result:</b> {{ items['object-achievements']['test-result'] }}<br>
 										<div ng-switch on='items["conflict"]'>
 														<div ng-switch-when="true">
