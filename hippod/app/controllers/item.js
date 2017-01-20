@@ -191,6 +191,8 @@ DBService.getFoo($scope.id, $scope.sub_id).then(function(res) {
     $scope.conflict = res['conflict'];
     $scope.latest_index = res['latest_index'];
     $scope.index = res['requested-index']
+    var lifetime = res['subcontainer'][$scope.index]['lifetime-leftover']
+    $scope.lifetime = secondsToRelativeLifetime(lifetime)
 });
 
 $scope.graphTestResultOptions = {

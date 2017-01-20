@@ -22,7 +22,7 @@ def create_container_data_merge_issue_new(app, sha_major, sha_minor, object_item
     d['subcontainer-list'] = list()
     sub_cntr_init = dict()
     sub_cntr_init['sha-minor'] = sha_minor
-    user_data = hippod.users.get(app, object_item['submitter'])
+    user_data = hippod.users.get(app, object_item['submitter'], 'submitter')
     sub_cntr_init['submitter'] = user_data[0]['fullname']
     sub_cntr_init['date-added'] = date
     d['subcontainer-list'].append(sub_cntr_init)
@@ -44,7 +44,7 @@ def create_subcontainer_data_merge_issue_new(app, sha_major, sha_minor, object_i
     obj_root_path = app['DB_OBJECT_PATH']
     cntr_path = os.path.join(obj_root_path, sha_major[0:2], sha_major, 'container.db')
     d_sub = dict()
-    user_data = hippod.users.get(app, object_item['submitter'])
+    user_data = hippod.users.get(app, object_item['submitter'], 'submitter')
     d_sub['submitter'] = user_data[0]['fullname']
     d_sub['achievements'] = []
     d_sub['object-item'] = dict()

@@ -138,7 +138,7 @@ def add_subcontainer_list(app, sha_major, sha_minor, submitter, date_added):
             cntr = json.load(file)
             new_sub_cntr = dict()
             new_sub_cntr['sha-minor'] = sha_minor
-            user_data = hippod.users.get(app, submitter)
+            user_data = hippod.users.get(app, submitter, 'submitter')
             new_sub_cntr['submitter'] = user_data[0]['fullname']
             new_sub_cntr['date-added'] = date
             cntr['subcontainer-list'].append(new_sub_cntr)
@@ -187,7 +187,7 @@ def update_attachment_achievement(app, sha_major, sha_minor, xobj):
         msg = "cannot read object although it is an update!?"
         raise ApiError(msg)
 
-    user_data = hippod.users.get(app, xobj['submitter'])
+    user_data = hippod.users.get(app, xobj['submitter'], 'submitter')
     submitter = user_data[0]['fullname']
 
     if 'attachment' in xobj:
@@ -206,7 +206,7 @@ def update_attachment_achievement(app, sha_major, sha_minor, xobj):
             new_attachment_meta['submitter'] = submitter
 
             current_attachments.append(new_attachment_meta)
-            user_data = hippod.users.get(app, xobj['attachment']['responsible'])
+            user_data = hippod.users.get(app, xobj['attachment']['responsible'], 'responsible')
             responsible = user_data[0]['fullname']
             xobj['attachment']['responsible'] = responsible
             write_attachment_file(app, sha_major, current_attachments_no, xobj['attachment'])
@@ -223,7 +223,7 @@ def update_attachment_achievement(app, sha_major, sha_minor, xobj):
                 new_attachment_meta['submitter'] = submitter
 
                 current_attachments.append(new_attachment_meta)
-                user_data = hippod.users.get(app, xobj['attachment']['responsible'])
+                user_data = hippod.users.get(app, xobj['attachment']['responsible'], 'responsible')
                 responsible = user_data[0]['fullname']
                 xobj['attachment']['responsible'] = responsible
                 write_attachment_file(app, sha_major, current_attachments_no, xobj['attachment'])

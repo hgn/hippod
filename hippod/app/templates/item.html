@@ -55,15 +55,6 @@
 					<div class="list-group">
 						<div class="list-group-item">
 							<h5 class="list-group-item-heading"><span class="glyphicon
-							glyphicon-info-sign" aria-hidden="true"></span>
-								Maturity:<br><br>
-						{{ data['maturity-level']['level'] }}</h5>
-						</div>
-					</div>
-
-					<div class="list-group">
-						<div class="list-group-item">
-							<h5 class="list-group-item-heading"><span class="glyphicon
 							glyphicon-tasks" aria-hidden="true"></span>
 								Category:<br><br>
 							<span ng-bind-html="categories | toHtmlSave : nil"></span>
@@ -103,6 +94,14 @@
 							<h5 class="list-group-item-heading"><span class="glyphicon
 							glyphicon-time" aria-hidden="true"></span> Added:<br><br>
 						{{ date_added }}</h5>
+						</div>
+					</div>
+
+					<div class="list-group">
+						<div class="list-group-item">
+							<h5 class="list-group-item-heading"><span class="glyphicon
+							glyphicon-time" aria-hidden="true"></span> 
+							Lifetime:<br><br> {{ lifetime }}</h5>
 						</div>
 					</div>
 

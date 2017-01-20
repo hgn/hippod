@@ -17,8 +17,8 @@ def load_data(path):
         return json.load(data_file)
 
 
-def filter_data(userdb, username):
-    data = userdb.query_user(username)
+def filter_data(userdb, username, kind):
+    data = userdb.query_user(username, kind)
     entry = dict()
     ret = list()
     # probably sensitive data, we opt-in here explicetly
@@ -39,6 +39,6 @@ def filter_data(userdb, username):
 
 
 
-def get(app, username):
+def get(app, username, kind):
     userdb = app['USER_DB']
-    return filter_data(userdb, username)
+    return filter_data(userdb, username, kind)

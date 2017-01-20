@@ -38,20 +38,11 @@ def random_image():
         content = f.read()
         return base64.b64encode(content)
 
-
-def encode_snippet(id):
-    script_path = os.path.dirname(os.path.realpath(__file__))
-    snippet_path = os.path.join(script_path, 'data', 'snippet{}.py'.format(id))
-    with open(snippet_path, "rb") as f:
-        content = f.read()
-        return base64.b64encode(content)
-
-
 def random_id():
     return str(uuid.uuid4())[0:5]
 
 def random_title(words):
-    words = ['Foo', 'Bar', 'Linux', 'Something', 'Yeah', 'Nope', 'Random', "REST", "IPv6"]
+    words = ['Foo', 'Bar']
     s = ' '.join(random.choice(words) for _ in range(1))
     return s
 
@@ -60,7 +51,7 @@ def random_result():
     return d[random.randint(0, len(d) - 1)]
 
 def random_submitter():
-    d = ['john_doe']
+    d = ['charlie']
     return d[random.randint(0, len(d) - 1)]
 
 def query_full(id, sub_id):
@@ -83,7 +74,7 @@ def add_n(n):
         data["submitter"] = random_submitter()
         data["object-item"] = dict()
         data["object-item"]['categories'] = [ "team:orange", "topic:ip", "subtopic:route-cache" ]
-        data["object-item"]['version'] = 0
+        data["object-item"]['version'] = random.randint(0,1)
         data['object-item']['title'] = "{}".format(random_title(3))
 
         data['object-item']['data'] = list()
@@ -101,7 +92,7 @@ Dynamically procrastinate __B2C users__ after installed base benefits. Dramatica
 visualize customer directed convergence without **revolutionary ROI**.
 
     int foo(void) {
-        abort(0);
+	    abort(0);
     }
 
 * Item1
@@ -173,28 +164,10 @@ after maintainable products.
         img_data['data'] = "R0lGODlhDwAPAKECAAAAzxzM/////wAAACwAAAAADwAPAAACIISPeQHsrZ5ModrLlN48CXF8m2iQ3YmmKqVlRtW4MLwWACH+H09wdGltaXplZCBieSBVbGVhZCBTbWFydFNhdmVyIQAAOw=="
         data['object-item']['data'].append(img_data)
 
-        snippet_data = dict()
-        snippet_data['name'] = 'snippet.py'
-        snippet_data['image-name'] = None
-        # how name for snippet-image implement?
-        # snippet_data['image-name'] = None
-        snippet_data['mime-type'] = 'x-snippet-python-matlplotlib-png'
-        snippet_data['data'] = encode_snippet(1).decode('utf-8')
-        data['object-item']['data'].append(snippet_data)
-
-        snippet_data2 = dict()
-        snippet_data2['name'] = 'snippet.py'
-        snippet_data2['image-name'] = None
-        # how name for snippet-image implement?
-        # snippet_data['image-name'] = None
-        snippet_data2['mime-type'] = 'x-snippet-python-matlplotlib-png'
-        snippet_data2['data'] = encode_snippet(2).decode('utf-8')
-        data['object-item']['data'].append(snippet_data2)
-
         data["attachment"] = dict()
         data["attachment"]['references'] = [ "doors:234236", "your-tool:4391843" ]
         data["attachment"]['tags'] = [ "ip", "route", "cache", "performance" ]
-        data["attachment"]['responsible'] = random_submitter()
+        data["attachment"]['responsible'] = 'magerquark'
 
         achievement = dict()
         achievement["test-date"] = datetime.datetime.now().isoformat('T')
@@ -212,8 +185,6 @@ after maintainable products.
         log_data['mime-type'] = 'application/vnd.tcpdump.pcap'
         log_data['data'] = "R0lGODlhDwAPAKECAAABzMzM/////wAAACwAAAAADwAPAAACIISPeQHsrZ5ModrLlN48CXF8m2iQ3YmmKqVlRtW4MLwWACH+H09wdGltaXplZCBieSBVbGVhZCBTbWFydFNhdmVyIQAAOw=="
         achievement['data'].append(log_data)
-        achievement['data'].append(snippet_data)
-        achievement['data'].append(snippet_data2)
 
         if random.randint(0, 3) == 0:
             variety = dict()
@@ -265,7 +236,7 @@ after maintainable products.
 
 
 if __name__ == '__main__':
-    status = add_n(1)
+    status = add_n(100)
     if status==200:
         print("OK")
     else:

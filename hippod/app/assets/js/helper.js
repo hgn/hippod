@@ -42,6 +42,14 @@ function formatDateYYYYMMDD(date) {
     return [year, month, day].join('-');
 }
 
+function addZero(i){
+    if (i < 10) {
+        i = "0" + i
+    }
+    return i
+}
+
+
 function formatDateYYYYMMDDHHMM(date) {
     var d = new Date(date),
         month = '' + (d.getMonth() + 1),
@@ -49,7 +57,7 @@ function formatDateYYYYMMDDHHMM(date) {
         year = d.getFullYear();
 		    hours = d.getHours();
 				minutes = d.getMinutes();
-
+                minutes = addZero(minutes);
     if (month.length < 2) month = '0' + month;
     if (day.length < 2) day = '0' + day;
 
@@ -102,17 +110,58 @@ function humanRelativeDate(date) {
 					 prev_date.getUTCFullYear() + ")";
 	}
 
-	return prev_date.getUTCDate() + "-" +
-		     (prev_date.getUTCMonth() + 1) + "-" +
-				 prev_date.getUTCFullYear();
+	// return prev_date.getUTCDate() + "-" +
+	// 	     (prev_date.getUTCMonth() + 1) + "-" +
+	// 			 prev_date.getUTCFullYear();
 }
 
 function humanFormatDateYYYYMMDD(date) {
-	return humanRelativeDate(date) + " (" + formatDateYYYYMMDD(date) + ")";
+	return humanRelativeDate(date) + " - " + formatDateYYYYMMDD(date) ;
 }
 
 function humanFormatDateYYYYMMDDHHMM(date) {
-	return humanRelativeDate(date) + " (" + formatDateYYYYMMDDHHMM(date) + ")";
+	return humanRelativeDate(date) + " - " + formatDateYYYYMMDDHHMM(date);
+}
+
+function secondsToRelativeLifetime(seconds) {
+    if (seconds < 0)
+    {
+        return String(seconds);
+    }
+    if (seconds < 60)
+    {
+        return seconds == 1 ? "one second left" : seconds + " seconds left";
+    }
+    if (seconds < 120)
+    {
+        return "a minute";
+    }
+    if (seconds < 2700) // 45 * 60
+    {
+        return Math.ceil(seconds / 60) + " minutes left";
+    }
+    if (seconds < 5400) // 90 * 60
+    {
+        return "an hour";
+    }
+    if (seconds < 86400) // 24 * 60 * 60
+    {
+        return Math.ceil(seconds / (60 * 60)) + " hours left";
+    }
+    if (seconds < 172800) // 48 * 60 * 60
+    {
+        return "yesterday";
+    }
+    if (seconds < 2592000) // 30 * 24 * 60 * 60
+    {
+        return Math.ceil(seconds / (60 * 60 * 24)) + " days left";
+    }
+    if (seconds < 31104000) // 12 * 30 * 24 * 60 * 60
+    {
+        return Math.ceil(seconds / (60 * 60 * 24 * 30)) + " month left (" +
+                 prev_date.getUTCDate() + "-" +  (prev_date.getUTCMonth() + 1) + "-" +
+                     prev_date.getUTCFullYear() + ")";
+    }
 }
 
 Date.prototype.getWeek = function (dowOffset) {

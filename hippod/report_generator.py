@@ -84,13 +84,40 @@ class ReportGenerator(object):
                 dst_path = os.path.join(sub_dir, 'description.md')
                 with open(dst_path, 'wb') as dst:
                     shutil.copyfile(src_path, dst_path)
-            else:
-                name = data['name']
-                # head, tail = os.path.split(data['name'])
-                # name, data_type = os.path.split(tail)
-                dst_path = os.path.join(sub_dir, name)
-                with open(dst_path, 'wb') as dst:
-                    shutil.copyfile(src_path_snippet, dst_path)
+            elif data['type'] == 'snippet':
+                head, tail = os.path.split(data['name'])
+                f_name, data_type = os.path.splitext(tail)
+                src_path = os.path.join(app['DB_SNIPPET_PATH'], '{}{}'.format(data['data-id'], data_type))
+                name = data['data-id']
+                if data_type == '.png':
+                    dst_path = os.path.join(sub_dir, '{}.png'.format(name))
+                elif data_type == '.jpg':
+                    dst_path = os.path.join(sub_dir, '{}.jpg'.format(name))
+                elif data_type == '.jpeg':
+                    dst_path = os.path.join(sub_dir, '{}.jpeg'.format(name))
+                elif data_type == '.gif':
+                    dst_path = os.path.join(sub_dir, '{}.gif'.format(name))
+                else:
+                    # FIXME: not sure, but this function should return. If
+                    # not dst_path is undefined and will definitly crash some
+                    # lines later!
+                    log.error("data type not supported: {}".format(data_type))
+                    return None
+                with open(src_path, 'rb') as file:
+                    data = file.read()
+                    #data = zlib.decompress(data)
+                    data += b'==='                                              # arrange that correctly!
+                    decoded = hippod.hasher.decode_base64_data(data)
+                with open(dst_path, 'wb') as file:
+                    file.write(decoded)
+                with open(dst_path, 'wb') as dst:                    shutil.copyfile(src_path, dst_path)
+            # else:
+            #     name = data['name']
+            #     # head, tail = os.path.split(data['name'])
+            #     # name, data_type = os.path.split(tail)
+            #     dst_path = os.path.join(sub_dir, name)
+            #     with open(dst_path, 'wb') as dst:
+            #         shutil.copyfile(src_path_snippet, dst_path)
             return dst_path
 
         def store_achievement(self, app, achievement_path, sub_dir):
@@ -380,7 +407,7 @@ class ReportGenerator(object):
                         file1.write(description1)
             # FIXME, need arguments
             self._pandoc_generate(app, sub_reports[0], pdf_out_path)
-            shutil.rmtree(self.tmp_path)
+            # shutil.rmtree(self.tmp_path)
 
 
 

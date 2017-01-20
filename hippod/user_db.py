@@ -86,9 +86,9 @@ class UserDB:
         print("initialize new enpty user database in {}".format(self.user_db_path))
         entry = dict()
         entry_sub = dict()
-        entry["john_doe"] = entry_sub
-        entry_sub['fullname']   = "John Doe"
-        entry_sub['email']      = "john@example.coa"
+        entry["anonym"] = entry_sub
+        entry_sub['fullname']   = "Anonymous"
+        entry_sub['email']      = "anonym@example.com"
         entry_sub['department'] = "Death Star"
         entry_sub['telephone']  = "00000000"
         #entry['color']    = '#{:02X}'.format(random.randint(0, 0xFFFFFF))
@@ -102,9 +102,9 @@ class UserDB:
         print("initialize new enpty LDAP database in {}".format(self.ldap_db_path))
         entry = dict()
         entry_sub = dict()
-        entry["john_doe"] = entry_sub
-        entry_sub['fullname']   = "John Doe"
-        entry_sub['email']      = "john@example.coa"
+        entry["anonym"] = entry_sub
+        entry_sub['fullname']   = "Anonymous"
+        entry_sub['email']      = "anonym@example.com"
         entry_sub['department'] = "Death Star"
         entry_sub['telephone']  = "00000000"
         #entry['color']    = '#{:02X}'.format(random.randint(0, 0xFFFFFF))
@@ -150,7 +150,7 @@ class UserDB:
             return
 
 
-    def query_user(self, username):
+    def query_user(self, username, kind):
         data_local_db = self._local_db_query_entry(username)
         if not data_local_db and self.ldap_method:
             data_local_ldap = self._local_ldap_db_query_entry(username)
@@ -158,11 +158,14 @@ class UserDB:
                 ldap = LDAP(self.server_addr, self.server_port, self.username,
                             self.password, self.bind)
                 ok, data = ldap.query(username)
-                if not ok:
+                if not ok and kind == 'submitter':
                     msg = "user {} not known in user database or LDAP server" \
                           " down or credentials wrong. More info: {}"
                     msg = msg.format(username, data)
                     raise ApiError(msg)
+                elif not ok and kind == 'responsible':
+                    data = self._local_db_query_entry('anonym')
+                    return data
                 self._local_ldap_db_add_entry(data, username)
                 data_local_ldap = data
             return data_local_ldap

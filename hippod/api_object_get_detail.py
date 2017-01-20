@@ -105,6 +105,46 @@ def get_last_attachment_data(app, sha_major, cont_obj):
     return r
 
 
+def scan_subcontainer(subcontainer_content):
+    # returning the date of the latest achievement
+    return subcontainer_content['achievements'][-1]['date-added']
+
+
+def get_latest_achievement(app, container_content):
+    dates = list()
+    subcontainers = container_content['subcontainer-list']
+    sha_major = container_content['object-item-id']
+    for subcontainer in subcontainers:
+        sha_minor = subcontainer['sha-minor']
+        ok, data = hippod.api_shared.read_subcont_obj_by_id(app, sha_major, sha_minor)
+        if not ok:
+            msg = "subcontainer {} not available, although entry in subcontainer-list"
+            msg = msg.format(sub_cont['sha-minor'])
+            raise ApiError(msg)
+        latest_achiev_date = scan_subcontainer(data)
+        latest_achiev_date = datetime.datetime.strptime(latest_achiev_date, '%Y-%m-%dT%H:%M:%S.%f')
+        dates.append(latest_achiev_date)
+    return max(dates)
+
+
+def get_latest_obj_by_achievement(app):
+    object_index_data = hippod.api_shared.object_index_read(app)
+    if not object_index_data:
+        return None
+    full_list = list()
+    for obj in object_index_data:
+        sha_major = obj['object-item-id']
+        ok, data = hippod.api_shared.read_cont_obj_by_id(app, sha_major)
+        if not ok:
+            msg = "cannot read object by id: {}".format(sha_major)
+            raise ApiError(msg)
+        latest_achiev_date = get_latest_achievement(app, data)
+        full_list.append((sha_major, latest_achiev_date))
+    full_list_sorted = sorted(full_list, key=lambda x: x[1])
+    sha_majors, dates = zip(*full_list_sorted)
+    return list(sha_majors)
+
+
 def container_obj_to_ret_obj(app, request_data, sha_major, cont_obj):
     ret_obj = dict()
     buff_dict = dict()
@@ -183,15 +223,15 @@ def object_data_by_id(app, request_data, sha_major):
 
 
 def object_get_by_sub_data_rev(app, request_data, reverse=True):
-    object_index_data = hippod.api_shared.object_index_read(app)
+    object_index_data = get_latest_obj_by_achievement(app)
     if not object_index_data:
         return None
     limit = request_data['limit']
     limit_enabled = True if limit > 0 else False
     ret_data = list()
     list_sort_func = (null_func, reversed)[bool(reverse)]
-    for i in list_sort_func(object_index_data):
-        success, data = object_data_by_id(app, request_data, i['object-item-id'])
+    for sha_major in list_sort_func(object_index_data):
+        success, data = object_data_by_id(app, request_data, sha_major)
         if not success:
             # probably a filter (status, maturity_level, ..)
             continue

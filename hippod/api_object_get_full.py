@@ -100,9 +100,8 @@ def container_obj_to_ret_obj(app, sha_major, sha_minor, cont_obj):
             sub_dict['object-achievements'] = data
         if 'data' in full_sub_cont['object-item']:
             sub_dict['object-item']['data'] = full_sub_cont['object-item']['data']
-        # ret_obj['subcontainer'] = sub_dict
+        sub_dict['lifetime-leftover'] = full_sub_cont['lifetime-leftover']
         ret_obj['subcontainer'].append(sub_dict)
-
     data = get_last_attachment_data(app, sha_major, cont_obj)
     if data:
         ret_obj['object-attachment'] = data
