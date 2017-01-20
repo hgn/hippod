@@ -137,6 +137,22 @@ class GHContainerAchievements(object):
             return ret_data
 
 
+        def write_lifetime(self, app, sha_major, sha_minor, diff_lifetime):
+            obj_path = app['DB_OBJECT_PATH']
+            ok, cont_content = hippod.api_shared.read_subcont_obj_by_id(app, sha_major, sha_minor)
+            if not ok:
+                log.error("cannot read container {} by sha, ignore for now".format(cont['object-item-id']))
+            if 'lifetime-leftover' in cont_content:
+                if cont_content['lifetime-leftover'] < diff_lifetime:
+                    cont_content['lifetime-leftover'] = diff_lifetime
+            else:
+                cont_content['lifetime-leftover'] = diff_lifetime
+            subc_path = os.path.join(obj_path, sha_major[0:2], sha_major, sha_minor, 'subcontainer.db')
+            with open(subc_path, 'w') as f:
+                content = json.dumps(cont_content, sort_keys=True,indent=4, separators=(',', ': '))
+                f.write(content)
+
+
         # if the achievement added to the garbage_list was the last one in subcontainer,
         # the subcontainer is empty/useless
         # same for subcontainer...if was the last one, container can be also removed
@@ -175,6 +191,11 @@ class GHContainerAchievements(object):
                     garbage_list.append(path)
                     sc_content = self.correct_subcontainer(app, sha_major, sha_minor, achiev['id'])
                 else:
+                    if 'anchor' in achievement:
+                        diff_lifetime = self.lifetime_anchored - diff
+                    else:
+                        diff_lifetime = self.lifetime_default - diff
+                    self.write_lifetime(app, sha_major, sha_minor, diff_lifetime)
                     continue
             if len(sc_content['achievements']) == 0:
                 path = os.path.join(sha_major[0:2], sha_major, sha_minor)
