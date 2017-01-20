@@ -15,7 +15,7 @@ log = logging.getLogger()
 def exchange_entry(app, sha, data, source_path, source_type):
     path = os.path.join(source_path)
     s_format = data['mime-type'].split('-')[-1]
-    if data['image-name'] == None:
+    if 'image-name' not in data or data['image-name'] == None:
         data['image-name'] = 'snippet.{}'.format(s_format)
     else:
         data['image-name'] = '{}}.{}'.format(data['image-name'],s_format)
