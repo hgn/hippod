@@ -42,6 +42,14 @@ function formatDateYYYYMMDD(date) {
     return [year, month, day].join('-');
 }
 
+function addZero(i){
+    if (i < 10) {
+        i = "0" + i
+    }
+    return i
+}
+
+
 function formatDateYYYYMMDDHHMM(date) {
     var d = new Date(date),
         month = '' + (d.getMonth() + 1),
@@ -49,7 +57,7 @@ function formatDateYYYYMMDDHHMM(date) {
         year = d.getFullYear();
 		    hours = d.getHours();
 				minutes = d.getMinutes();
-
+                minutes = addZero(minutes);
     if (month.length < 2) month = '0' + month;
     if (day.length < 2) day = '0' + day;
 
