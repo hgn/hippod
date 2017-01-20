@@ -39,9 +39,9 @@ def random_image():
         return base64.b64encode(content)
 
 
-def encode_snippet():
+def encode_snippet(id):
     script_path = os.path.dirname(os.path.realpath(__file__))
-    snippet_path = os.path.join(script_path, 'data', 'snippet.py')
+    snippet_path = os.path.join(script_path, 'data', 'snippet{}.py'.format(id))
     with open(snippet_path, "rb") as f:
         content = f.read()
         return base64.b64encode(content)
@@ -179,8 +179,17 @@ after maintainable products.
         # how name for snippet-image implement?
         # snippet_data['image-name'] = None
         snippet_data['mime-type'] = 'x-snippet-python-matlplotlib-png'
-        snippet_data['data'] = encode_snippet().decode('utf-8')
+        snippet_data['data'] = encode_snippet(1).decode('utf-8')
         data['object-item']['data'].append(snippet_data)
+
+        snippet_data2 = dict()
+        snippet_data2['name'] = 'snippet.py'
+        snippet_data2['image-name'] = None
+        # how name for snippet-image implement?
+        # snippet_data['image-name'] = None
+        snippet_data2['mime-type'] = 'x-snippet-python-matlplotlib-png'
+        snippet_data2['data'] = encode_snippet(2).decode('utf-8')
+        data['object-item']['data'].append(snippet_data2)
 
         data["attachment"] = dict()
         data["attachment"]['references'] = [ "doors:234236", "your-tool:4391843" ]
@@ -204,7 +213,7 @@ after maintainable products.
         log_data['data'] = "R0lGODlhDwAPAKECAAABzMzM/////wAAACwAAAAADwAPAAACIISPeQHsrZ5ModrLlN48CXF8m2iQ3YmmKqVlRtW4MLwWACH+H09wdGltaXplZCBieSBVbGVhZCBTbWFydFNhdmVyIQAAOw=="
         achievement['data'].append(log_data)
         achievement['data'].append(snippet_data)
-        achievement['data'].append(snippet_data)
+        achievement['data'].append(snippet_data2)
 
         if random.randint(0, 3) == 0:
             variety = dict()
@@ -256,7 +265,7 @@ after maintainable products.
 
 
 if __name__ == '__main__':
-    status = add_n(3)
+    status = add_n(1)
     if status==200:
         print("OK")
     else:
