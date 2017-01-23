@@ -123,7 +123,7 @@ function humanFormatDateYYYYMMDDHHMM(date) {
 	return humanRelativeDate(date) + " - " + formatDateYYYYMMDDHHMM(date);
 }
 
-function secondsToRelativeLifetime(seconds) {
+function secondsToRelativeLifetime(seconds) {;
     if (seconds < 0)
     {
         return String(seconds);
@@ -158,9 +158,7 @@ function secondsToRelativeLifetime(seconds) {
     }
     if (seconds < 31104000) // 12 * 30 * 24 * 60 * 60
     {
-        return Math.ceil(seconds / (60 * 60 * 24 * 30)) + " month left (" +
-                 prev_date.getUTCDate() + "-" +  (prev_date.getUTCMonth() + 1) + "-" +
-                     prev_date.getUTCFullYear() + ")";
+        return Math.ceil(seconds / (60 * 60 * 24 * 30)) + " month left"
     }
 }
 
