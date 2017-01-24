@@ -179,7 +179,7 @@ after maintainable products.
         snippet_data['data'] = encode_snippet(1).decode('utf-8')
         data['object-item']['data'].append(snippet_data)
         snippet_data = dict()
-        # snippet_data['name'] = None
+        snippet_data['name'] = None
         snippet_data['mime-type'] = 'x-snippet-python-matlplotlib-png'
         snippet_data['data'] = encode_snippet(2).decode('utf-8')
         data['object-item']['data'].append(snippet_data)

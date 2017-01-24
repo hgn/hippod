@@ -153,8 +153,8 @@ after maintainable products.
         data['object-item']['data'].append(desc_data)
 
         img_data = dict()
-        img_data['name'] = 'image.png'
-        img_data['mime-type'] = 'image/png'
+        img_data['name'] = 'image.jpg'
+        img_data['mime-type'] = 'image/jpg'
         img_data['data'] = random_image().decode("utf-8") 
         data['object-item']['data'].append(img_data)
 
