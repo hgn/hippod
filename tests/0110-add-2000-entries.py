@@ -34,7 +34,7 @@ def random_title(length):
 def add_n(n):
     url = 'http://localhost:8080/api/v1/object'
     data = dict()
-    data["submitter"] = "john_doe"
+    data["submitter"] = "anonym"
     data["object-item"] = dict()
     data["object-item"]['categories'] = [ "team:orange", "topic:ip", "subtopic:route-cache" ]
     data["object-item"]['version'] = 0
