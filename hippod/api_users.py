@@ -25,21 +25,21 @@ def get_user_data(app, req_obj):
     return hippod.users.get(app, user_filter)
 
 
-async def handle(request):
-    if request.method != "GET" and request.method != "POST":
-        msg = "Internal Error... request method: {} is not allowed".format(request.method)
-        raise hippod.error_object.ApiError(msg)
-    app = request.app
+# async def handle(request):
+#     if request.method != "GET" and request.method != "POST":
+#         msg = "Internal Error... request method: {} is not allowed".format(request.method)
+#         raise hippod.error_object.ApiError(msg)
+#     app = request.app
 
-    try:
-        start = time.clock()
-        req_obj = await request.json()
-        data = get_user_data(app, req_obj)
-        end = time.clock()
-    except ApiError as e:
-        return e.transform()
+#     try:
+#         start = time.clock()
+#         req_obj = await request.json()
+#         data = get_user_data(app, req_obj)
+#         end = time.clock()
+#     except ApiError as e:
+#         return e.transform()
 
-    o = hippod.ex3000.Ex3000()
-    o['data'] = data
-    o['processing-time'] = "{0:.4f}".format(end - start)
-    return o.transform()
+#     o = hippod.ex3000.Ex3000()
+#     o['data'] = data
+#     o['processing-time'] = "{0:.4f}".format(end - start)
+#     return o.transform()
