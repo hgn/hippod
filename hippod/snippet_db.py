@@ -14,15 +14,18 @@ log = logging.getLogger()
 
 def exchange_entry(app, sha, data, source_path, source_type):
     path = os.path.join(source_path)
-    s_format = data['mime-type'].split('-')[-1]
-    if data['image-name'] == None:
-        data['image-name'] = 'snippet.{}'.format(s_format)
+    f_format = data['mime-type'].split('-')[-1]
+    if 'name' not in data or data['name'] is None:
+        entry = dict()
+        entry['data-id'] = sha
+        entry['type'] = 'snippet'
+        entry['name'] = 'snippet-image-{}.{}'.format(sha, f_format)
     else:
-        data['image-name'] = '{}}.{}'.format(data['image-name'],s_format)
-    entry = dict()
-    entry['data-id'] = sha
-    entry['type'] = 'snippet'
-    entry['name'] = data['image-name']
+        data['name'] = '{}.{}'.format(data['name'],f_format)
+        entry = dict()
+        entry['data-id'] = sha
+        entry['type'] = 'snippet'
+        entry['name'] = data['name']
     with open(path, 'r') as f:
         content = json.load(f)
         if source_type == 'subcontainer':
@@ -34,10 +37,10 @@ def exchange_entry(app, sha, data, source_path, source_type):
         f.write(new_content)
 
 
-def save_snippet(app, mime_type, sha, name, data):
-    f_type = name.split('.')[1]
-    snippet_tmp_path = os.path.join('/tmp', 'tmp{}.{}'.format(sha, f_type))
-    # snippet_tmp_path = os.path.join(tmp_path, name)
+def save_snippet(app, mime_type, sha, data):
+    s_type = mime_type.split('-')[2]
+    if s_type == 'python':
+        snippet_tmp_path = os.path.join('/tmp', 'tmp{}.py'.format(sha))
     data_decoded = hippod.hasher.decode_base64_data(data)
     data_decoded = data_decoded.decode('utf-8')
     with open(snippet_tmp_path, 'w') as file:
@@ -49,7 +52,6 @@ def execute_snippet(app, sha, data, source_path, source_type):
     snippet_db = app['DB_SNIPPET_PATH']
     mime_type = data['mime-type']
     mime_list = mime_type.split('-')
-    name = data['name']
 
     # get all libary requirements
     lib_list = list()
@@ -62,8 +64,9 @@ def execute_snippet(app, sha, data, source_path, source_type):
     # for lib in lib_list:
     #   os.system('apt-get install {}'.format(lib))
 
-    f_type = name.split('.')[1]
-    snippet_tmp_path = os.path.join('/tmp', 'tmp{}.{}'.format(sha, f_type))
+    s_type = mime_type.split('-')[2]
+    if s_type == 'python':
+        snippet_tmp_path = os.path.join('/tmp', 'tmp{}.py'.format(sha))
     exec_code = os.system('python3 {} {}'.format(snippet_tmp_path, snippet_db_path))
     if exec_code == 0:
         exchange_entry(app, sha, data, source_path, source_type)
@@ -75,11 +78,10 @@ def execute_snippet(app, sha, data, source_path, source_type):
 
 def register_snippet(app, data, sha, source_path, source_type):
     preserve_data = data.copy()
-    name = data['name']
     mime_type = data['mime-type']
     data_content = data['data']
 
-    snippet_tmp_path = save_snippet(app, mime_type, sha, name, data_content)
+    snippet_tmp_path = save_snippet(app, mime_type, sha, data_content)
 
     loop = asyncio.get_event_loop()
     loop.call_soon(functools.partial(execute_snippet, app, sha, preserve_data, source_path, source_type))
