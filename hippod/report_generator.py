@@ -85,10 +85,14 @@ class ReportGenerator(object):
                 with open(dst_path, 'wb') as dst:
                     shutil.copyfile(src_path, dst_path)
             elif data['type'] == 'snippet':
-                head, tail = os.path.split(data['name'])
-                f_name, data_type = os.path.splitext(tail)
+                if 'name' in data:
+                    head, tail = os.path.split(data['name'])
+                    name, data_type = os.path.splitext(tail)
+                else:
+                    name = data['data-id']
+                    data_type = '.png'
+                    # FIXME: hardcoded data_type
                 src_path = os.path.join(app['DB_SNIPPET_PATH'], '{}{}'.format(data['data-id'], data_type))
-                name = data['data-id']
                 if data_type == '.png':
                     dst_path = os.path.join(sub_dir, '{}.png'.format(name))
                 elif data_type == '.jpg':
@@ -106,18 +110,16 @@ class ReportGenerator(object):
                 with open(src_path, 'rb') as file:
                     data = file.read()
                     #data = zlib.decompress(data)
-                    data += b'==='                                              # arrange that correctly!
+                    data += b'==='
+                    # FIXME:  arrange that correctly...'===' should be there without 
+                    # adding
                     decoded = hippod.hasher.decode_base64_data(data)
                 with open(dst_path, 'wb') as file:
                     file.write(decoded)
-                with open(dst_path, 'wb') as dst:                    shutil.copyfile(src_path, dst_path)
+                with open(dst_path, 'wb') as dst:
+                    shutil.copyfile(src_path, dst_path)
             # else:
-            #     name = data['name']
-            #     # head, tail = os.path.split(data['name'])
-            #     # name, data_type = os.path.split(tail)
-            #     dst_path = os.path.join(sub_dir, name)
-            #     with open(dst_path, 'wb') as dst:
-            #         shutil.copyfile(src_path_snippet, dst_path)
+            #     FIXME: error handling
             return dst_path
 
         def store_achievement(self, app, achievement_path, sub_dir):
