@@ -61,9 +61,11 @@ hippoD.factory('DBService', function($http) {
                              if ('data' in subcontainer[requested_index]['object-item']) {
                              var item_data = subcontainer[requested_index]['object-item']['data'];
                              var attachments = new Array();
-                             var counter = 1;
+                             var num = 1;
                              var id_memory = new Array();
                              for (var i = 0; i < item_data.length; i++) {
+                                 var counter = num+"";
+                                 counter = "00" + counter;
                                  if (item_data[i]['type'] !== 'description') {
                                      var entry = {};
                                      var data_id = item_data[i]['data-id']
@@ -86,7 +88,7 @@ hippoD.factory('DBService', function($http) {
                                                 var obj = {}
                                                 obj[data_id] = counter
                                                 id_memory.push(obj);
-                                                counter++
+                                                numm++
                                                 }
                                             // case of snippet image with user given name
                                             else {entry['name'] = item_data[i]['name']}
@@ -111,7 +113,7 @@ hippoD.factory('DBService', function($http) {
                                                 var obj = {}
                                                 obj[data_id] = counter
                                                 id_memory.push(obj);
-                                                counter++
+                                                num++
                                             }
                                             else{
                                                 entry['type'] = 'undefined';
