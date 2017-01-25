@@ -8,6 +8,19 @@ import sys
 
 import hippod.api_object_post
 import hippod.users
+import hippod.garbage_handler_container_achievements
+
+
+
+def get_lifetime(app, xobj):
+    anchor_available = hippod.api_object_post.check_anchor(app, xobj)
+    conf = app['CONF']
+    garbage = hippod.garbage_handler_container_achievements.GHContainerAchievements()
+    if anchor_available:
+        seconds = garbage.convert_lifetime(conf.achievements_validity_lifetime.achievements_anchored)
+    else:
+        seconds = garbage.convert_lifetime(conf.achievements_validity_lifetime.achievements)
+    return seconds
 
 def create_container_data_merge_issue_new(app, sha_major, sha_minor, object_item):
     date = datetime.datetime.now().isoformat('T') # ISO 8601 format
@@ -47,6 +60,7 @@ def create_subcontainer_data_merge_issue_new(app, sha_major, sha_minor, object_i
     user_data = hippod.users.get(app, object_item['submitter'], 'submitter')
     d_sub['submitter'] = user_data[0]['fullname']
     d_sub['achievements'] = []
+    d_sub['lifetime-leftover'] = get_lifetime(app, object_item)
     d_sub['object-item'] = dict()
     if 'data' in object_item['object-item']:
         d_sub['object-item']['data'] = object_item['object-item']['data']

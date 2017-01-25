@@ -14,7 +14,7 @@ def query_user():
     url = 'http://localhost:8080/api/v1/users'
     data = dict()
     data["filter"] = dict() 
-    data["filter"]['username'] = 'john_doe'
+    data["filter"]['username'] = 'anonym'
 
     dj = json.dumps(data, sort_keys=True, separators=(',', ': '))
     headers = {'Content-type': 'application/json', 'Accept': 'application/json'}

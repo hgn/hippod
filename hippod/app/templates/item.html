@@ -99,9 +99,11 @@
 
 					<div class="list-group">
 						<div class="list-group-item">
+							<div data-toggle="tooltip" title="Time left over until deletion">
 							<h5 class="list-group-item-heading"><span class="glyphicon
 							glyphicon-time" aria-hidden="true"></span> 
-							Lifetime:<br><br> {{ lifetime }}</h5>
+								Lifetime:<br><br> {{ lifetime }}</h5>
+							</div>
 						</div>
 					</div>
 
@@ -157,7 +159,7 @@
 											</div>
 										</div>
 										<!-- <div ng-repeat="subcontainer in data['subcontainer']"> -->
-										<div ng-repeat="achievement in data['subcontainer'][index]['object-achievements']">
+										<div ng-repeat="achievement in variety['achievements']">
 											<a ng-href="#/item/{{id}}/{{data['subcontainer'][index]['sha-minor']}}/{{achievement['id']}}">
 											<div class="achievement-box">
 												ID: {{ achievement['id'] }}<br>

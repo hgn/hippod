@@ -290,6 +290,45 @@ def object_index_initial_add_major(app, sha_major, xobj):
     object_index_update(app, object_index)
 
 
+def check_anchor(app, xobj):
+    achievements = xobj['achievements']
+    for achievement in achievements:
+        if 'anchor' in achievement:
+            return True
+    return False
+
+def prove_bigger_lifetime_overwritten(listed_lifetime, new_lifetime):
+    # in case older test was anchored, new test not anchored and older lifetime
+    # bigger than new one...would be wrong to overwrite the lifetime
+    if listed_lifetime < new_lifetime:
+        return new_lifetime
+    else:
+        return listed_lifetime
+
+
+def update_lifetime(app, sha_major, sha_minor, xobj):
+    anchor_available = check_anchor(app, xobj)
+    conf = app['CONF']
+    garbage = hippod.garbage_handler_container_achievements.GHContainerAchievements()
+    ok, subcontainer = hippod.api_shared.read_subcont_obj_by_id(app, sha_major, sha_minor)
+    if not ok:
+        msg = "can not read subcontainer by id '{}/{}'. Although it is an update and subcontainer\
+               should be available.".format(sha_major, sha_minor)
+        log.error(msg)
+        return
+    default_lifetime = garbage.convert_lifetime(conf.achievements_validity_lifetime.achievements)
+    anchor_lifetime = garbage.convert_lifetime(conf.achievements_validity_lifetime.achievements_anchored)
+    if anchor_available:
+        subcontainer['lifetime-leftover'] = anchor_lifetime
+    else:
+        subcontainer['lifetime-leftover'] = prove_bigger_lifetime_overwritten(subcontainer['lifetime-leftover'], 
+                                                                            default_lifetime)
+    subc_path = os.path.join(app['DB_OBJECT_PATH'], sha_major[0:2], sha_major, sha_minor, 'subcontainer.db')
+    with open(subc_path, 'w') as f:
+        json_cont = json.dumps(subcontainer, sort_keys=True, indent=4, separators=(',', ': '))
+        f.write(json_cont)
+
+
 def try_adding_xobject(app, xobj):
     if not 'submitter' in xobj:
         msg = "No submitter in xobject given!"
@@ -318,17 +357,20 @@ def try_adding_xobject(app, xobj):
     # object container file write should be delayed until everything
     # is sane.
     ok = is_obj_major_already_in_db(app, sha_major)
+    # check whether anchor is in achievement to add correct initial lifetime of the object
     if not ok:
-        # new entry, save to file
+        # new entry, save to file container.db
         # FULL update
-        hippod.store_container.save_new_object_container(app, sha_major, sha_minor, xobj,)
+        hippod.store_container.save_new_object_container(app, sha_major, sha_minor, xobj)
         object_index_initial_add_major(app, sha_major, xobj)
 
     ok2 = is_obj_minor_already_in_db(app, sha_major, sha_minor)
     if not ok2:
-        # new entry, save to file
-        date_added = hippod.store_container.save_new_object_minor_container(app, sha_major, sha_minor, xobj, )
+        # new entry, save to file subcontainer.db
+        date_added = hippod.store_container.save_new_object_minor_container(app, sha_major, sha_minor, xobj)
         add_subcontainer_list(app, sha_major, sha_minor, xobj['submitter'], date_added)
+
+    update_lifetime(app, sha_major, sha_minor, xobj)
 
     update_attachment_achievement(app, sha_major, sha_minor, xobj)
 

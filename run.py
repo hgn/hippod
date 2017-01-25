@@ -158,9 +158,9 @@ def setup_routes(app, conf):
     app.router.add_route('POST',
                         '/api/v1/object',
                         api_object_post.handle)
-    app.router.add_route('*',
-                        '/api/v1/users',
-                        api_users.handle)
+    # app.router.add_route('*',
+    #                     '/api/v1/users',
+    #                     api_users.handle)
 
     absdir = os.path.dirname(os.path.realpath(__file__))
     app_path = os.path.join(absdir, 'hippod/app')

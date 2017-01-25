@@ -60,7 +60,7 @@ def random_result():
     return d[random.randint(0, len(d) - 1)]
 
 def random_submitter():
-    d = ['john_doe']
+    d = ['anonym']
     return d[random.randint(0, len(d) - 1)]
 
 def query_full(id, sub_id):
@@ -174,19 +174,23 @@ after maintainable products.
         data['object-item']['data'].append(img_data)
 
         snippet_data = dict()
-        snippet_data['name'] = 'snippet.py'
-        snippet_data['image-name'] = None
-        # how name for snippet-image implement?
-        # snippet_data['image-name'] = None
+        # snippet_data['name'] = None
         snippet_data['mime-type'] = 'x-snippet-python-matlplotlib-png'
         snippet_data['data'] = encode_snippet(1).decode('utf-8')
         data['object-item']['data'].append(snippet_data)
+        snippet_data = dict()
+        snippet_data['name'] = None
+        snippet_data['mime-type'] = 'x-snippet-python-matlplotlib-png'
+        snippet_data['data'] = encode_snippet(2).decode('utf-8')
+        data['object-item']['data'].append(snippet_data)
+        snippet_data = dict()
+        snippet_data['name'] = 'Foosnip.png'
+        snippet_data['mime-type'] = 'x-snippet-python-matlplotlib-png'
+        snippet_data['data'] = encode_snippet(2).decode('utf-8')
+        data['object-item']['data'].append(snippet_data)
 
         snippet_data2 = dict()
-        snippet_data2['name'] = 'snippet.py'
-        snippet_data2['image-name'] = None
-        # how name for snippet-image implement?
-        # snippet_data['image-name'] = None
+        snippet_data2['name'] = 'FooSnip'
         snippet_data2['mime-type'] = 'x-snippet-python-matlplotlib-png'
         snippet_data2['data'] = encode_snippet(2).decode('utf-8')
         data['object-item']['data'].append(snippet_data2)

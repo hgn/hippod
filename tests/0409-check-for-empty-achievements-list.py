@@ -41,7 +41,7 @@ def random_image():
 
 def encode_snippet():
     script_path = os.path.dirname(os.path.realpath(__file__))
-    snippet_path = os.path.join(script_path, 'data', 'snippet.py')
+    snippet_path = os.path.join(script_path, 'data', 'snippet1.py')
     with open(snippet_path, "rb") as f:
         content = f.read()
         return base64.b64encode(content)
@@ -60,7 +60,7 @@ def random_result():
     return d[random.randint(0, len(d) - 1)]
 
 def random_submitter():
-    d = ['john_doe']
+    d = ['anonym']
     return d[random.randint(0, len(d) - 1)]
 
 def query_full(id, sub_id):

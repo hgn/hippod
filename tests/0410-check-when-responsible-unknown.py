@@ -51,7 +51,7 @@ def random_result():
     return d[random.randint(0, len(d) - 1)]
 
 def random_submitter():
-    d = ['charlie']
+    d = ['john_doe']
     return d[random.randint(0, len(d) - 1)]
 
 def query_full(id, sub_id):
@@ -167,7 +167,7 @@ after maintainable products.
         data["attachment"] = dict()
         data["attachment"]['references'] = [ "doors:234236", "your-tool:4391843" ]
         data["attachment"]['tags'] = [ "ip", "route", "cache", "performance" ]
-        data["attachment"]['responsible'] = 'magerquark'
+        data["attachment"]['responsible'] = 'not_known'
 
         achievement = dict()
         achievement["test-date"] = datetime.datetime.now().isoformat('T')

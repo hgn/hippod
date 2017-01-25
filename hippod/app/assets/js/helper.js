@@ -101,11 +101,11 @@ function humanRelativeDate(date) {
 	}
 	if (delta < 2592000) // 30 * 24 * 60 * 60
 	{
-		return Math.ceil(delta / (60 * 60 * 24)) + " days ago";
+		return Math.ceil(delta / 86400) + " days ago";
 	}
 	if (delta < 31104000) // 12 * 30 * 24 * 60 * 60
 	{
-		return Math.ceil(delta / (60 * 60 * 24 * 30)) + " month ago (" +
+		return Math.ceil(delta / 2592000) + " month ago (" +
 			     prev_date.getUTCDate() + "-" +  (prev_date.getUTCMonth() + 1) + "-" +
 					 prev_date.getUTCFullYear() + ")";
 	}
@@ -154,13 +154,11 @@ function secondsToRelativeLifetime(seconds) {
     }
     if (seconds < 2592000) // 30 * 24 * 60 * 60
     {
-        return Math.ceil(seconds / (60 * 60 * 24)) + " days left";
+        return Math.ceil(seconds / 86400) + " days left";
     }
     if (seconds < 31104000) // 12 * 30 * 24 * 60 * 60
     {
-        return Math.ceil(seconds / (60 * 60 * 24 * 30)) + " month left (" +
-                 prev_date.getUTCDate() + "-" +  (prev_date.getUTCMonth() + 1) + "-" +
-                     prev_date.getUTCFullYear() + ")";
+        return Math.ceil(seconds / 2592000) + " month left" // 60 * 60 * 24 * 30
     }
 }
 

@@ -161,7 +161,15 @@ def save_object_item_data(app, data, source_path, source_type):
     sha = hippod.hasher.hash_data(data['data'])
     if data['mime-type'].startswith('x-snippet'):
         hippod.snippet_db.register_snippet(app, data, sha, source_path, source_type)
-        del data['image-name']
+        # FIXME: truncate possible format endings png, jpg and so on?
+        # hardcoded formats
+        if 'name' in data and data['name'] is not None and '.' not in data['name']:
+            data['name'] = '{}.py'.format(data['name'])
+        elif 'name' in data and data['name'] is not None and '.' in data['name']:
+            data['name'] = '{}.py'.format(data['name'].split('.')[0])
+        else:
+            data['name'] = 'snippet-{}.py'.format(sha)
+
 
     compressable = False
     if is_compressable(data):
