@@ -21,6 +21,8 @@ def exchange_entry(app, sha, data, source_path, source_type):
         entry['type'] = 'snippet'
         entry['name'] = 'snippet-image-{}.{}'.format(sha, f_format)
     else:
+        if '.' in data['name']:
+            data['name'] = data['name'].split('.')[0]
         data['name'] = '{}.{}'.format(data['name'],f_format)
         entry = dict()
         entry['data-id'] = sha
@@ -39,7 +41,7 @@ def exchange_entry(app, sha, data, source_path, source_type):
 
 def save_snippet(app, mime_type, sha, data):
     s_type = mime_type.split('-')[2]
-    if s_type == 'python':
+    if s_type == 'python' or s_type == 'python2' or s_type == 'python3':
         snippet_tmp_path = os.path.join('/tmp', 'tmp{}.py'.format(sha))
     data_decoded = hippod.hasher.decode_base64_data(data)
     data_decoded = data_decoded.decode('utf-8')
@@ -65,7 +67,7 @@ def execute_snippet(app, sha, data, source_path, source_type):
     #   os.system('apt-get install {}'.format(lib))
 
     s_type = mime_type.split('-')[2]
-    if s_type == 'python':
+    if s_type == 'python' or s_type == 'python2' or s_type == 'python3':
         snippet_tmp_path = os.path.join('/tmp', 'tmp{}.py'.format(sha))
     exec_code = os.system('python3 {} {}'.format(snippet_tmp_path, snippet_db_path))
     if exec_code == 0:
