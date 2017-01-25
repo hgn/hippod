@@ -54,17 +54,18 @@ def execute_snippet(app, sha, data, source_path, source_type):
     snippet_db = app['DB_SNIPPET_PATH']
     mime_type = data['mime-type']
     mime_list = mime_type.split('-')
-
+    image_format = mime_list[-1]
     # get all libary requirements
     lib_list = list()
     for i in range(3, len(mime_list)-1):
         lib_list.append(mime_list[i])
 
-    snippet_db_path = os.path.join(snippet_db, sha)
+    snippet_db_path = os.path.join(snippet_db, '{}.{}'.format(sha, image_format))
     # python specific installation of pakets?
     # os.system('python3')
     # for lib in lib_list:
     #   os.system('apt-get install {}'.format(lib))
+    print(snippet_db_path)
 
     s_type = mime_type.split('-')[2]
     if s_type == 'python' or s_type == 'python2' or s_type == 'python3':

@@ -46,6 +46,14 @@ class ReportGenerator(object):
         # def __del__(self):
         #     shutil.rmtree(self.tmp_path)
 
+        def get_format_snippet(app, data_id):
+            db_path = app['DB_DATA_PATH']
+            attr_path = os.path.join(db_path, data_id, 'attr.db')
+            with open(attr_path, 'r') as f:
+                content = json.load(f)
+                snippet_format = content['mime-type'].split('-')[-1]
+            return snippet_format
+
 
         def store_data(self, app, data, sub_dir):
             src_path = os.path.join(app['DB_DATA_PATH'], data['data-id'], 'blob.bin')
@@ -90,8 +98,7 @@ class ReportGenerator(object):
                     name, data_type = os.path.splitext(tail)
                 else:
                     name = data['data-id']
-                    data_type = '.png'
-                    # FIXME: hardcoded data_type
+                    data_type = get_format_snippet(app, data['data-id'])
                 src_path = os.path.join(app['DB_SNIPPET_PATH'], '{}{}'.format(data['data-id'], data_type))
                 if data_type == '.png':
                     dst_path = os.path.join(sub_dir, '{}.png'.format(name))
@@ -468,7 +475,8 @@ class ReportGenerator(object):
                 sc = sub_cont['sha-minor']
                 ok, full_sub_cont = hippod.api_shared.read_subcont_obj_by_id(app, sha_major, sc)
                 if not ok:
-                    pass # what if? ---> no raise ApiError possible
+                    pass
+                    # FIXME: what if? ---> no raise ApiError possible
                 data = hippod.api_object_get_full.get_all_achievement_data(app, sha_major, sc, full_sub_cont)
                 if data:
                     buff_dict[sc] = data[0]['date-added']
