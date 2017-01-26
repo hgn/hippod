@@ -70,6 +70,7 @@ hippoD.factory('DBService', function($http) {
                                      var entry = {};
                                      var data_id = item_data[i]['data-id']
                                      entry['data-id'] = item_data[i]['data-id']
+                                     entry['size-real'] = item_data[i]['size-real'];
                                      // exchange sha in name with an id_number
                                      if ('type' in item_data[i]) {
                                         entry['type'] = item_data[i]['type'];
@@ -121,7 +122,6 @@ hippoD.factory('DBService', function($http) {
                                                 }
                                             }
                                     }
-                                     // entry['data-id'] = item_data[i]['data-id'];
                                      attachments.push(entry);
                                  }
                              }
