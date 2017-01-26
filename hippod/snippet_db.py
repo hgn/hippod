@@ -4,6 +4,7 @@ import asyncio
 import functools
 import logging
 import json
+import base64
 
 import hippod.mime_data_db
 import hippod.hasher
@@ -12,7 +13,17 @@ import hippod.hasher
 log = logging.getLogger()
 
 
-def exchange_entry(app, sha, data, source_path, source_type):
+def get_size(snippet_db_path):
+    image_path = os.path.join(snippet_db_path)
+    with open(image_path, 'rb') as f:
+        content = f.read()
+        data = base64.b64encode(content)
+        bin_data = base64.b64decode(data)
+        size_real = len(bin_data)
+    return size_real
+
+
+def exchange_entry(app, sha, data, source_path, source_type, snippet_db_path):
     path = os.path.join(source_path)
     f_format = data['mime-type'].split('-')[-1]
     if 'name' not in data or data['name'] is None:
@@ -20,6 +31,7 @@ def exchange_entry(app, sha, data, source_path, source_type):
         entry['data-id'] = sha
         entry['type'] = 'snippet'
         entry['name'] = 'snippet-image-{}.{}'.format(sha, f_format)
+        entry['size-real'] = get_size(snippet_db_path)
     else:
         if '.' in data['name']:
             data['name'] = data['name'].split('.')[0]
@@ -28,6 +40,7 @@ def exchange_entry(app, sha, data, source_path, source_type):
         entry['data-id'] = sha
         entry['type'] = 'snippet'
         entry['name'] = data['name']
+        entry['size-real'] = get_size(snippet_db_path)
     with open(path, 'r') as f:
         content = json.load(f)
         if source_type == 'subcontainer':
@@ -65,14 +78,13 @@ def execute_snippet(app, sha, data, source_path, source_type):
     # os.system('python3')
     # for lib in lib_list:
     #   os.system('apt-get install {}'.format(lib))
-    print(snippet_db_path)
 
     s_type = mime_type.split('-')[2]
     if s_type == 'python' or s_type == 'python2' or s_type == 'python3':
         snippet_tmp_path = os.path.join('/tmp', 'tmp{}.py'.format(sha))
     exec_code = os.system('python3 {} {}'.format(snippet_tmp_path, snippet_db_path))
     if exec_code == 0:
-        exchange_entry(app, sha, data, source_path, source_type)
+        exchange_entry(app, sha, data, source_path, source_type, snippet_db_path)
     else:
         # FIXME: handle unexecutable code
         log.error('Snippet file {} is not executable'.format(snippet_path))

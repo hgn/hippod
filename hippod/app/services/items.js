@@ -70,6 +70,7 @@ hippoD.factory('DBService', function($http) {
                                      var entry = {};
                                      var data_id = item_data[i]['data-id']
                                      entry['data-id'] = item_data[i]['data-id']
+                                     entry['size-real'] = item_data[i]['size-real'];
                                      // exchange sha in name with an id_number
                                      if ('type' in item_data[i]) {
                                         entry['type'] = item_data[i]['type'];
@@ -121,7 +122,6 @@ hippoD.factory('DBService', function($http) {
                                                 }
                                             }
                                     }
-                                     // entry['data-id'] = item_data[i]['data-id'];
                                      attachments.push(entry);
                                  }
                              }
@@ -260,16 +260,67 @@ hippoD.factory('AchievementService', function($http) {
                              //}
                              var item_data = subcontainer[requested_index]['object-achievements'][achiev_id]['data'];
                              var attachments = new Array();
+                             var num = 1;
+                             var id_memory = new Array();
                              for (var i = 0; i < item_data.length; i++) {
+                                 var counter = num+"";
+                                 counter = "00" + counter;
                                  if (item_data[i]['type'] !== 'description') {
                                      var entry = {};
-                                     entry['name'] = item_data[i]['name'];
+                                     var data_id = item_data[i]['data-id']
+                                     entry['data-id'] = item_data[i]['data-id']
+                                     entry['size-real'] = item_data[i]['size-real'];
+                                     // exchange sha in name with an id_number
                                      if ('type' in item_data[i]) {
                                         entry['type'] = item_data[i]['type'];
+                                        // case of snippet file
+                                        var count_in_list = false
+                                        for (var k = 0; k < id_memory.length; k++) {
+                                            if (data_id in id_memory[k]) {
+                                                var same_counter = id_memory[k][data_id]
+                                                count_in_list = true
+                                                }
+                                            }
+                                        if (!(count_in_list)) {
+                                            if (item_data[i]['name'].includes(data_id)){
+                                                // case of non-given name for snippet image
+                                                entry['name'] = item_data[i]['name'].replace(data_id, counter)
+                                                var obj = {}
+                                                obj[data_id] = counter
+                                                id_memory.push(obj);
+                                                numm++
+                                                }
+                                            // case of snippet image with user given name
+                                            else {entry['name'] = item_data[i]['name']}
+                                        }
+                                        else{entry['name'] = item_data[i]['name'].replace(data_id, same_counter)}
+
                                     } else {
-                                        entry['type'] = 'undefined'
+                                        var count_in_list = false
+                                        for (var k = 0; k < id_memory.length; k++) {
+                                            if (data_id in id_memory[k]) {
+                                                var same_counter = id_memory[k][data_id]
+                                                count_in_list = true
+                                                }
+                                            }
+                                        if (count_in_list){
+                                            entry['type'] = 'undefined';
+                                            entry['name'] = item_data[i]['name'].replace(data_id, same_counter)
+                                            }
+                                        else{
+                                            if (item_data[i]['name'].includes(data_id)){
+                                                entry['name'] = item_data[i]['name'].replace(data_id, counter)
+                                                var obj = {}
+                                                obj[data_id] = counter
+                                                id_memory.push(obj);
+                                                num++
+                                            }
+                                            else{
+                                                entry['type'] = 'undefined';
+                                                entry['name'] = item_data[i]['name'];
+                                                }
+                                            }
                                     }
-                                     entry['data-id'] = item_data[i]['data-id'];
                                      attachments.push(entry);
                                  }
                              }
