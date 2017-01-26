@@ -180,7 +180,10 @@ class ReportGenerator(object):
 
         def add_achievement(self, description_path, achievement_path, title, \
                             achievement_data, attachment_path, categories):
-            attach_content = self.get_attachment_content(attachment_path)
+            if not attachment_path:
+                attach_content = None
+            else:
+                attach_content = self.get_attachment_content(attachment_path)
             achievement_content = self.get_achievement_content(achievement_path)
             if description_path == None:
                 # remove '/achievement.db' of the path and create a 'description.md' file in this directory
@@ -191,7 +194,10 @@ class ReportGenerator(object):
                 submitter = achievement_content['submitter']
                 test_date = achievement_content['test-date']
                 categories = categories
-                responsible = attach_content['responsible']
+                if attach_content != None:
+                    responsible = attach_content['responsible']
+                else:
+                    responsible = 'No responsible'
 
                 with open(description_path, 'w') as file:
                     description  = '# {} #\n\n'.format(title)
@@ -211,7 +217,10 @@ class ReportGenerator(object):
                 submitter = achievement_content['submitter']
                 test_date = achievement_content['test-date']
                 categories = categories
-                responsible = attach_content['responsible']
+                if attach_content != None:
+                    responsible = attach_content['responsible']
+                else:
+                    responsible = 'No responsible'
 
                 with open(description_path, 'r') as file:
                     description_only = file.read()
@@ -318,13 +327,17 @@ class ReportGenerator(object):
                 
                 subcontainer = os.path.join(db_path, sha_major[0:2], sha_major, sha_minor, 'subcontainer.db')
                 achievement = os.path.join(db_path, sha_major[0:2], sha_major, sha_minor, 'achievements', '{}.db'.format(achievement_id))
-                attachment = os.path.join(db_path, sha_major[0:2], sha_major, 'attachments', last_attachment)
+                if last_attachment != None:
+                    attachment = os.path.join(db_path, sha_major[0:2], sha_major, 'attachments', last_attachment)
                 
                 stored_data_path = self.store_achievement(app, achievement, sub_dir)
                 files_catalog[sub_dir]['achievement'] = stored_data_path
 
-                stored_data_path = self.store_attachment(app, attachment, sub_dir)
-                files_catalog[sub_dir]['attachment'] = stored_data_path
+                if not last_attachment:
+                    files_catalog[sub_dir]['attachment'] = None
+                else:
+                    stored_data_path = self.store_attachment(app, attachment, sub_dir)
+                    files_catalog[sub_dir]['attachment'] = stored_data_path
 
                 data_list_achievement = self.fetch_data_list_achievement(achievement)
                 if data_list_achievement != None:
@@ -566,5 +579,7 @@ class ReportGenerator(object):
             attach_path = os.path.join(obj_path, sha_major[0:2], sha_major, 'attachments')
             attach_files = os.path.join(attach_path, '*')
             attach_list = glob.glob(attach_files)
+            if len(attach_list) == 0:
+                return None
             last_attach = max(attach_list, key=os.path.getctime)
             return last_attach
