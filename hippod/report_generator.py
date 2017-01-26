@@ -57,7 +57,6 @@ class ReportGenerator(object):
 
         def store_data(self, app, data, sub_dir):
             src_path = os.path.join(app['DB_DATA_PATH'], data['data-id'], 'blob.bin')
-            # FIXME: hardcoded {}.png format!
             src_path_snippet = os.path.join(app['DB_SNIPPET_PATH'], '{}.png'.format(data['data-id']))
             if not os.path.isdir(sub_dir):
                 os.mkdir(sub_dir)
@@ -440,7 +439,8 @@ class ReportGenerator(object):
             for cont in object_index_data:
                 ok, cont_obj = hippod.api_shared.read_cont_obj_by_id(app, cont['object-item-id'])
                 if not ok:
-                    continue # what if? ---> no raise ApiError possible
+                    log.error("cannot read container {} by sha although it's in object-index.db".format(cont['object-item-id']))
+                    continue
                 title = cont_obj['title']
                 categories = cont_obj['categories']
                 if filter_type == ReportGenerator.LAST_ACHIEVEMENTS:
@@ -475,8 +475,8 @@ class ReportGenerator(object):
                 sc = sub_cont['sha-minor']
                 ok, full_sub_cont = hippod.api_shared.read_subcont_obj_by_id(app, sha_major, sc)
                 if not ok:
-                    pass
-                    # FIXME: what if? ---> no raise ApiError possible
+                    log.error('cannot read subcontainer {}/{} by sha although sha_minor in subcontainer-list'.format(sha_major, sha_minor))
+                    continue
                 data = hippod.api_object_get_full.get_all_achievement_data(app, sha_major, sc, full_sub_cont)
                 if data:
                     buff_dict[sc] = data[0]['date-added']
