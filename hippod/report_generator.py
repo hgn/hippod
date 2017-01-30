@@ -178,7 +178,7 @@ class ReportGenerator(object):
             with open(description_path, 'r') as file:
                 description = file.read()
             with open(description_path, 'w') as file:
-                description = str(description) + '\n' + '![image caption here]({})'.format(file_path)
+                description = str(description) + '\n' + '![image caption here]({})'.format(file_path) + '\n'
                 file.write(description)
 
 
@@ -207,7 +207,7 @@ class ReportGenerator(object):
                     description += '**Test-Date**             {}\n'.format(test_date)
                     description += '-----------------------   ----------\n\n'
                     for data in achievement_data:
-                        description += '![Description]({})\n'.format(data)
+                        description += '![Description]({})\n\n'.format(data)
                     file.write(description)
                 return description_path
             else:
@@ -229,7 +229,7 @@ class ReportGenerator(object):
                     description += '**Test-Date**             {}\n'.format(test_date)
                     description += '-----------------------   ----------\n\n'
                     for data in achievement_data:
-                        description += '![Description]({})\n'.format(data)
+                        description += '![Description]({})\n\n'.format(data)
                     description += str(description_only)
                     file.write(description)
                 return description_path
