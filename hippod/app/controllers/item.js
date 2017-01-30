@@ -114,6 +114,7 @@ function updateVaritiesData(res) {
                 achievment['submitter'] = value['submitter'];
                 achievment['test-date'] = humanFormatDateYYYYMMDDHHMM(value['test-date']);
                 achievment['date-added'] = humanFormatDateYYYYMMDDHHMM(value['date-added']);
+                achievment['lifetime-leftover'] = secondsToRelativeLifetime(value['lifetime-leftover']);
 
                 value2['achievements'].push(achievment);
             }
