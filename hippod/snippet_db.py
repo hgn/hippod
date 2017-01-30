@@ -23,7 +23,7 @@ def get_size(snippet_db_path):
     return size_real
 
 
-def exchange_entry(app, sha, data, source_path, source_type, snippet_db_path):
+def add_entry_in_container_achievement_meta(app, sha, data, source_path, source_type, snippet_db_path):
     path = os.path.join(source_path)
     f_format = data['mime-type'].split('-')[-1]
     if 'name' not in data or data['name'] is None:
@@ -84,7 +84,7 @@ def execute_snippet(app, sha, data, source_path, source_type):
         snippet_tmp_path = os.path.join('/tmp', 'tmp{}.py'.format(sha))
     exec_code = os.system('python3 {} {}'.format(snippet_tmp_path, snippet_db_path))
     if exec_code == 0:
-        exchange_entry(app, sha, data, source_path, source_type, snippet_db_path)
+        add_entry_in_container_achievement_meta(app, sha, data, source_path, source_type, snippet_db_path)
     else:
         # FIXME: handle unexecutable code
         log.error('Snippet file {} is not executable'.format(snippet_path))
