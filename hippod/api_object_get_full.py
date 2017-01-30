@@ -30,6 +30,7 @@ def get_all_achievement_data(app, sha_major, sha_minor, subcont_obj):
         r['id'] = achievement["id"]
         r['variety-id'] = achievement["variety-id"]
         r['date-added'] = achievement["date-added"]
+        r['lifetime-leftover'] = achievement["lifetime-leftover"]
         # we make sure these data is always in the database
         # if not a python key exception is raised and the
         # DB can be fixed

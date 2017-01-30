@@ -243,6 +243,7 @@ def update_attachment_achievement(app, sha_major, sha_minor, xobj):
             new_data['id'] = current_achievements_no
             new_data['date-added'] =  date
             new_data['variety-id'] = hippod.hasher.calc_variety_id(a)
+            new_data['lifetime-leftover'] = hippod.store_container.get_lifetime(app, xobj)
             current_achievements.append(new_data)
 
             # additionally, we add the submitter to the achievement
