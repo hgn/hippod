@@ -299,6 +299,25 @@ class ReportGenerator(object):
             return data_list
 
 
+        def store_data_subcontainer(self, app, data_list, sub_dir):
+            stored_paths = list()
+            for i, data in enumerate(data_list):
+                stored_data_path = self.store_data(app, data, sub_dir)
+                if stored_data_path == None:
+                    continue
+                stored_paths.append(stored_data_path)
+            return stored_paths
+
+
+        def store_data_achievement(self, app, data_list, sub_dir):
+            stored_paths = list()
+            for i, data in enumerate(data_list):
+                stored_data_path = self.store_data(app, data, sub_dir)
+                if stored_data_path != None:
+                    stored_paths.append(stored_data_path)
+            return stored_paths
+
+
         def store_data_in_tmp(self, app):
             db_path = app['DB_OBJECT_PATH']
             files_catalog = dict()
@@ -335,19 +354,14 @@ class ReportGenerator(object):
 
                 data_list_achievement = self.fetch_data_list_achievement(achievement)
                 if data_list_achievement != None:
-                    for i, data in enumerate(data_list_achievement):
-                        stored_data_path = self.store_data(app, data, sub_dir)
-                        if stored_data_path != None:
-                            files_catalog[sub_dir]['data']['achievements'].append(stored_data_path)
+                    stored_paths = self.store_data_achievement(app, data_list_achievement, sub_dir)
+                    for path in stored_paths: files_catalog[sub_dir]['data']['achievements'].append(path)
 
                 data_list_subcontainer = self.fetch_data_list_subcontainer(subcontainer)
                 if data_list_subcontainer == None:
                     continue
-                for i, data in enumerate(data_list_subcontainer):
-                    stored_data_path = self.store_data(app, data, sub_dir)
-                    if stored_data_path == None:
-                        continue
-                    files_catalog[sub_dir]['data']['subcontainer'].append(stored_data_path)
+                stored_paths = self.store_data_subcontainer(app, data_list_subcontainer, sub_dir)
+                for path in stored_paths: files_catalog[sub_dir]['data']['subcontainer'].append(path)
             return files_catalog
 
 
