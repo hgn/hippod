@@ -141,6 +141,32 @@ def decode_and_write_file(app, sha_sum, data, compress=False):
     return d
 
 
+def already_in_data_db(app, sha):
+    data_db = app['DB_DATA_PATH']
+    data_list = os.listdir(data_db)
+    if sha in data_list:
+        return True
+    return False
+
+
+def higher_mime_type_preference(app, sha, data):
+    # FIXME: hardcoded stuff
+    if data['mime-type'].startswith('x-snippet') or data['mime-type'].startswith('image'):
+        return True
+    return False
+
+
+def overwrite_previous_mime_type(app, sha, data):
+    data_db = app['DB_DATA_PATH']
+    data_path = os.path.join(data_db, sha, 'attr.db')
+    with open(data_path, 'r') as f:
+        content = json.load(f)
+        content['mime-type'] = data['mime-type']
+    with open(data_path, 'w') as f:
+        json_content = json.dumps(content, sort_keys=True, indent=4, separators=(',', ': '))
+        f.write(json_content)
+
+
 def save_object_item_data(app, data, source_path, source_type):
     # we need at least some data now:
     # - mimetype
@@ -159,6 +185,17 @@ def save_object_item_data(app, data, source_path, source_type):
 
     # ok, data stuff
     sha = hippod.hasher.hash_data(data['data'])
+    # if already in db, prove mime-type like 'x-snippet-...' is not overwritten in attr.db
+    # those mime-types have higher preference when same content (sha)
+    if already_in_data_db(app, sha):
+        if higher_mime_type_preference(app, sha, data):
+            overwrite_previous_mime_type(app, sha, data)
+        else:
+            data['data-id'] = sha
+            del data['data']
+            del data['mime-type']
+            return
+
     if data['mime-type'].startswith('x-snippet'):
         hippod.snippet_db.register_snippet(app, data, sha, source_path, source_type)
         # FIXME: truncate possible format endings png, jpg and so on?
