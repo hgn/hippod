@@ -100,7 +100,6 @@ def decode_and_compress(data):
 
 def decode_and_write_file(app, sha_sum, data, compress=False):
     size_stats = dict()
-    snippet_available = False
     path = app['DB_DATA_PATH']
     obj_path = os.path.join(path, sha_sum)
     if not os.path.isdir(obj_path):
@@ -149,19 +148,19 @@ def already_in_data_db(app, sha):
     return False
 
 
-def higher_mime_type_preference(app, sha, data):
+def higher_mime_type_preference(app, sha, mime_type):
     # FIXME: hardcoded stuff
-    if data['mime-type'].startswith('x-snippet') or data['mime-type'].startswith('image'):
+    if mime_type.startswith('x-snippet'):
         return True
     return False
 
 
-def overwrite_previous_mime_type(app, sha, data):
+def overwrite_previous_mime_type(app, sha, mime_type):
     data_db = app['DB_DATA_PATH']
     data_path = os.path.join(data_db, sha, 'attr.db')
     with open(data_path, 'r') as f:
         content = json.load(f)
-        content['mime-type'] = data['mime-type']
+        content['mime-type'] = mime_type
     with open(data_path, 'w') as f:
         json_content = json.dumps(content, sort_keys=True, indent=4, separators=(',', ': '))
         f.write(json_content)
@@ -188,13 +187,8 @@ def save_object_item_data(app, data, source_path, source_type):
     # if already in db, prove mime-type like 'x-snippet-...' is not overwritten in attr.db
     # those mime-types have higher preference when same content (sha)
     if already_in_data_db(app, sha):
-        if higher_mime_type_preference(app, sha, data):
-            overwrite_previous_mime_type(app, sha, data)
-        else:
-            data['data-id'] = sha
-            del data['data']
-            del data['mime-type']
-            return
+        if higher_mime_type_preference(app, sha, data['mime-type']):
+            overwrite_previous_mime_type(app, sha, data['mime-type'])
 
     if data['mime-type'].startswith('x-snippet'):
         hippod.snippet_db.register_snippet(app, data, sha, source_path, source_type)
