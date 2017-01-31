@@ -1,15 +1,19 @@
 "use strict";
 
 function is_already_listed(data_id, id_memory) {
+    // Because snippet and appropriate image have same data-id, a number which we want to add to
+    // the name can be stored in a dictionary with the data-id as key. This dictionary is id_memory
     var count_in_list = false
     for (var k = 0; k < id_memory.length; k++) {
         if (data_id in id_memory[k]) {
             var same_counter = id_memory[k][data_id]
             count_in_list = true
-            }
         }
-    return {count_in_list: count_in_list,
-            same_counter: same_counter};
+    }
+    return {
+        count_in_list: count_in_list,
+        same_counter: same_counter
+    };
 }
 
 function get_name_case_snippet(name_item, data_id, num, id_memory) {
@@ -18,22 +22,30 @@ function get_name_case_snippet(name_item, data_id, num, id_memory) {
     var is_listed = is_already_listed(data_id, id_memory)
     var count_in_list = is_listed.count_in_list
     var same_counter = is_listed.same_counter
+    // count_in_list specifies whether there was already an iteration over the snippet or the
+    // appropriate image, so the same number (stored in counter) can appended to the name
     if (!(count_in_list)) {
-        if (name_item.includes(data_id)){
+        if (name_item.includes(data_id)) {
             // case of non-given name for snippet image
             name = name_item.replace(data_id, counter)
             var obj = {}
             obj[data_id] = counter
             id_memory.push(obj);
             num++
-            }
+        }
         // case of snippet image with user given name
-        else {name = name_item}
-    } else{name = name_item.replace(data_id, same_counter)}
+        else {
+            name = name_item
+        }
+    } else {
+        name = name_item.replace(data_id, same_counter)
+    }
 
-    return {num: num,
-            name: name,
-            id_memory: id_memory};
+    return {
+        num: num,
+        name: name,
+        id_memory: id_memory
+    };
 }
 
 function get_name_case_data(name_item, data_id, num, id_memory) {
@@ -44,8 +56,8 @@ function get_name_case_data(name_item, data_id, num, id_memory) {
     var same_counter = is_listed.same_counter
     if (count_in_list){
         name = name_item.replace(data_id, same_counter)
-        }
-    else{
+    }
+    else {
         if (name_item.includes(data_id)){
             name = name_item.replace(data_id, counter)
             var obj = {}
@@ -53,13 +65,15 @@ function get_name_case_data(name_item, data_id, num, id_memory) {
             id_memory.push(obj);
             num++
         }
-        else{
+        else {
             name = name_item;
-            }
         }
-    return {num: num,
-            name: name,
-            id_memory: id_memory};
+    }
+    return {
+        num: num,
+        name: name,
+        id_memory: id_memory
+    };
 }
 
 
@@ -117,8 +131,6 @@ hippoD.factory('DBService', function($http) {
                              var requested_index = response.data.data['requested-index'];
                              var subcontainer = response.data.data['subcontainer'];
                              var achievements = response.data.data['object-achievements'];
-                             //for (var i = 0; i < achievements.length; i++) {
-                             //}
 
                              if ('data' in subcontainer[requested_index]['object-item']) {
                              var item_data = subcontainer[requested_index]['object-item']['data'];
@@ -131,8 +143,9 @@ hippoD.factory('DBService', function($http) {
                                      var data_id = item_data[i]['data-id']
                                      entry['data-id'] = item_data[i]['data-id']
                                      entry['size-real'] = item_data[i]['size-real'];
-                                     // exchange sha in name with an id_number
-                                     // type entry helps to differentiate between data and snippt db
+                                     // exchange sha in name with an number, e.g. snippet-001.py and snippet-image-001.png
+                                     // snippet and appropriate image should have same number
+                                     // 'type' helps to differentiate between data and snippet db
                                      if ('type' in item_data[i]) {
                                         entry['type'] = item_data[i]['type'];
                                         // case of snippet file
@@ -140,13 +153,13 @@ hippoD.factory('DBService', function($http) {
                                         num = ret.num;
                                         entry['name'] = ret.name;
                                         id_memory =  ret.id_memory;
-                                    } else {
+                                     } else {
                                         entry['type'] = 'undefined';
                                         var ret = get_name_case_data(item_data[i]['name'], data_id, num, id_memory)
                                         num = ret.num;
                                         entry['name'] = ret.name;
                                         id_memory = ret.id_memory;
-                                    }
+                                     }
                                      attachments.push(entry);
                                  }
                              }
@@ -281,8 +294,7 @@ hippoD.factory('AchievementService', function($http) {
                              var requested_index = response.data.data['requested-index'];
                              var subcontainer = response.data.data['subcontainer'];
                              var achievements = response.data.data['object-achievements'];
-                             //for (var i = 0; i < achievements.length; i++) {
-                             //}
+
                              var item_data = subcontainer[requested_index]['object-achievements'][achiev_id]['data'];
                              var attachments = new Array();
                              var num = 1;
@@ -296,19 +308,19 @@ hippoD.factory('AchievementService', function($http) {
                                      // exchange sha in name with an id_number
                                      // type entry helps to differentiate between data and snippt db
                                      if ('type' in item_data[i]) {
-                                        entry['type'] = item_data[i]['type'];
                                         // case of snippet file
+                                        entry['type'] = item_data[i]['type'];
                                         var ret = get_name_case_snippet(item_data[i]['name'], data_id, num, id_memory)
                                         num = ret.num;
                                         entry['name'] = ret.name;
                                         id_memory =  ret.id_memory;
-                                    } else {
+                                     } else {
                                         entry['type'] = 'undefined';
                                         var ret = get_name_case_data(item_data[i]['name'], data_id, num, id_memory)
                                         num = ret.num;
                                         entry['name'] = ret.name;
                                         id_memory = ret.id_memory;
-                                    }
+                                     }
                                      attachments.push(entry);
                                  }
                              }
