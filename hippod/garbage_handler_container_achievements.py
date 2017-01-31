@@ -142,15 +142,12 @@ class GHContainerAchievements(object):
             ok, cont_content = hippod.api_shared.read_subcont_obj_by_id(app, sha_major, sha_minor)
             if not ok:
                 log.error("cannot read container {} by sha, ignore for now".format(cont['object-item-id']))
-            # FIXME: key check is not needed anymore...initial lifetime while posting process
-            if 'lifetime-leftover' in cont_content:
-                if cont_content['lifetime-leftover'] < diff_lifetime:
-                    cont_content['lifetime-leftover'] = diff_lifetime
-            else:
-                cont_content['lifetime-leftover'] = diff_lifetime
+            lifetimes = list()
             for achievement in cont_content['achievements']:
                 if str(achievement['id']) == achiev_id:
                     achievement['lifetime-leftover'] = diff_lifetime
+                lifetimes.append(achievement['lifetime-leftover'])
+            cont_content['lifetime-leftover'] = min(lifetimes)
             subc_path = os.path.join(obj_path, sha_major[0:2], sha_major, sha_minor, 'subcontainer.db')
             with open(subc_path, 'w') as f:
                 content = json.dumps(cont_content, sort_keys=True,indent=4, separators=(',', ': '))
