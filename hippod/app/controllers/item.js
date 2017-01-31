@@ -114,6 +114,7 @@ function updateVaritiesData(res) {
                 achievment['submitter'] = value['submitter'];
                 achievment['test-date'] = humanFormatDateYYYYMMDDHHMM(value['test-date']);
                 achievment['date-added'] = humanFormatDateYYYYMMDDHHMM(value['date-added']);
+                achievment['lifetime-leftover'] = secondsToRelativeLifetime(value['lifetime-leftover']);
 
                 value2['achievements'].push(achievment);
             }
@@ -128,6 +129,7 @@ function updateVaritiesData(res) {
             achievment['submitter'] = value['submitter'];
             achievment['test-date'] = humanFormatDateYYYYMMDDHHMM(value['test-date']);
             achievment['date-added'] = humanFormatDateYYYYMMDDHHMM(value['date-added']);
+            achievment['lifetime-leftover'] = secondsToRelativeLifetime(value['lifetime-leftover']);
 
             // new container required
             var var_container = { };
@@ -180,6 +182,7 @@ function formatReferences(ref_arr) {
 };
 
 DBService.getFoo($scope.id, $scope.sub_id).then(function(res) {
+    console.log(res)
     $scope.data = res;
     if ('object-attachment' in res){
         $scope.responsible = res['object-attachment']['responsible'];
@@ -191,9 +194,82 @@ DBService.getFoo($scope.id, $scope.sub_id).then(function(res) {
     $scope.conflict = res['conflict'];
     $scope.latest_index = res['latest_index'];
     $scope.index = res['requested-index']
+    $scope.data_list = res['__attachments']
+    var data_ids = get_data_id($scope.data_list);
+    var formats = get_format($scope.data_list);
+    var shown_data = check_data_types(formats);
+    $scope.data_ids_scope = sanitize_ids(data_ids, shown_data);
+    $scope.types_scope = sanitize_formats(formats, shown_data);
     var lifetime = res['subcontainer'][$scope.index]['lifetime-leftover']
     $scope.lifetime = secondsToRelativeLifetime(lifetime)
 });
+
+
+function get_format(data) {
+    var extensions = new Array();
+    for (var i=0; i < data.length; i++){
+        var filename = data[i]['name'];
+        var extension = filename.substr(filename.lastIndexOf('.')+1)
+        extensions.push(extension);
+        }
+    return extensions
+}
+
+function get_data_id(data) {
+    var data_ids = new Array();
+    for (var i=0; i < data.length; i++){
+        var data_id = data[i]['data-id'];
+        var type = data[i]['type']
+        data_ids.push({'data-id': data_id,
+                        'type': type });
+    }
+    return data_ids
+}
+
+function check_data_types(formats){
+    var shown_data = new Array()
+    for (var i=0; i < formats.length; i++){
+        switch(formats[i]){
+            case 'png':
+                shown_data.push(true);
+                break;
+            case 'jpeg':
+                shown_data.push(true);
+                break;
+            case 'jpg':
+                shown_data.push(true);
+                break;
+            case 'gif':
+                shown_data.push(true);
+            default:
+                shown_data.push(false);
+                break;
+            }
+    }
+    return shown_data
+}
+
+function sanitize_ids(data_ids, shown_data) {
+    var sanitized_ids = new Array()
+    for(var i=0; i < data_ids.length; i++){
+        if (shown_data[i] == true){
+            sanitized_ids.push({'data-id': data_ids[i]['data-id'],
+                                'type': data_ids[i]['type'] })
+        }
+    }
+    return sanitized_ids
+}
+
+function sanitize_formats(formats, shown_data) {
+    var sanitized_formats = new Array()
+    for(var i=0; i < formats.length; i++){
+        if (shown_data[i] == true){
+            sanitized_formats.push(formats[i])
+        }
+    }
+    return sanitized_formats
+}
+
 
 $scope.graphTestResultOptions = {
     chart: {

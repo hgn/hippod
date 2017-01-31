@@ -55,43 +55,56 @@ class ReportGenerator(object):
             return snippet_format
 
 
+        def get_dst_path(self, data_type, sub_dir, name):
+            if data_type == '.png':
+                dst_path = os.path.join(sub_dir, '{}.png'.format(name))
+            elif data_type == '.jpg':
+                dst_path = os.path.join(sub_dir, '{}.jpg'.format(name))
+            elif data_type == '.jpeg':
+                dst_path = os.path.join(sub_dir, '{}.jpeg'.format(name))
+            elif data_type == '.gif':
+                dst_path = os.path.join(sub_dir, '{}.gif'.format(name))
+            else:
+                # FIXME: not sure, but this function should return. If
+                # not dst_path is undefined and will definitly crash some
+                # lines later!
+                log.error("data type not supported: {}".format(data_type))
+                return None
+            return dst_path
+
+
+        def copy_to_dst(self, src_path, dst_path):
+            with open(src_path, 'rb') as file:
+                data = file.read()
+                decoded = hippod.hasher.decode_base64_data(data)
+            with open(dst_path, 'wb') as file:
+                file.write(decoded)
+            with open(dst_path, 'wb') as dst:
+                shutil.copyfile(src_path, dst_path)
+
+
         def store_data(self, app, data, sub_dir):
             src_path = os.path.join(app['DB_DATA_PATH'], data['data-id'], 'blob.bin')
             src_path_snippet = os.path.join(app['DB_SNIPPET_PATH'], '{}.png'.format(data['data-id']))
             if not os.path.isdir(sub_dir):
                 os.mkdir(sub_dir)
-            # check whether data is a image or description
+            # check whether data is a image or description or snippet
             if 'type' not in data:
                 head, tail = os.path.split(data['name'])
                 name, data_type = os.path.splitext(tail)
-                if data_type == '.png':
-                    dst_path = os.path.join(sub_dir, '{}.png'.format(name))
-                elif data_type == '.jpg':
-                    dst_path = os.path.join(sub_dir, '{}.jpg'.format(name))
-                elif data_type == '.jpeg':
-                    dst_path = os.path.join(sub_dir, '{}.jpeg'.format(name))
-                elif data_type == '.gif':
-                    dst_path = os.path.join(sub_dir, '{}.gif'.format(name))
-                else:
-                    # FIXME: not sure, but this function should return. If
-                    # not dst_path is undefined and will definitly crash some
-                    # lines later!
-                    log.error("data type not supported: {}".format(data_type))
+
+                dst_path = self.get_dst_path(data_type, sub_dir, name)
+                if not dst_path:
                     return None
-                with open(src_path, 'rb') as file:
-                    data = file.read()
-                    #data = zlib.decompress(data)
-                    data += b'==='                                              # arrange that correctly!
-                    decoded = hippod.hasher.decode_base64_data(data)
-                with open(dst_path, 'wb') as file:
-                    file.write(decoded)
-                with open(dst_path, 'wb') as dst:
-                    shutil.copyfile(src_path, dst_path)
+                self.copy_to_dst(src_path, dst_path)
+
             elif data['type'] == 'description':
                 dst_path = os.path.join(sub_dir, 'description.md')
                 with open(dst_path, 'wb') as dst:
                     shutil.copyfile(src_path, dst_path)
+
             elif data['type'] == 'snippet':
+            # in case of snippet root of src is snippet_db
                 if 'name' in data:
                     head, tail = os.path.split(data['name'])
                     name, data_type = os.path.splitext(tail)
@@ -99,34 +112,14 @@ class ReportGenerator(object):
                     name = data['data-id']
                     data_type = get_format_snippet(app, data['data-id'])
                 src_path = os.path.join(app['DB_SNIPPET_PATH'], '{}{}'.format(data['data-id'], data_type))
-                if data_type == '.png':
-                    dst_path = os.path.join(sub_dir, '{}.png'.format(name))
-                elif data_type == '.jpg':
-                    dst_path = os.path.join(sub_dir, '{}.jpg'.format(name))
-                elif data_type == '.jpeg':
-                    dst_path = os.path.join(sub_dir, '{}.jpeg'.format(name))
-                elif data_type == '.gif':
-                    dst_path = os.path.join(sub_dir, '{}.gif'.format(name))
-                else:
-                    # FIXME: not sure, but this function should return. If
-                    # not dst_path is undefined and will definitly crash some
-                    # lines later!
-                    log.error("data type not supported: {}".format(data_type))
+                dst_path = self.get_dst_path(data_type, sub_dir, name)
+                if not dst_path:
                     return None
-                with open(src_path, 'rb') as file:
-                    data = file.read()
-                    #data = zlib.decompress(data)
-                    data += b'==='
-                    # FIXME:  arrange that correctly...'===' should be there without 
-                    # adding
-                    decoded = hippod.hasher.decode_base64_data(data)
-                with open(dst_path, 'wb') as file:
-                    file.write(decoded)
-                with open(dst_path, 'wb') as dst:
-                    shutil.copyfile(src_path, dst_path)
+                self.copy_to_dst(src_path, dst_path)
             # else:
             #     FIXME: error handling
             return dst_path
+
 
         def store_achievement(self, app, achievement_path, sub_dir):
             with open(achievement_path, 'r') as achiev:
@@ -165,6 +158,10 @@ class ReportGenerator(object):
 
 
         def get_attachment_content(self, attachment_path):
+            default_attach = dict()
+            default_attach['responsible'] = 'Anonymous'
+            if not attachment_path:
+                return default_attach
             with open(attachment_path) as attach:
                 content = json.load(attach)
                 return content
@@ -174,69 +171,51 @@ class ReportGenerator(object):
             with open(description_path, 'r') as file:
                 description = file.read()
             with open(description_path, 'w') as file:
-                description = str(description) + '\n' + '![image caption here]({})'.format(file_path)
+                description = str(description) + '\n' + '![image caption here]({})'.format(file_path) + '\n'
                 file.write(description)
+
+
+        def design_description(self, achievement_content, categories, attach_content, title):
+            result = achievement_content['result']
+            submitter = achievement_content['submitter']
+            test_date = achievement_content['test-date']
+            categories = categories
+            responsible = attach_content['responsible']
+
+            description  = '# {} #\n\n'.format(title)
+            description += '-----------------------   ----------\n'
+            description += '**Test Result**           {}\n'.format(result)
+            description += '**Categories**            {}\n'.format(categories)
+            description += '**Submitter**             {}\n'.format(submitter)
+            description += '**Responsible**           {}\n'.format(responsible)
+            description += '**Test-Date**             {}\n'.format(test_date)
+            description += '-----------------------   ----------\n\n'
+            for data in achievement_content['data-references']:
+                description += '![Description]({})\n\n'.format(data)
+            return description
 
 
         def add_achievement(self, description_path, achievement_path, title, \
                             achievement_data, attachment_path, categories):
-            if not attachment_path:
-                attach_content = None
-            else:
-                attach_content = self.get_attachment_content(attachment_path)
+            attach_content = self.get_attachment_content(attachment_path)
             achievement_content = self.get_achievement_content(achievement_path)
+            achievement_content['data-references'] = achievement_data
             if description_path == None:
                 # remove '/achievement.db' of the path and create a 'description.md' file in this directory
                 tmp_item_path = os.path.dirname(achievement_path)
                 description_path = os.path.join(tmp_item_path, 'description.md')
 
-                result = achievement_content['result']
-                submitter = achievement_content['submitter']
-                test_date = achievement_content['test-date']
-                categories = categories
-                if attach_content != None:
-                    responsible = attach_content['responsible']
-                else:
-                    responsible = 'No responsible'
-
                 with open(description_path, 'w') as file:
-                    description  = '# {} #\n\n'.format(title)
-                    description += '-----------------------   ----------\n'
-                    description += '**Test Result**           {}\n'.format(result)
-                    description += '**Categories**            {}\n'.format(categories)
-                    description += '**Submitter**             {}\n'.format(submitter)
-                    description += '**Responsible**           {}\n'.format(responsible)
-                    description += '**Test-Date**             {}\n'.format(test_date)
-                    description += '-----------------------   ----------\n\n'
-                    for data in achievement_data:
-                        description += '![Description]({})\n'.format(data)
-                    file.write(description)
+                    descr = self.design_description(achievement_content, categories, attach_content, title)
+                    file.write(descr)
                 return description_path
             else:
-                result = achievement_content['result']
-                submitter = achievement_content['submitter']
-                test_date = achievement_content['test-date']
-                categories = categories
-                if attach_content != None:
-                    responsible = attach_content['responsible']
-                else:
-                    responsible = 'No responsible'
-
                 with open(description_path, 'r') as file:
                     description_only = file.read()
                 with open(description_path, 'w') as file:
-                    description  = '# {} #\n\n'.format(title)
-                    description += '-----------------------   ----------\n'
-                    description += '**Test Result**           {}\n'.format(result)
-                    description += '**Categories**            {}\n'.format(categories)
-                    description += '**Submitter**             {}\n'.format(submitter)
-                    description += '**Responsible**           {}\n'.format(responsible)
-                    description += '**Test-Date**             {}\n'.format(test_date)
-                    description += '-----------------------   ----------\n\n'
-                    for data in achievement_data:
-                        description += '![Description]({})\n'.format(data)
-                    description += str(description_only)
-                    file.write(description)
+                    descr = self.design_description(achievement_content, categories, attach_content, title)
+                    descr += str(description_only)
+                    file.write(descr)
                 return description_path
 
 
@@ -304,6 +283,25 @@ class ReportGenerator(object):
             return data_list
 
 
+        def store_data_subcontainer(self, app, data_list, sub_dir):
+            stored_paths = list()
+            for i, data in enumerate(data_list):
+                stored_data_path = self.store_data(app, data, sub_dir)
+                if stored_data_path == None:
+                    continue
+                stored_paths.append(stored_data_path)
+            return stored_paths
+
+
+        def store_data_achievement(self, app, data_list, sub_dir):
+            stored_paths = list()
+            for i, data in enumerate(data_list):
+                stored_data_path = self.store_data(app, data, sub_dir)
+                if stored_data_path != None:
+                    stored_paths.append(stored_data_path)
+            return stored_paths
+
+
         def store_data_in_tmp(self, app):
             db_path = app['DB_OBJECT_PATH']
             files_catalog = dict()
@@ -327,33 +325,27 @@ class ReportGenerator(object):
                 
                 subcontainer = os.path.join(db_path, sha_major[0:2], sha_major, sha_minor, 'subcontainer.db')
                 achievement = os.path.join(db_path, sha_major[0:2], sha_major, sha_minor, 'achievements', '{}.db'.format(achievement_id))
-                if last_attachment != None:
-                    attachment = os.path.join(db_path, sha_major[0:2], sha_major, 'attachments', last_attachment)
-                
-                stored_data_path = self.store_achievement(app, achievement, sub_dir)
-                files_catalog[sub_dir]['achievement'] = stored_data_path
 
                 if not last_attachment:
                     files_catalog[sub_dir]['attachment'] = None
                 else:
+                    attachment = os.path.join(db_path, sha_major[0:2], sha_major, 'attachments', last_attachment)
                     stored_data_path = self.store_attachment(app, attachment, sub_dir)
                     files_catalog[sub_dir]['attachment'] = stored_data_path
 
+                stored_data_path = self.store_achievement(app, achievement, sub_dir)
+                files_catalog[sub_dir]['achievement'] = stored_data_path
+
                 data_list_achievement = self.fetch_data_list_achievement(achievement)
                 if data_list_achievement != None:
-                    for i, data in enumerate(data_list_achievement):
-                        stored_data_path = self.store_data(app, data, sub_dir)
-                        if stored_data_path != None:
-                            files_catalog[sub_dir]['data']['achievements'].append(stored_data_path)
+                    stored_paths = self.store_data_achievement(app, data_list_achievement, sub_dir)
+                    for path in stored_paths: files_catalog[sub_dir]['data']['achievements'].append(path)
 
                 data_list_subcontainer = self.fetch_data_list_subcontainer(subcontainer)
                 if data_list_subcontainer == None:
                     continue
-                for i, data in enumerate(data_list_subcontainer):
-                    stored_data_path = self.store_data(app, data, sub_dir)
-                    if stored_data_path == None:
-                        continue
-                    files_catalog[sub_dir]['data']['subcontainer'].append(stored_data_path)
+                stored_paths = self.store_data_subcontainer(app, data_list_subcontainer, sub_dir)
+                for path in stored_paths: files_catalog[sub_dir]['data']['subcontainer'].append(path)
             return files_catalog
 
 

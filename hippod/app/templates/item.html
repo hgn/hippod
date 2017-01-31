@@ -23,6 +23,18 @@
 					<div class="markdown-env">
 						<div ng-bind-html="data['__description'] | toHtmlSave : data['__attachments']"></div>
 					</div>
+					<div ng-repeat="data in data_ids_scope track by $index">
+						<div ng-switch on="data.type">
+							<div ng-switch-when="snippet">
+								<img data-ng-src="api/v1/data-snippet/{{data['data-id']}}">
+								<br>
+							</div>
+							<div ng-switch-default>
+								<img data-ng-src="api/v1/data/{{data['data-id']}}">
+								<br>
+							</div>
+						</div>
+					</div>
 					<hr >
 					<h2>Attachments:</h2>
 					<br>
@@ -137,6 +149,7 @@
 												Submitter: {{ achievement['submitter'] }} <br>
 												Date Tested:  <span class="glyphicon glyphicon-time" aria-hidden="true"></span> {{ achievement['test-date'] }} <br>
 												Date Uploaded: <span class="glyphicon glyphicon-time" aria-hidden="true"></span> {{achievement['date-added'] }}<br>
+												Lifetime: {{ achievement['lifetime-leftover'] }} <br>
 											</div>
 											</a>
 										</div>
@@ -168,6 +181,7 @@
 												Submitter: {{ achievement['submitter'] }} <br>
 												Date Tested:  <span class="glyphicon glyphicon-time" aria-hidden="true"></span> {{ achievement['test-date'] }} <br>
 												Date Uploaded: <span class="glyphicon glyphicon-time" aria-hidden="true"></span> {{achievement['date-added'] }}<br>
+												Lifetime: {{ achievement['lifetime-leftover'] }} <br>
 											</div>
 											</a>
 										</div>
