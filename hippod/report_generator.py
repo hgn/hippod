@@ -76,8 +76,6 @@ class ReportGenerator(object):
         def copy_to_dst(self, src_path, dst_path):
             with open(src_path, 'rb') as file:
                 data = file.read()
-                #data = zlib.decompress(data)
-                data += b'==='                                              # arrange that correctly!
                 decoded = hippod.hasher.decode_base64_data(data)
             with open(dst_path, 'wb') as file:
                 file.write(decoded)
