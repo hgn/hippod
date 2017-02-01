@@ -29,6 +29,8 @@ from hippod import api_report
 from hippod import api_get_reports
 from hippod import garbage_handler_container_achievements
 from hippod import garbage_handler_mime_db
+from hippod import api_cache_persons
+from hippod import walker
 
 APP_VERSION = "002"
 
@@ -158,6 +160,9 @@ def setup_routes(app, conf):
     app.router.add_route('POST',
                         '/api/v1/object',
                         api_object_post.handle)
+    app.router.add_route('GET',
+                        '/api/v1/cache-persons',
+                        api_cache_persons.handle)
     # app.router.add_route('*',
     #                     '/api/v1/users',
     #                     api_users.handle)
@@ -177,10 +182,20 @@ def gh_mime_data(app):
     garb_handler_md.remove(app)
 
 
+def cache_data(app):
+    all_titles = list()
+    all_results = list()
+    w = walker.Walker(app)
+    for achievement in w.get_all_achievements():
+        all_titles.append(achievement.container.title)
+        all_results.append(achievement.result)
+
+
 def timeout_daily(app):
     log.info("daily execution handler started")
     gh_container_achievements(app)
     gh_mime_data(app)
+    cache_data(app)
 
 
 def seconds_to_midnight():
