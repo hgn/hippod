@@ -29,8 +29,11 @@ from hippod import api_report
 from hippod import api_get_reports
 from hippod import garbage_handler_container_achievements
 from hippod import garbage_handler_mime_db
-from hippod import api_cache_persons
 from hippod import walker
+from hippod import cache_categories
+from hippod import cache_tags
+from hippod import cache_achievements
+from hippod import cache_persons
 
 APP_VERSION = "002"
 
@@ -69,6 +72,11 @@ def check_db_environmet(app, path):
 
     obj_path = os.path.join(path, 'snippets')
     app['DB_SNIPPET_PATH'] = obj_path
+    if not os.path.isdir(obj_path):
+        os.makedirs(obj_path)
+
+    obj_path = os.path.join(path, 'cache')
+    app['DB_CACHE_PATH'] = obj_path
     if not os.path.isdir(obj_path):
         os.makedirs(obj_path)
 
@@ -160,9 +168,6 @@ def setup_routes(app, conf):
     app.router.add_route('POST',
                         '/api/v1/object',
                         api_object_post.handle)
-    app.router.add_route('GET',
-                        '/api/v1/cache-persons',
-                        api_cache_persons.handle)
     # app.router.add_route('*',
     #                     '/api/v1/users',
     #                     api_users.handle)
@@ -182,20 +187,33 @@ def gh_mime_data(app):
     garb_handler_md.remove(app)
 
 
-def cache_data(app):
-    all_titles = list()
-    all_results = list()
-    w = walker.Walker(app)
-    for achievement in w.get_all_achievements():
-        all_titles.append(achievement.container.title)
-        all_results.append(achievement.result)
+def cache_update(app, frequency=None):
+    if frequency == None:
+        raise InternalError("frequency must be 'daily\', 'hourly\' or 'weekly\'")
+
+    cache_person = cache_persons.Cache(app, frequency)
+    cache_tag = cache_tags.Cache(app, frequency)
+    cache_category = cache_categories.Cache(app, frequency)
+    cache_achievement = cache_achievements.Cache(app, frequency)
+
+    for achievement in walker.Walker.get_all_achievements(app):
+        cache_tag.update(achievement)
+        cache_category.update(achievement)
+        cache_achievement.update(achievement)
+
+    cache_person.update()
+
+    cache_person.write_cache_file()
+    cache_tag.write_cache_file()
+    cache_category.write_cache_file()
+    cache_achievement.write_cache_file()
 
 
 def timeout_daily(app):
     log.info("daily execution handler started")
     gh_container_achievements(app)
     gh_mime_data(app)
-    cache_data(app)
+    cache_update(app, 'daily')
 
 
 def seconds_to_midnight():

@@ -3,49 +3,71 @@ import hippod.api_shared
 
 class Walker(object):
 
-    def __init__(self, app):
-        self. app = app
-        self.obj_db = app['DB_OBJECT_PATH']
-
-
-    def get_subcontainer_list(self, container_path):
+    @staticmethod
+    def walk_container(app, container, a):
         subcontainer_list = list()
-        for file in os.listdir(container_path):
-            path = os.path.join(container_path, file)
-            if os.path.isdir(path) and os.path.basename(path) != "attachments":
-                subcontainer_list.append(file)
-        return subcontainer_list
+        ok, cont_content = hippod.api_shared.read_cont_obj_by_id(app, container)
+        if not ok:
+            msg = "couldn't open container {} although listed in directoy. ignore for now".format(container)
+            log.error(msg)
+            return None
+        for subc in cont_content['subcontainer-list']:
+            subcontainer_list.append(subc['sha-minor'])
+        attachment_id = cont_content['attachments'][-1]['id']
+        a.container.title = cont_content['title']
+        a.container.categories = cont_content['categories']
+        return subcontainer_list, attachment_id, a
 
 
-    def get_pre_container_list(self):
-        pre_container_list = list()
-        for file in os.listdir(self.obj_db):
-            path = os.path.join(self.obj_db, file)
-            if os.path.isdir(path):
-                pre_container_list.append(file)
-        return pre_container_list
+    @staticmethod
+    def walk_achievement(app, container, subcontainer, achievement, a):
+        content = hippod.api_shared.get_achievement_data_by_sha_id(app, container, subcontainer, achievement)
+        a.result = content['result']
+        return a
 
 
-    def get_all_achievements(self):
-        pre_container_list = self.get_pre_container_list()
-        a = self.AchievementData()
-        for pre_container in pre_container_list:
-            pre_container_path = os.path.join(self.obj_db, pre_container)
-            container_list = os.listdir(pre_container_path)
-            for container in container_list:
-                container_path = os.path.join(self.obj_db, pre_container, container)
-                ok, cont_content = hippod.api_shared.read_cont_obj_by_id(self.app, container)
-                a.container.title = cont_content['title']
-                a.container.categories = cont_content['categories']
-                subcontainer_list = self.get_subcontainer_list(container_path)
-                for subcontainer in subcontainer_list:
-                    achievements_path = os.path.join(self.obj_db, pre_container, container, subcontainer, 'achievements')
-                    achievements = os.listdir(achievements_path)
-                    for achievement in achievements:
-                        achiev_id = achievement.split('.')[0]
-                        content = hippod.api_shared.get_achievement_data_by_sha_id(self.app, container, subcontainer, achiev_id)
-                        a.result = content['result']
-                        yield a
+    @staticmethod
+    def walk_attachment(app, container, attachment_id, a):
+        content = hippod.api_shared.get_attachment_data_by_sha_id(app, container, attachment_id)
+        a.container.attachment.tags = content['tags']
+        return a
+
+
+    @staticmethod
+    def get_container_list(app):
+        container_list = list()
+        obj_list = hippod.api_shared.object_index_read(app)
+        for obj in obj_list:
+            container_list.append(obj['object-item-id'])
+        return container_list
+
+
+    @staticmethod
+    def get_achievement_list(app, container, subcontainer):
+        achievement_list = list()
+        ok, content = hippod.api_shared.read_subcont_obj_by_id(app, container, subcontainer)
+        if not ok:
+            msg = "couldn't open container {} although listed in directoy. ignore for now".format(container)
+            log.error(msg)
+            return None
+        for achievement in content['achievements']:
+            achievement_list.append(achievement['id'])
+        return achievement_list
+
+
+    @staticmethod
+    def get_all_achievements(app):
+        a = Walker.AchievementData()
+        container_list = Walker.get_container_list(app)
+        # FIXME: what if None?
+        for container in container_list:
+            subcontainer_list, attachment_id, a = Walker.walk_container(app, container, a)
+            a = Walker.walk_attachment(app, container, attachment_id, a)
+            for subcontainer in subcontainer_list:
+                achievements = Walker.get_achievement_list(app, container, subcontainer)
+                for achievement in achievements:
+                    a = Walker.walk_achievement(app, container, subcontainer, achievement, a)
+                    yield a
 
 
     class AchievementData(object):
@@ -53,5 +75,9 @@ class Walker(object):
         class ObjectData(object):
             pass
 
+            class AttachmentData(object):
+                pass
+
         def __init__(self):
             self.container = self.ObjectData()
+            self.container.attachment = self.container.AttachmentData()
