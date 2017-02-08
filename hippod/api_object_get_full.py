@@ -80,14 +80,22 @@ def container_obj_to_ret_obj(app, sha_major, sha_minor, cont_obj):
     ret_obj['object-item'] = dict()
     ret_obj['object-item']['title'] = cont_obj['title']
     ret_obj['object-item']['categories'] = cont_obj['categories']
+    # set conflict key true if multiple subcontainers
     if len(cont_obj['subcontainer-list']) > 1:
         ret_obj['conflict'] = True
+
     for i,v in enumerate(cont_obj['subcontainer-list']):
+        # fetch index of the requested subcontainer and the subcontainer itself
+        # in the list to load the correct data and display the correct description in GUI
         if cont_obj['subcontainer-list'][i]['sha-minor'] == sha_minor:
             ret_obj['requested-index'] = i
             sub_cont = cont_obj['subcontainer-list'][i]
+
     ret_obj['subcontainer'] = list()
     for sub_cont in cont_obj['subcontainer-list']:
+        # store meta and data from every subcontainer, because request URL is the same for
+        # default subcontainer displayed at first and choosen subcontainer
+        # so GUI just look at 'requested-index' in ret_obj and read from the subcontainer list 
         sub_dict = dict()
         sub_dict['object-item'] = dict()
         sub_dict['sha-minor'] = sub_cont['sha-minor']
@@ -103,6 +111,7 @@ def container_obj_to_ret_obj(app, sha_major, sha_minor, cont_obj):
             sub_dict['object-item']['data'] = full_sub_cont['object-item']['data']
         sub_dict['lifetime-leftover'] = full_sub_cont['lifetime-leftover']
         ret_obj['subcontainer'].append(sub_dict)
+
     data = get_last_attachment_data(app, sha_major, cont_obj)
     if data:
         ret_obj['object-attachment'] = data
