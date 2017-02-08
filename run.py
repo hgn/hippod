@@ -196,7 +196,7 @@ def cache_update(app, frequency=None):
     cache_category = cache_categories.Cache(app, frequency)
     cache_achievement = cache_achievements.Cache(app, frequency)
 
-    for achievement in walker.Walker.get_all_achievements(app):
+    for achievement in walker.Walker.get_achievements(app, False):
         cache_tag.update(achievement)
         cache_category.update(achievement)
         cache_achievement.update(achievement)
