@@ -1,5 +1,6 @@
 import os
 import hippod.api_shared
+from datetime import datetime as dt
 
 class Walker(object):
 
@@ -20,10 +21,13 @@ class Walker(object):
 
 
     @staticmethod
-    def walk_achievement(app, container, subcontainer, achievement, a):
+    def walk_achievement(app, container, subcontainer, achievement, a, limit_to_last_achievement):
         content = hippod.api_shared.get_achievement_data_by_sha_id(app, container, subcontainer, achievement)
-        a.result = content['result']
-        return a
+        if limit_to_last_achievement == False:
+            a.result = content['result']
+            return a
+        else:
+            return content['test-date']
 
 
     @staticmethod
@@ -43,31 +47,68 @@ class Walker(object):
 
 
     @staticmethod
-    def get_achievement_list(app, container, subcontainer):
+    def get_achievement_list(app, container, subcontainer, limit_to_last_achievement):
         achievement_list = list()
         ok, content = hippod.api_shared.read_subcont_obj_by_id(app, container, subcontainer)
         if not ok:
             msg = "couldn't open container {} although listed in directoy. ignore for now".format(container)
             log.error(msg)
             return None
-        for achievement in content['achievements']:
-            achievement_list.append(achievement['id'])
-        return achievement_list
+        if limit_to_last_achievement == False:
+            for achievement in content['achievements']:
+                achievement_list.append(achievement['id'])
+            return achievement_list
+        else:
+            return content['achievements'][-1]['id']
 
 
     @staticmethod
-    def get_all_achievements(app):
+    def get_last_achievement(app, container, subcontainer, a):
+        # fetches last achievement with date to compare with last achievement of other subcontainers
+        last_achiev_id = Walker.get_achievement_list(app, container, subcontainer, True)
+        achievement_date = Walker.walk_achievement(app, container, subcontainer, last_achiev_id, a, True)
+        achievement = dict()
+        achievement_date = dt.strptime(achievement_date, '%Y-%m-%dT%H:%M:%S.%f')
+        achievement['date'] = achievement_date
+        achievement['id'] = last_achiev_id
+        achievement['subcontainer'] = subcontainer
+        return achievement
+
+
+    @staticmethod
+    def get_latest_index_of_subcontainer(achievement_list):
+        # compare dates of all last achievements of all subcontainers of the container
+        index = max(range(len(achievement_list)), key=lambda index: \
+                    achievement_list[index]['date'])
+        return index
+
+
+    @staticmethod
+    def get_achievements(app, limit_to_last_achievement=False):
+        # in case of limit_to_last_achievement the iteration process only returns the data
+        # from the subcontainer with the latest achievement, else every subcontainer and achievement
         a = Walker.AchievementData()
         container_list = Walker.get_container_list(app)
         # FIXME: what if None?
         for container in container_list:
+            last_achievements_of_subcontainer = list()
             subcontainer_list, attachment_id, a = Walker.walk_container(app, container, a)
             a = Walker.walk_attachment(app, container, attachment_id, a)
             for subcontainer in subcontainer_list:
-                achievements = Walker.get_achievement_list(app, container, subcontainer)
-                for achievement in achievements:
-                    a = Walker.walk_achievement(app, container, subcontainer, achievement, a)
-                    yield a
+                if limit_to_last_achievement == False:
+                    achievements = Walker.get_achievement_list(app, container, subcontainer, limit_to_last_achievement)
+                    for achievement in achievements:
+                        a = Walker.walk_achievement(app, container, subcontainer, achievement, a, limit_to_last_achievement)
+                        yield a
+                else:
+                    achievement = Walker.get_last_achievement(app, container, subcontainer, a)
+                    last_achievements_of_subcontainer.append(achievement)
+            if limit_to_last_achievement:
+                latest_index = Walker.get_latest_index_of_subcontainer(last_achievements_of_subcontainer)
+                subcontainer = last_achievements_of_subcontainer[latest_index]['subcontainer']
+                achiev_id = last_achievements_of_subcontainer[latest_index]['id']
+                a = Walker.walk_achievement(app, container, subcontainer, achiev_id, a , False)
+                yield a
 
 
     class AchievementData(object):
