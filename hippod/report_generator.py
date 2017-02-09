@@ -159,7 +159,7 @@ class ReportGenerator(object):
 
         def get_attachment_content(self, attachment_path):
             default_attach = dict()
-            default_attach['responsible'] = 'Anonymous'
+            default_attach['responsible'] = 'anonymous'
             if not attachment_path:
                 return default_attach
             with open(attachment_path) as attach:

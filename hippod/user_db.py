@@ -87,7 +87,7 @@ class UserDB:
         entry = dict()
         entry_sub = dict()
         entry["anonym"] = entry_sub
-        entry_sub['fullname']   = "Anonymous"
+        entry_sub['fullname']   = "anonymous"
         entry_sub['email']      = "anonym@example.com"
         entry_sub['department'] = "Death Star"
         entry_sub['telephone']  = "00000000"
@@ -103,7 +103,7 @@ class UserDB:
         entry = dict()
         entry_sub = dict()
         entry["anonym"] = entry_sub
-        entry_sub['fullname']   = "Anonymous"
+        entry_sub['fullname']   = "anonymous"
         entry_sub['email']      = "anonym@example.com"
         entry_sub['department'] = "Death Star"
         entry_sub['telephone']  = "00000000"
