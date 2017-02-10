@@ -5,6 +5,15 @@ from datetime import datetime as dt
 class Walker(object):
 
     @staticmethod
+    def db_empty(app):
+        empty = False
+        obj_list = hippod.api_shared.object_index_read(app)
+        if not obj_list or len(obj_list)==0:
+            empty = True
+        return empty
+
+
+    @staticmethod
     def walk_container(app, container, a):
         subcontainer_list = list()
         ok, cont_content = hippod.api_shared.read_cont_obj_by_id(app, container)

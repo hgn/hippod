@@ -190,6 +190,8 @@ def gh_mime_data(app):
 def cache_update(app, frequency=None):
     if frequency == None:
         raise InternalError("frequency must be 'daily\', 'hourly\' or 'weekly\'")
+    if walker.Walker.db_empty(app):
+        return
 
     cache_person = cache_persons.Cache(app, frequency)
     cache_tag = cache_tags.Cache(app, frequency)
