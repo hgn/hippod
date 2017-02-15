@@ -166,6 +166,10 @@ def overwrite_previous_mime_type(app, sha, mime_type):
         f.write(json_content)
 
 
+def valid_snippet_mime_type(mime_type):
+    return mime_type == "x-snippet-python3-matplot-png"
+
+
 def save_object_item_data(app, data, source_path, source_type):
     # we need at least some data now:
     # - mimetype
@@ -191,9 +195,10 @@ def save_object_item_data(app, data, source_path, source_type):
             overwrite_previous_mime_type(app, sha, data['mime-type'])
 
     if data['mime-type'].startswith('x-snippet'):
+        if not valid_snippet_mime_type(data['mime-type']):
+            msg = "not a valid x-snippet mime type!"
+            raise ApiError(msg)
         hippod.snippet_db.register_snippet(app, data, sha, source_path, source_type)
-        # FIXME: truncate possible format endings png, jpg and so on?
-        # hardcoded formats
         if 'name' in data and data['name'] is not None and '.' not in data['name']:
             data['name'] = '{}.py'.format(data['name'])
         elif 'name' in data and data['name'] is not None and '.' in data['name']:

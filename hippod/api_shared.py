@@ -41,6 +41,8 @@ def get_achievement_data_by_sha_id(app, sha_major, sha_minor, id_no):
                         sha_minor,
                         'achievements',
                         '{}.db'.format(id_no))
+    if not os.path.isfile(path):
+        return None
     with open(path) as data_file:
         data = json.load(data_file)
     return data
@@ -52,6 +54,8 @@ def get_attachment_data_by_sha_id(app, sha_major, id_no):
                         sha_major,
                         'attachments',
                         '{}.db'.format(id_no))
+    if not os.path.isfile(path):
+        return None
     with open(path) as data_file:
         data = json.load(data_file)
     return data

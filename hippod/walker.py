@@ -20,7 +20,9 @@ class Walker(object):
         if not ok:
             msg = "couldn't open container {} although listed in directoy. ignore for now".format(container)
             log.error(msg)
-            return None
+            return None, None, None
+        if len(cont_content['attachments']) <= 0:
+            return None, None, None
         for subc in cont_content['subcontainer-list']:
             subcontainer_list.append(subc['sha-minor'])
         attachment_id = cont_content['attachments'][-1]['id']
@@ -42,6 +44,7 @@ class Walker(object):
     @staticmethod
     def walk_attachment(app, container, attachment_id, a):
         content = hippod.api_shared.get_attachment_data_by_sha_id(app, container, attachment_id)
+        if content == None: return None
         a.container.attachment.tags = content['tags']
         return a
 
@@ -102,7 +105,11 @@ class Walker(object):
         for container in container_list:
             last_achievements_of_subcontainer = list()
             subcontainer_list, attachment_id, a = Walker.walk_container(app, container, a)
+            if subcontainer_list == None:
+                continue
             a = Walker.walk_attachment(app, container, attachment_id, a)
+            if a == None:
+                continue
             for subcontainer in subcontainer_list:
                 if limit_to_last_achievement == False:
                     achievements = Walker.get_achievement_list(app, container, subcontainer, limit_to_last_achievement)
