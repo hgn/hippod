@@ -101,10 +101,21 @@
 
 .controll-container {
 	padding: 20px;
-	background-color: #f6f6f6;
+	background-color: #fbfbfb;
 	width: 100%;
-	margin-bottom: 20px;
+	margin-bottom: 10px;
 }
+
+.filter-display-box {
+	border-radius: 5px;
+	background-color: #F5F5F5;
+	padding: 10px;
+}
+
+.inner-filter-display-box {
+  font-size: 90%;
+}
+
 
 /* styles for verbose item data */
 .item-container {
@@ -203,7 +214,7 @@
 .alignleft {
 	float: left;
 	margin: 0px;
-  font-size: 105%;
+  font-size: 110%;
   font-weight: 600;
 }
 .alignright {
@@ -270,16 +281,6 @@ a.list-group-item:focus, a.list-group-item:hover, button.list-group-item:focus, 
     color: #000;
     text-decoration: none;
     background-color: #f6f6f6;
-}
-
-.filter-display-box {
-	border-radius: 5px;
-	background-color: #EEEEEE;
-	padding: 10px;
-}
-
-.inner-filter-display-box {
-  font-size: 90%;
 }
 
 /* progress bar do not look good in tables */
