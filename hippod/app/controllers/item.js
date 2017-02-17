@@ -24,12 +24,14 @@ hippoD.controller("ItemCntrl", function ($scope, $stateParams, $window, DBServic
             var o = { };
             o['pass'] = new Array();
             o['fail'] = new Array();
+            o['excep'] = new Array();
             o['non']  = new Array();
 
             angular.forEach(data, function(value, key) {
                 var t = new Date(value['date']).getTime();
                 o['pass'].push([t, value['pass']]);
                 o['fail'].push([t, value['fail']]);
+                o['excep'].push([t, value['excep']]);
                 o['non'].push([t, value['non']]);
             });
             return o;
@@ -47,6 +49,7 @@ hippoD.controller("ItemCntrl", function ($scope, $stateParams, $window, DBServic
                 entry['date'] = norm_data;
                 entry['pass'] = 0;
                 entry['fail'] = 0;
+                entry['excep'] = 0;
                 entry['non'] = 0;
                 achiev_res_date_arr.push(entry);
             } else {
@@ -55,6 +58,7 @@ hippoD.controller("ItemCntrl", function ($scope, $stateParams, $window, DBServic
                     entry['date'] = norm_data;
                     entry['pass'] = 0;
                     entry['fail'] = 0;
+                    entry['excep'] = 0;
                     entry['non'] = 0;
                     achiev_res_date_arr.push(entry);
                 }
@@ -68,6 +72,9 @@ hippoD.controller("ItemCntrl", function ($scope, $stateParams, $window, DBServic
                     break;
                 case "passed":
                     achiev_res_date_arr[index]['pass'] += 1;
+                    break;
+                case "exception":
+                    achiev_res_date_arr[index]['excep'] += 1;
                     break;
                 case "nonapplicable":
                     achiev_res_date_arr[index]['non'] += 1;
@@ -89,6 +96,11 @@ hippoD.controller("ItemCntrl", function ($scope, $stateParams, $window, DBServic
         {
             "key" : "Failed" ,
             "values" : mult['fail']
+        },
+
+        {
+            "key" : "Exception" ,
+            "values" : mult['excep']
         },
 
         {

@@ -16,6 +16,7 @@ import hippod.hasher
 import hippod.ex3000
 import hippod.api_shared
 import hippod.api_object_get_full
+import hippod.status_codes
 
 from hippod.error_object import *
 
@@ -40,8 +41,9 @@ def check_request_data(xobj):
             raise ApiError(msg)
     if 'filter-by-result' in xobj:
         filter_result = xobj['filter-by-result']
-        if filter_result not in ("all", "passed", "failed", "nonapplicable"):
-            msg = "maturity_level must be all, passed, failed or nonapplicable "
+        if filter_result not in hippod.status_codes.status_list_with_all:
+            status_list = " ".join(hippod.status_codes.status_list_with_all)
+            msg = "result status must be {}".format(status_list)
             raise ApiError(msg)
 
     # fine, arguments are fime

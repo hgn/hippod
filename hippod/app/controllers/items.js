@@ -45,6 +45,7 @@ hippoD.controller("ItemsCtrl", function ($scope, ItemService, $uibModal, $log, $
 				case "Passed": return "passed";
 				case "Failed": return "failed";
 				case "Non Applicable": return "nonapplicable";
+				case "Exception": return "exception";
 				default: console.log("result name not supported");
 			}
 		};
@@ -107,6 +108,7 @@ hippoD.controller("ItemsCtrl", function ($scope, ItemService, $uibModal, $log, $
 			var passed_achievement = 0;
 			var failed_achievement = 0;
 			var nonapplicable_achievement = 0;
+			var exception_achievement = 0;
 			var no_achievements = 0;
 
 			$scope.passedAchievements = 0;
@@ -131,6 +133,8 @@ hippoD.controller("ItemsCtrl", function ($scope, ItemService, $uibModal, $log, $
 						failed_achievement++;
 					} else if (result == "nonapplicable") {
 						nonapplicable_achievement++;
+					} else if (result == "exception") {
+						exception_achievement++;
 					} else {
 						console.log("corrupt achievement!");
 					}
@@ -160,9 +164,10 @@ hippoD.controller("ItemsCtrl", function ($scope, ItemService, $uibModal, $log, $
 			$scope.passedAchievements = passed_achievement;
 			$scope.failedAchievements = failed_achievement;
 			$scope.nonApplicableAchievements = nonapplicable_achievement;
+			$scope.exceptionAchievements = exception_achievement;
 			$scope.noAchievements = no_achievements;
 
-			var colorArray = [ '#4CAF50', '#F44336', '#2196F3', '#A1887F' ];
+			var colorArray = [ '#4CAF50', '#F44336', '#2196F3', '#FF9800', '#ffFF00' ];
 			function colorFunction() {
 				return function(d, i) {
 					return colorArray[i];
@@ -172,10 +177,10 @@ hippoD.controller("ItemsCtrl", function ($scope, ItemService, $uibModal, $log, $
 			$scope.optionsPieChart = {
 				chart: {
 					type: 'pieChart',
-					height: 500,
+					height: 400,
 					x: function(d){return d.key;},
 					y: function(d){return d.y;},
-					showLabels: true,
+					showLabels: false,
 					duration: 500,
 					labelThreshold: 0.01,
 					labelSunbeamLayout: true,
@@ -183,7 +188,7 @@ hippoD.controller("ItemsCtrl", function ($scope, ItemService, $uibModal, $log, $
 	        color:colorFunction(),
 					legend: {
 						margin: {
-							top: 20,
+							top: 10,
 							right: 0,
 							bottom: 0,
 							left: 0
@@ -196,12 +201,13 @@ hippoD.controller("ItemsCtrl", function ($scope, ItemService, $uibModal, $log, $
 				{ key: "Passed", y: passed_achievement },
 				{ key: "Failed", y: failed_achievement },
 				{ key: "Non Applicable", y: nonapplicable_achievement },
+				{ key: "Exception", y: exception_achievement },
 				{ key: "Never Tested", y: no_achievements }
 			];
 
 			$scope.testDateOldest = humanRelativeDate(test_date_oldest);
 			$scope.testDateYoungest = humanRelativeDate(test_date_youngest);
-  
+
 
 		}, function(error) {
 			$scope.data = null;

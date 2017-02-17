@@ -246,6 +246,44 @@
 								</a>
 							</div>
 
+							<div ng-switch-when="exception">
+								<a ng-href="#/item/{{items['object-item-id']}}/{{items['object-item']['sha-minor']}}">
+									<div class="item-container">
+										<div class="status-area status-area-exception"></div>
+										<div class="item-main">
+											<div class="header">
+												<p class="alignleft">{{ items["object-item"]['title'] }}</p>
+												<p class="alignright">{{ items["object-item-id"] }}</p>
+												<div style="clear: both;"></div>
+											</div>
+											<div class="content">
+												<div class="achievements">
+													<b>Last Submitter:</b> {{ items['object-achievements']['submitter'] }}<br>
+													<b>Submitter Date:</b> {{ items['object-achievements']['date-added'] }}<br>
+													<b>Test Date:</b> {{ items['object-achievements']['test-date-relative-long'] }}<br>
+													<b>Result:</b> {{ items['object-achievements']['test-result'] }}<br>
+													<div ng-switch on='items["conflict"]'>
+														<div ng-switch-when="true">
+															<div class="alert alert-danger" role="alert">
+															 <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+																<b>Conflict:</b> Multiple subcontainers detected<br>
+															</div>
+														</div>
+														<div ng-switch-default></div>
+													</div>
+												</div>
+												<div class="attachments">
+													<b>Category:</b> {{ items['object-attachment']['categories'] }}<br>
+													<b>References:</b> {{ items['object-attachment']['references'] }}<br>
+													<b>Responsible:</b> {{ items['object-attachment']['responsible'] }}<br>
+													<b>Tags:</b> {{ items['object-attachment']['tags'] }}<br>
+												</div>
+											</div>
+										</div>
+									</div>
+								</a>
+							</div>
+
 							<div ng-switch-default>
 								<a ng-href="#/item/{{items['object-item-id']}}/{{items['object-item']['sha-minor']}}">
 
@@ -323,6 +361,28 @@
 							<div ng-switch-when="failed">
 								<a ng-href="#/item/{{items['object-item-id']}}/{{items['object-item']['sha-minor']}}">
 									<div class="list-group-item test-failure-indicator">
+										<p class="alignleft">{{ items["object-item"]['title'] }}</p>
+										<p class="alignright">{{ items["object-item-id"] }}</p>
+										<div style="clear: both;"></div>
+										<div class="header-seperator"></div>
+										<b>Last Submitter:</b> {{ items['object-achievements']['submitter'] }}<br>
+										<b>Date:</b> {{ items['object-achievements']['test-date-relative'] }}<br>
+										<b>Result:</b> {{ items['object-achievements']['test-result'] }}<br>
+										<div ng-switch on='items["conflict"]'>
+														<div ng-switch-when="true">
+															<div class="alert alert-danger" role="alert">
+															 <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+																<b>Conflict:</b> Multiple subcontainers detected<br>
+															</div>
+														</div>
+														<div ng-switch-default></div>
+													</div>
+									</div>
+								</a>
+							</div>
+							<div ng-switch-when="exception">
+								<a ng-href="#/item/{{items['object-item-id']}}/{{items['object-item']['sha-minor']}}">
+									<div class="list-group-item test-exception-indicator">
 										<p class="alignleft">{{ items["object-item"]['title'] }}</p>
 										<p class="alignright">{{ items["object-item-id"] }}</p>
 										<div style="clear: both;"></div>
@@ -422,9 +482,12 @@
 					Passed: {{ passedAchievements }}<br>
 					Failed: {{ failedAchievements }}<br>
 					Non Applicable: {{ nonApplicableAchievements }}<br>
+					Exception: {{ exceptionAchievements }}<br>
 					Never tested: {{ noAchievements }}<br>
 
-					<div ng-controller="ItemsCtrl"> 
+					<hr class="divider">
+
+					<div ng-controller="ItemsCtrl">
 						<nvd3 options="optionsPieChart" data="exampleData2"></nvd3>
 					</div>
 
@@ -435,6 +498,6 @@
 			</div>
 
 		</div> <!-- col-sm-6 -->
-	</div>    
+	</div>
 </div> <!-- main-content-container -->
 

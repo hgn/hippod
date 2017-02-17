@@ -19,6 +19,7 @@ import hippod.api_shared
 import hippod.statistic
 import hippod.mime_data_db
 import hippod.store_container
+import hippod.status_codes
 
 from hippod.error_object import *
 
@@ -164,8 +165,9 @@ def validate_achievement(achievement):
         msg = "achievements has no result!"
         raise ApiError(msg)
 
-    if achievement['result'] not in ['passed', 'failed', 'nonapplicable']:
-        msg = "achievements result MUST be passed, failed, nonapplicable"
+    if achievement['result'] not in hippod.status_codes.status_list:
+        allowed_list = " ".join(hippod.status_codes.status_list)
+        msg = "achievements result MUST be {}".format(allowed_list)
         raise ApiError(msg)
 
     if not "test-date" in achievement:

@@ -142,6 +142,9 @@
 .status-area-failure {
   background-color: #ff0000;
 }
+.status-area-exception {
+  background-color: #FF9800;
+}
 .status-area-nonapplicable {
   background-color: #2196F3;
 }
@@ -218,20 +221,24 @@
 
 .test-success-indicator {
 	border-left-color: #4CAF50;
-	border-left-width: 4px;
+	border-left-width: 5px;
 }
 
 .test-failure-indicator {
 	border-left-color: #ff0000;
-	border-left-width: 4px;
+	border-left-width: 5px;
+}
+.test-exception-indicator {
+	border-left-color: #ff9005;
+	border-left-width: 5px;
 }
 .test-nonapplicable-indicator {
 	border-left-color: #2196F3;
-	border-left-width: 4px;
+	border-left-width: 5px;
 }
 .test-nontest-indicator {
 	border-left-color: #A1887F;
-	border-left-width: 4px;
+	border-left-width: 5px;
 }
 
 /* fixed logo */
