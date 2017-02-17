@@ -40,8 +40,8 @@ def check_request_data(xobj):
             raise ApiError(msg)
     if 'filter-by-result' in xobj:
         filter_result = xobj['filter-by-result']
-        if filter_result not in ("all", "passed", "failed", "inapplicable"):
-            msg = "maturity_level must be all, passed, failed or inapplicable "
+        if filter_result not in ("all", "passed", "failed", "nonapplicable"):
+            msg = "maturity_level must be all, passed, failed or nonapplicable "
             raise ApiError(msg)
 
     # fine, arguments are fime
