@@ -31,6 +31,24 @@ tools. Hippod collects, harmonizes & manages your tests!
 	tags, etc. To provide reports hippod can export to several formats like PDF
 	or even ePUB.
 
+# Test Status
+
+There are four status codes that HippoD accept:
+
+- passed
+- failed
+- nonapplicable
+- exception
+
+**Passed** when a test was successfully executed, if not **failed** is the
+appropriate status. **Nonapplicable** is for all tests where black/white do not
+match. For example if you count source code lines you should take this
+categorization. **Exception** can be used when the test itself failed to
+execute. If the test system has internal errors, required resources where not
+available or compiling of the test itself failed. We don't used *error* here to
+make it obvious that something else happens and that the maintainer must correct/fix
+something.
+
 # Traceability
 
 Traceability, trust & non-modifiable results are some of the most important
