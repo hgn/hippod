@@ -40,5 +40,4 @@ hippoD.config(function($stateProvider, $urlRouterProvider) {
             templateUrl: 'templates/report.html',
             controller: 'ReportCtrl'
         });
-        
 });
