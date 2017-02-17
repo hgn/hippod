@@ -49,6 +49,10 @@ available or compiling of the test itself failed. We don't used *error* here to
 make it obvious that something else happens and that the maintainer must correct/fix
 something.
 
+The next screenshot show the four possible test results:
+
+![Test Results](images/test-result-screenshot.png "Test Results")
+
 # Traceability
 
 Traceability, trust & non-modifiable results are some of the most important
