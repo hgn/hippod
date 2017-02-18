@@ -10,6 +10,7 @@ import argparse
 import addict
 import logging
 import asyncio
+import time
 
 from aiohttp import web
 
@@ -95,7 +96,7 @@ def check_conf_environment(app, path):
 
 def check_report_path(app, path):
     if not os.path.isdir(path):
-        log.warning("create report path: {}".format(path))
+        log.warning("Create report path: {}".format(path))
         os.makedirs(path)
 
 
@@ -177,22 +178,30 @@ def setup_routes(app, conf):
     app.router.add_static('/', app_path)
 
 
-def gh_container_achievements(app):
+def gh_container_achievements_daily(app):
+    start_time = time.time()
+    log.info("  Exectute Garbage Collector for Achievements")
     garb_handler_ca = garbage_handler_container_achievements.GHContainerAchievements()
     garb_handler_ca.handle_garbage(app)
+    end_time = time.time()
+    log.info("    Excuted in {:0.2f} seconds".format(end_time - start_time))
 
 
-def gh_mime_data(app):
+def gh_mime_data_daily(app):
+    start_time = time.time()
+    log.info("  Exectute Garbage Collector for MimeDB")
     garb_handler_md = garbage_handler_mime_db.GHMimeData()
     garb_handler_md.remove(app)
+    end_time = time.time()
+    log.info("    Excuted in {:0.2f} seconds".format(end_time - start_time))
 
 
-def cache_update(app, frequency=None):
-    if frequency == None:
-        raise InternalError("frequency must be 'daily\', 'hourly\' or 'weekly\'")
+def cache_update_daily(app):
     if walker.Walker.db_empty(app):
         return
 
+    achievements_no = 0
+    frequency = 'daily'
     cache_person = cache_persons.Cache(app, frequency)
     cache_tag = cache_tags.Cache(app, frequency)
     cache_category = cache_categories.Cache(app, frequency)
@@ -202,6 +211,7 @@ def cache_update(app, frequency=None):
         cache_tag.update(achievement)
         cache_category.update(achievement)
         cache_achievement.update(achievement)
+        achievements_no += 1
 
     cache_person.update()
 
@@ -210,12 +220,17 @@ def cache_update(app, frequency=None):
     cache_category.write_cache_file()
     cache_achievement.write_cache_file()
 
+    log.info("  Processed {} achievements".format(achievements_no))
+
 
 def timeout_daily(app):
-    log.info("daily execution handler started")
-    gh_container_achievements(app)
-    gh_mime_data(app)
-    cache_update(app, 'daily')
+    log.info("Execute daily execution handler")
+    start_time = time.time()
+    gh_container_achievements_daily(app)
+    gh_mime_data_daily(app)
+    cache_update_daily(app)
+    end_time = time.time()
+    log.info("  Excuted in {:0.2f} seconds".format(end_time - start_time))
 
 
 def seconds_to_midnight():
@@ -232,7 +247,7 @@ def register_timeout_handler_daily(app):
     loop = asyncio.get_event_loop()
     midnight_sec = seconds_to_midnight()
     call_time = loop.time() + midnight_sec
-    msg = "register daily timeout, scheduled in {} seconds"
+    msg = "Register daily timeout [scheduled in {} seconds]"
     log.warning(msg.format(midnight_sec))
     loop.call_at(call_time, register_timeout_handler_daily, app)
     timeout_daily(app)
@@ -291,7 +306,7 @@ def init_logging(conf):
     if not isinstance(numeric_level, int):
         raise ValueError('Invalid log level: {}'.format(numeric_level))
     logging.basicConfig(level=numeric_level, format='%(message)s')
-    log.error("log level configuration: {}".format(log_level_conf))
+    log.error("Log level configuration: {}".format(log_level_conf))
 
 
 def conf_check_report(app, conf):
