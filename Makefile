@@ -52,3 +52,5 @@ install:
 	@echo "Don't forget to install required python modules (for root): \"sudo -H pip3 install -r requirements.txt\""
 	@echo "and \"sudo apt-get install python3-pip libsasl2-dev pandoc texlive-xetex texlive-latex-extra texlive-latex-recommended libldap-dev\""
 
+ctags:
+	ctags -R .
