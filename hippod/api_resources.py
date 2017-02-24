@@ -16,18 +16,18 @@ from hippod.error_object import *
 
 
 
-def get_statistics():
-    return hippod.statistic.get()
+def get_statistics(app):
+    return hippod.statistic.get(app)
 
 
 def handle(request):
     if request.method != "GET":
         msg = "Internal Error... request method: {} is not allowed".format(request.method)
         raise hippod.error_object.ApiError(msg)
-
+    app = request.app
     try:
         start = time.clock()
-        data = get_statistics()
+        data = get_statistics(app)
         end = time.clock()
     except ApiError as e:
         return e.transform()
