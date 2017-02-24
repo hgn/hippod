@@ -14,7 +14,6 @@ hippoD.factory('ResourcesService', function($http) {
 					 headers: { "Content-Type": "application/json" }
 			   })
 				 .then(function (response) {
-
 					 // calculate avg value for mimetype compression
 					 response.data.data['__compression'] = [];
 					 var ptr = response.data.data['data-compression'];
@@ -46,4 +45,25 @@ hippoD.factory('ResourcesService', function($http) {
             return srv.getRessource();
         }
     };
+});
+
+
+hippoD.factory('ResultService', function($http) {
+	return{
+		getResults: function() {
+			var obj = {};
+			var promise = $http({
+	                             url: '/api/v1/cache/achievements',
+	                             dataType: 'json',
+	                             method: 'GET',
+	                             data: obj,
+	                             headers: { "Content-Type": "application/json" }
+                         })
+						 .then(function(response) {
+							return response.data.data;
+						 })
+		return promise
+		}
+	}
+
 });
