@@ -41,11 +41,11 @@ class Cache(object):
         with open(achievements_cache_path, 'r') as file:
             data = json.load(file)
         if 'achievements-by-time' not in data:
-            data['achievements-by-time'] = dict()
-            date['achievements-by-time']['passed'] = list()
-            date['achievements-by-time']['failed'] = list()
-            date['achievements-by-time']['nonapplicable'] = list()
-        return data['achievements-by-time']
+            self.data['achievements-by-time'] = dict()
+            self.data['achievements-by-time']['passed'] = list()
+            self.data['achievements-by-time']['failed'] = list()
+            self.data['achievements-by-time']['nonapplicable'] = list()
+        return self.data['achievements-by-time']
 
 
     def write_cache_file(self):

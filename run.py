@@ -35,6 +35,7 @@ from hippod import cache_categories
 from hippod import cache_tags
 from hippod import cache_achievements
 from hippod import cache_persons
+from hippod import api_cache_achievements
 
 APP_VERSION = "002"
 
@@ -169,6 +170,9 @@ def setup_routes(app, conf):
     app.router.add_route('POST',
                         '/api/v1/object',
                         api_object_post.handle)
+    app.router.add_route('GET',
+                         '/api/v1/cache/achievements',
+                         api_cache_achievements.handle)
     # app.router.add_route('*',
     #                     '/api/v1/users',
     #                     api_users.handle)
@@ -207,18 +211,24 @@ def cache_update_daily(app):
     cache_category = cache_categories.Cache(app, frequency)
     cache_achievement = cache_achievements.Cache(app, frequency)
 
+    achievements_no = 0
+    cache_no = 0
+
     for achievement in walker.Walker.get_achievements(app, False):
         cache_tag.update(achievement)
         cache_category.update(achievement)
         cache_achievement.update(achievement)
         achievements_no += 1
+        cache_no += 1
 
     cache_person.update()
+    print(achievements_no, cache_no)
 
     cache_person.write_cache_file()
     cache_tag.write_cache_file()
     cache_category.write_cache_file()
     cache_achievement.write_cache_file()
+    cache_achievement.order_for_sunburn()
 
     log.info("  Processed {} achievements".format(achievements_no))
 
