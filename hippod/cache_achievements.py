@@ -166,7 +166,8 @@ class Cache(object):
             if 'children' in d:
                 d['children'] = self.sort(d['children'])
             else:
-                continue        return data
+                continue
+        return data
 
 
     def order_for_sunburn(self):
