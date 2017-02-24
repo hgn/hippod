@@ -54,6 +54,20 @@ def random_submitter():
     d = ['anonym']
     return d[random.randint(0, len(d) - 1)]
 
+def random_category():
+    list1 = [ "team:orange", "team:red", "team:blue", "team:green", "team:grey" ]
+    list2 = ["topic:ip", "topic:id", "topic:tcp", "topic:udp", "topic:mac"]
+    t2 = random.randint(0,1)
+    list3 = ["subtopic:route-cache", "subtopic:route-trail", "subtopic:route-boot"]
+    t3 = random.randint(0,1)
+    category = list()
+    category.append(list1[random.randint(0, len(list1) - 1)])
+    if t2 ==1:
+        category.append(list2[random.randint(0, len(list2) - 1)])
+    if t2 ==1 and t3 == 1:
+        category.append(list3[random.randint(0, len(list3) - 1)])
+    return category
+
 def query_full(id, sub_id):
     url = 'http://localhost:8080/api/v1/object/{}/{}'.format(id, sub_id)
     data = ''' '''
@@ -73,7 +87,7 @@ def add_n(n):
         data = dict()
         data["submitter"] = random_submitter()
         data["object-item"] = dict()
-        data["object-item"]['categories'] = [ "team:orange", "topic:ip", "subtopic:route-cache" ]
+        data["object-item"]['categories'] = random_category()
         data["object-item"]['version'] = 0
         data['object-item']['title'] = "{}".format(random_title(3))
 
