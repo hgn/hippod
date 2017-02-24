@@ -45,7 +45,10 @@ class Walker(object):
     def walk_attachment(app, container, attachment_id, a):
         content = hippod.api_shared.get_attachment_data_by_sha_id(app, container, attachment_id)
         if content == None: return None
-        a.container.attachment.tags = content['tags']
+        if 'tags' in content:
+            a.container.attachment.tags = content['tags']
+        else:
+            a.container.attachment.tags = []
         return a
 
 
