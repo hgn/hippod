@@ -47,17 +47,25 @@ def check_sum_object_issue(o):
         ''' reurns SHA1 sum'''
         buf = ''
         if type(o) is not dict:
-            msg = "object data currupt - must be dict: {}".format(str(o))
+            msg = "object data corrupt - must be dict: {}".format(str(o))
             raise ApiError(msg)
         # check if required attributes are all available
         if "title" not in o:
-            msg = "object data currupt - title missing: {}".format(str(o))
+            msg = "object data corrupt - title missing: {}".format(str(o))
             raise ApiError(msg)
         if "version" not in o:
-            msg = "object data currupt - version missing: {}".format(str(o))
+            msg = "object data corrupt - version missing: {}".format(str(o))
+            raise ApiError(msg)
+        if type(o["title"]) is not str:
+            msg = "object data corrupt - title is not a string: {}".format(str(o['title']))
+            raise ApiError(msg)
+        corrupt_list = [x for x in o['categories'] if type(x)!=str]
+        if corrupt_list:
+            msg = "object data corrupt - items in categories list are not " \
+                  "string: {}".format(str(o['categories']))
             raise ApiError(msg)
 
-        majorbuf = ''.join(o["title"]) + ''.join(o["categories"])
+        majorbuf = o["title"] + ''.join(o["categories"])
         sha_major = hashlib.sha1(majorbuf.encode('utf-8')).hexdigest()
 
         minorbuf = __sum_dict(o)
