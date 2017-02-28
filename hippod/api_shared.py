@@ -17,9 +17,12 @@ def read_cont_obj_by_id(app, sha_major):
                         'container.db')
     if not os.path.isfile(path):
         return [False, None]
-    with open(path) as data_file:
-        data = json.load(data_file)
-    return [True, data]
+    try:
+        with open(path) as data_file:
+            data = json.load(data_file)
+            return [True, data]
+    except:
+        return [False, None]
 
 def read_subcont_obj_by_id(app, sha_major, sha_minor):
     path = os.path.join(app['DB_OBJECT_PATH'],
@@ -29,9 +32,12 @@ def read_subcont_obj_by_id(app, sha_major, sha_minor):
                         'subcontainer.db')
     if not os.path.isfile(path):
         return [False, None]
-    with open(path) as data_file:
-        data = json.load(data_file)
-    return [True, data]
+    try:
+        with open(path) as data_file:
+            data = json.load(data_file)
+            return [True, data]
+    except:
+        return [False, None]
 
 
 def get_achievement_data_by_sha_id(app, sha_major, sha_minor, id_no):
@@ -43,9 +49,12 @@ def get_achievement_data_by_sha_id(app, sha_major, sha_minor, id_no):
                         '{}.db'.format(id_no))
     if not os.path.isfile(path):
         return None
-    with open(path) as data_file:
-        data = json.load(data_file)
-    return data
+    try:
+        with open(path) as data_file:
+            data = json.load(data_file)
+            return data
+    except:
+        return None
 
 
 def get_attachment_data_by_sha_id(app, sha_major, id_no):
@@ -56,9 +65,12 @@ def get_attachment_data_by_sha_id(app, sha_major, id_no):
                         '{}.db'.format(id_no))
     if not os.path.isfile(path):
         return None
-    with open(path) as data_file:
-        data = json.load(data_file)
-    return data
+    try:
+        with open(path) as data_file:
+            data = json.load(data_file)
+            return data
+    except:
+        return None
 
 
 def object_index_read(app):
@@ -66,5 +78,8 @@ def object_index_read(app):
     object_index_db_path = os.path.join(db_path, "object-index.db")
     if not os.path.isfile(object_index_db_path):
         return None
-    with open(object_index_db_path) as data_file:
-        return json.load(data_file)
+    try:
+        with open(object_index_db_path) as data_file:
+            return json.load(data_file)
+    except:
+        return None
