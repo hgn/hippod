@@ -369,3 +369,59 @@ a.list-group-item:focus, a.list-group-item:hover, button.list-group-item:focus, 
     padding: 5px 5px 5px 5px;
 }
 
+.sunburn-body {
+  font-family: 'Open Sans', sans-serif;
+  font-size: 12px;
+  font-weight: 400;
+  background-color: #fff;
+  width: 960px;
+  height: 700px;
+  margin-top: 10px;
+}
+
+#sunburn-main {
+  float: left;
+  width: 750px;
+  height: 35px
+}
+
+#sunburn-sidebar {
+  float: left;
+  width: 200px;
+}
+
+#sunburn-sequence {
+  width: 600px;
+  height: 50px;
+}
+
+#sunburn-legend {
+  padding: 10px 0 0 3px;
+}
+
+#sunburn-sequence text, #legend text {
+  font-weight: 600;
+  fill: #fff;
+}
+
+#sunburn-chart {
+  position: relative;
+}
+
+#sunburn-chart path {
+  stroke: #fff;
+}
+
+#sunburn-explanation {
+  position: relative;
+  top: 90px;
+  left: 80px;
+  width: 140px;
+  text-align: center;
+  color: #666;
+  z-index: -1;
+}
+
+#sunburn-percentage {
+  font-size: 1em;
+}

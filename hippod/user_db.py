@@ -102,7 +102,7 @@ class UserDB:
         print("initialize new enpty LDAP database in {}".format(self.ldap_db_path))
         entry = dict()
         entry_sub = dict()
-        entry["anonym"] = entry_sub
+        entry["anonymous"] = entry_sub
         entry_sub['fullname']   = "anonymous"
         entry_sub['email']      = "anonym@example.com"
         entry_sub['department'] = "Death Star"

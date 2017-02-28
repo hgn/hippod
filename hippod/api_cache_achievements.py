@@ -1,6 +1,3 @@
-#!/usr/bin/python
-# coding: utf-8
-
 import json
 import os
 import datetime
@@ -16,18 +13,23 @@ from hippod.error_object import *
 
 
 
-def get_statistics(app):
-    return hippod.statistic.get(app)
-
+def get_results_by_category(app):
+    cache_db = app['DB_CACHE_PATH']
+    results_path = os.path.join(cache_db, 'cache-achievements.db')
+    with open(results_path, 'r') as f:
+        content = json.load(f)
+    return content
+    
 
 def handle(request):
     if request.method != "GET":
         msg = "Internal Error... request method: {} is not allowed".format(request.method)
         raise hippod.error_object.ApiError(msg)
     app = request.app
+
     try:
         start = time.clock()
-        data = get_statistics(app)
+        data = get_results_by_category(app)
         end = time.clock()
     except ApiError as e:
         return e.transform()
