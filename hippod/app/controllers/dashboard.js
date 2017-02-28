@@ -272,10 +272,10 @@ function mouseover(d) {
   if (percentage < 0.1) {
     percentageString = "< 0.1%";
   }
-  d3.select("#statistics-percentage")
+  d3.select("#sunburn-percentage")
       .text(percentageString);
 
-  d3.select("#statistics-explanation")
+  d3.select("#sunburn-explanation")
       .style("visibility", "");
 
   var sequenceArray = getAncestors(d);
@@ -312,7 +312,7 @@ function mouseleave(d) {
               d3.select(this).on("mouseover", mouseover);
             });
 
-  d3.select("#statistics-explanation")
+  d3.select("#sunburn-explanation")
       .style("visibility", "hidden");
 }
 
@@ -330,7 +330,7 @@ function getAncestors(node) {
 
 function initializeBreadcrumbTrail() {
   // Add the svg area.
-  var trail = d3.select("#statistics-sequence").append("svg:svg")
+  var trail = d3.select("#sunburn-sequence").append("svg:svg")
       .attr("width", width)
       .attr("height", 50)
       .attr("id", "trail");
@@ -404,7 +404,7 @@ function drawLegend() {
     w: 160, h: 20, s: 3, r: 3
   };
 
-  var legend = d3.select("#statistics-legend").append("svg:svg")
+  var legend = d3.select("#sunburn-legend").append("svg:svg")
       .attr("width", li.w)
       .attr("height", d3.keys(colors_global).length * (li.h + li.s));
 
@@ -431,7 +431,7 @@ function drawLegend() {
 }
 
 function toggleLegend() {
-  var legend = d3.select("#statistics-legend");
+  var legend = d3.select("#sunburn-legend");
   if (legend.style("visibility") == "hidden") {
     legend.style("visibility", "");
   } else {

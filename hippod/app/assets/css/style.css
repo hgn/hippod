@@ -369,7 +369,7 @@ a.list-group-item:focus, a.list-group-item:hover, button.list-group-item:focus, 
     padding: 5px 5px 5px 5px;
 }
 
-.statistics-body {
+.sunburn-body {
   font-family: 'Open Sans', sans-serif;
   font-size: 12px;
   font-weight: 400;
@@ -379,40 +379,40 @@ a.list-group-item:focus, a.list-group-item:hover, button.list-group-item:focus, 
   margin-top: 10px;
 }
 
-#statistics-main {
+#sunburn-main {
   float: left;
   width: 750px;
   height: 35px
 }
 
-#statistics-sidebar {
+#sunburn-sidebar {
   float: left;
   width: 200px;
 }
 
-#statistics-sequence {
+#sunburn-sequence {
   width: 600px;
   height: 50px;
 }
 
-#statistics-legend {
+#sunburn-legend {
   padding: 10px 0 0 3px;
 }
 
-#statistics-sequence text, #legend text {
+#sunburn-sequence text, #legend text {
   font-weight: 600;
   fill: #fff;
 }
 
-#statistics-chart {
+#sunburn-chart {
   position: relative;
 }
 
-#statistics-chart path {
+#sunburn-chart path {
   stroke: #fff;
 }
 
-#statistics-explanation {
+#sunburn-explanation {
   position: relative;
   top: 90px;
   left: 80px;
@@ -422,6 +422,6 @@ a.list-group-item:focus, a.list-group-item:hover, button.list-group-item:focus, 
   z-index: -1;
 }
 
-#statistics-percentage {
+#sunburn-percentage {
   font-size: 1em;
 }

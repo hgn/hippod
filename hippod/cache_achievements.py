@@ -4,6 +4,11 @@ import datetime
 
 import pprint
 
+import logging
+
+log = logging.getLogger()
+
+pp = pprint.PrettyPrinter()
 
 
 class Cache(object):
@@ -45,7 +50,8 @@ class Cache(object):
             self.data['achievements-by-time']['passed'] = list()
             self.data['achievements-by-time']['failed'] = list()
             self.data['achievements-by-time']['nonapplicable'] = list()
-        return self.data['achievements-by-time']
+            return self.data['achievements-by-time']
+        return data['achievements-by-time']
 
 
     def write_cache_file(self):
@@ -58,38 +64,38 @@ class Cache(object):
         with open(achievements_cache_path, 'w') as f:
             f.write(data)
 
-    def check_already_listed(self, buffer_stat, cat):
-        listed = False
-        for i, name in enumerate(d['name'] for d in buffer_stat['children']):
-            if cat == name:
-                listed = True
-        return listed
 
-    def is_end_of_hierarchy(self, j, cat):
-        end = False
-        if j == len(cat)-1:
-                end = True
-        return end
-
-
-    def next_stat_in_hierarchy(self, buffer_stat, cat):
+    def update_sunburn_size_entry(self, buffer_stat, sub_category):
+        updated = False
         for d in buffer_stat['children']:
-            if d['name'] == cat:
-                return d
+            if d['name'] == sub_category and 'size' in d:
+                d['size'] += 1
+                updated = True
+        return buffer_stat['children'], updated
 
 
-    def update_sub_cat(self, buffer_stat, sub_cat):
-        if not buffer_stat['children']:
-            return None, False
-        try:
-            for child in buffer_stat['children']:
-                if child['name'] == sub_cat:
-                    child['size'] += 1
-                    return child, True
-                continue
-            return None, False
-        except:
-            return None, False
+    def add_new_sunburn_child_entry(self, root, sub_category):
+        entry = dict()
+        entry['name'] = str(sub_category)
+        entry['root'] = root
+        entry['children'] = list()
+        return entry
+
+
+    def initiate_new_sunburn_size_entry(self, root, sub_category):
+        entry = dict()
+        entry['name'] = str(sub_category)
+        entry['root'] = root
+        entry['size'] = 1
+        return entry
+
+
+    def next_hierarchy_level(self, buffer_stat, sub_category):
+        for d in buffer_stat['children']:
+            if d['name'] == sub_category and 'children' in d:
+                buffer_stat = d
+                return True, buffer_stat
+        return False, None
 
 
     def update(self, achievement):
@@ -102,62 +108,73 @@ class Cache(object):
             self.data['achievement-results-by-category'][category] = list()
         self.data['achievement-results-by-category'][category].append(result)
 
-        # save here results for sunburn data structre which is special
-        # with keys like name, children, size
-        # children-parent-hierarchy based on categories levels e.g. team->topic-subtopic
-        buffer_stat = self.data['achievement-results-sunburn-chart']
-        cat = eval(category)
-        root = cat[0]
-        for j in range(0,len(cat)):
-            listed = self.check_already_listed(buffer_stat, cat[j])
-            end = self.is_end_of_hierarchy(j, cat)
-            if j < len(cat)-1 and not listed:
-                sub_stat = dict()
-                sub_stat['name'] = str(cat[j])
-                sub_stat['root'] = root
-                sub_stat['children'] = list()
-                buffer_stat['children'].append(sub_stat)
-                buffer_stat = sub_stat
-            elif end:
-                size_token = False
-                for d in buffer_stat['children']:
-                    if d['name'] == cat[j] and 'size' in d:
-                        d['size'] += 1
-                        size_token = True
-                if size_token:
-                    continue
-                add_stat, update = self.update_sub_cat(buffer_stat, cat[j])
-                if not update:
-                    add_stat = dict()
-                    add_stat['name'] = str(cat[j])
-                    add_stat['root'] = root
-                    add_stat['size'] = 1
-                    buffer_stat['children'].append(add_stat)
-            else:
-                found = False
-                for d in buffer_stat['children']:
-                    if d['name'] == cat[j] and 'children' in d:
-                        buffer_stat = d
-                        found = True
-                if not found:
-                    dct = dict()
-                    dct['name'] = cat[j]
-                    dct['root'] = cat[0]
-                    dct['children'] = list()
-                    buffer_stat['children'].append(dct)
-                    buffer_stat = dct
-                continue
+        self.update_sunburn_data(category, result)
 
-        # achievements by date/time
+        # achievements saved by date/time
         # index '-1' is the latest date entry
         # at the end is a list with [date, amount_of_results]
-        result = achievement.result
         if result == 'passed':
             self.stored_data['passed'][-1][1] += 1
         elif result == 'failed':
             self.stored_data['failed'][-1][1] += 1
         elif result == 'nonapplicable':
             self.stored_data['nonapplicable'][-1][1] += 1
+        else:
+            log.error('unassignable result: {}'.format(result))
+
+
+    def update_sunburn_data(self, category, result):
+        # save here results for sunburn data structre which is specified
+        # with keys like name, children, size (root is added for color selection method)
+        # children-parent-hierarchy based on categories levels e.g. team->topic->subtopic
+        # data structure (for input category ['team:bar'] and ['team:foo', 'topic:ip'])
+        # is looking like (size is here the amount of tests):
+        #
+        # "children": [
+        #     {
+        #         "name": "team:bar",
+        #         "root": "team:bar",
+        #         "size": 1
+        #     },
+        #     {
+        #         "name": "team:foo",
+        #         "root": "team:foo",
+        #         "children": [
+        #             {
+        #                 "name": "topic:ip",
+        #                 "root": "team:foo",
+        #                 "size": 1
+        #             }
+        #         ]
+        #     }
+        # ]
+        buffer_stat = self.data['achievement-results-sunburn-chart']
+        cat = eval(category)
+        root = cat[0]
+        # cat is a list of categories ordered in a hierarchy
+        # e.g. ['team:red', 'topic:foo', 'subtopic:foobar']
+        # root is the very first sub category
+        for j in range(0,len(cat)):
+            if j < len(cat)-1:
+                # when there are more levels of categories
+                # going deeper inside the hierarchy
+                found, next_level_entry = self.next_hierarchy_level(buffer_stat, cat[j])
+                if found:
+                    buffer_stat = next_level_entry
+                    continue
+                entry = self.add_new_sunburn_child_entry(root, cat[j])
+                buffer_stat['children'].append(entry)
+                buffer_stat = entry
+                continue
+            else:
+                # in the last level of the category hierarchy size have to be
+                # added or updated when a size entry is already available
+                updated_entry, updated = self.update_sunburn_size_entry(buffer_stat, cat[j])
+                if updated:
+                    buffer_stat['children'] = updated_entry
+                    continue
+                entry = self.initiate_new_sunburn_size_entry(root, cat[j])
+                buffer_stat['children'].append(entry)
 
 
     def sort(self, data):
@@ -171,6 +188,9 @@ class Cache(object):
 
 
     def order_for_sunburn(self):
+        # ordering categories by name so if a category has only one level, it is not seperated
+        # from the same root category with more than one level in the list
+        # e.g. ['team:red'] and ['team:red', 'topic:ip']
         all_categories = self.data['achievement-results-sunburn-chart']['children']
         self.data['achievement-results-sunburn-chart']['children'] = self.sort(all_categories)
         cache_db = self.app['DB_CACHE_PATH']

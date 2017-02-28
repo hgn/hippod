@@ -12,25 +12,6 @@ import hippod.ex3000
 from hippod.error_object import *
 
 
-def check_already_listed(buffer_stat, cat):
-    listed = False
-    for i, name in enumerate(d['name'] for d in buffer_stat['children']):
-        if cat == name:
-            listed = True
-    return listed
-
-def is_end_of_hierarchy(j, cat):
-    end = False
-    if j == len(cat)-1:
-            end = True
-    return end
-
-
-def next_stat_in_hierarchy(buffer_stat, cat):
-    for d in buffer_stat['children']:
-        if d['name'] == cat:
-            return d 
-
 
 def get_results_by_category(app):
     cache_db = app['DB_CACHE_PATH']
