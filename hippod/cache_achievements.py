@@ -23,6 +23,7 @@ class Cache(object):
         self.stored_data['passed'].insert(len(self.stored_data['passed']), [self.date, 0])
         self.stored_data['failed'].insert(len(self.stored_data['failed']), [self.date, 0])
         self.stored_data['nonapplicable'].insert(len(self.stored_data['nonapplicable']), [self.date, 0])
+        self.stored_data['exception'].insert(len(self.stored_data['exception']), [self.date, 0])
 
 
     def init_data(self):
@@ -50,6 +51,7 @@ class Cache(object):
             self.data['achievements-by-time']['passed'] = list()
             self.data['achievements-by-time']['failed'] = list()
             self.data['achievements-by-time']['nonapplicable'] = list()
+            self.data['achievements-by-time']['exception'] = list()
             return self.data['achievements-by-time']
         return data['achievements-by-time']
 
@@ -119,6 +121,8 @@ class Cache(object):
             self.stored_data['failed'][-1][1] += 1
         elif result == 'nonapplicable':
             self.stored_data['nonapplicable'][-1][1] += 1
+        elif result == 'exception':
+            self.stored_data['exception'][-1][1] += 1
         else:
             log.error('unassignable result: {}'.format(result))
 
