@@ -48,7 +48,7 @@ hippoD.controller("DashboardCtrl", function ($scope, ResourcesService, ResultSer
             height: 355,
             margin : {
                 top: 145,
-                right: 0,
+                right: 20,
                 bottom: 40,
                 left: 75
             },

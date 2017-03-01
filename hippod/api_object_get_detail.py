@@ -8,6 +8,7 @@ import inspect
 import time
 import zlib
 import sys
+import logging
 
 import aiohttp
 import asyncio
@@ -19,6 +20,8 @@ import hippod.api_object_get_full
 import hippod.status_codes
 
 from hippod.error_object import *
+
+log = logging.getLogger()
 
 
 def check_request_data(xobj):
@@ -121,11 +124,14 @@ def get_latest_achievement(app, container_content):
         ok, data = hippod.api_shared.read_subcont_obj_by_id(app, sha_major, sha_minor)
         if not ok:
             msg = "subcontainer {} not available, although entry in subcontainer-list"
-            msg = msg.format(sub_cont['sha-minor'])
-            raise ApiError(msg)
+            msg = msg.format(subcontainer['sha-minor'])
+            log.error(msg)
+            continue
         latest_achiev_date = scan_subcontainer(data)
         latest_achiev_date = datetime.datetime.strptime(latest_achiev_date, '%Y-%m-%dT%H:%M:%S.%f')
         dates.append(latest_achiev_date)
+    if not dates:
+        return None
     return max(dates)
 
 
@@ -141,6 +147,8 @@ def get_latest_obj_by_achievement(app):
             msg = "cannot read object by id: {}".format(sha_major)
             raise ApiError(msg)
         latest_achiev_date = get_latest_achievement(app, data)
+        if not latest_achiev_date:
+            continue
         full_list.append((sha_major, latest_achiev_date))
     full_list_sorted = sorted(full_list, key=lambda x: x[1])
     sha_majors, dates = zip(*full_list_sorted)

@@ -214,7 +214,7 @@ class GHContainerAchievements(object):
                 sha_minor = subcont['sha-minor']
                 ok, sc_content = hippod.api_shared.read_subcont_obj_by_id(app, sha_major, sha_minor)
                 if not ok:
-                    log.error("cannot read container {} by sha, ignore for now".format(cont['object-item-id']))
+                    log.error("cannot read container {} by sha, ignore for now".format(cont_obj['object-item-id']))
                     continue
                 achiev_list, sc_list = self.check_achiev_lifetime(app, sha_major, sha_minor, sc_content, sc_list)
                 for achievement in achiev_list:

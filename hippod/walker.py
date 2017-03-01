@@ -1,6 +1,11 @@
 import os
-import hippod.api_shared
+import logging
 from datetime import datetime as dt
+
+import hippod.api_shared
+
+log = logging.getLogger()
+
 
 class Walker(object):
 
@@ -56,6 +61,8 @@ class Walker(object):
     def get_container_list(app):
         container_list = list()
         obj_list = hippod.api_shared.object_index_read(app)
+        if not obj_list:
+            return
         for obj in obj_list:
             container_list.append(obj['object-item-id'])
         return container_list
@@ -104,23 +111,29 @@ class Walker(object):
         # from the subcontainer with the latest achievement, else every subcontainer and achievement
         a = Walker.AchievementData()
         container_list = Walker.get_container_list(app)
+        if not container_list:
+            return
         # FIXME: what if None?
         for container in container_list:
             last_achievements_of_subcontainer = list()
             subcontainer_list, attachment_id, a = Walker.walk_container(app, container, a)
-            if subcontainer_list == None:
+            if not subcontainer_list:
                 continue
             a = Walker.walk_attachment(app, container, attachment_id, a)
-            if a == None:
+            if not a:
                 continue
             for subcontainer in subcontainer_list:
                 if limit_to_last_achievement == False:
                     achievements = Walker.get_achievement_list(app, container, subcontainer, limit_to_last_achievement)
+                    if not achievements:
+                        continue
                     for achievement in achievements:
                         a = Walker.walk_achievement(app, container, subcontainer, achievement, a, limit_to_last_achievement)
                         yield a
                 else:
                     achievement = Walker.get_last_achievement(app, container, subcontainer, a)
+                    if not achievement:
+                        continue
                     last_achievements_of_subcontainer.append(achievement)
             if limit_to_last_achievement:
                 latest_index = Walker.get_latest_index_of_subcontainer(last_achievements_of_subcontainer)
