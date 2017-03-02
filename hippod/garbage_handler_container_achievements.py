@@ -6,6 +6,7 @@ import logging
 
 import hippod.api_shared
 import hippod.utils_date
+import hippod.utils_file
 
 log = logging.getLogger()
 
@@ -96,7 +97,7 @@ class GHContainerAchievements(object):
                     if achiev['id'] == achiev_id:
                         del data['achievements'][i]
                 ret_data = data
-            with open(path, 'w') as data_file:
+            with hippod.utils_file.atomic_open(path, False) as data_file:
                 data = json.dumps(data, sort_keys=True,indent=4,
                       separators=(',', ': '))
                 data_file.write(data)
@@ -114,7 +115,7 @@ class GHContainerAchievements(object):
                     if sc['sha-minor'] == sha_minor:
                         del data['subcontainer-list'][i]
                 ret_data = data
-            with open(path, 'w') as data_file:
+            with hippod.utils_file.atomic_open(path, False) as data_file:
                 data = json.dumps(data, sort_keys=True,indent=4,
                       separators=(',', ': '))
                 data_file.write(data)
@@ -130,7 +131,7 @@ class GHContainerAchievements(object):
                     if d['object-item-id'] == sha_major:
                         del data[i]
                 ret_data = data
-            with open(path, 'w') as data_file:
+            with hippod.utils_file.atomic_open(path, False) as data_file:
                 data = json.dumps(data, sort_keys=True,indent=4,
                       separators=(',', ': '))
                 data_file.write(data)
@@ -150,7 +151,7 @@ class GHContainerAchievements(object):
                 lifetimes.append(achievement['lifetime-leftover'])
             cont_content['lifetime-leftover'] = min(lifetimes)
             subc_path = os.path.join(obj_path, sha_major[0:2], sha_major, sha_minor, 'subcontainer.db')
-            with open(subc_path, 'w') as f:
+            with hippod.utils_file.atomic_open(subc_path, False) as f:
                 content = json.dumps(cont_content, sort_keys=True,indent=4, separators=(',', ': '))
                 f.write(content)
 
