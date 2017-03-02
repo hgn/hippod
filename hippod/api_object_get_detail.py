@@ -70,6 +70,10 @@ def get_last_achievement_data(app, sha_major, sha_minor, sub_cont_obj):
     last_element_id = sub_cont_obj['achievements'][-1]["id"]
 
     data = hippod.api_shared.get_achievement_data_by_sha_id(app, sha_major, sha_minor, last_element_id)
+    if not data:
+        msg = "couldn't read achievement {} from container {}/{}".format(last_element_id, sha_major, sha_minor)
+        log.error(msg)
+        return None
     test_result = data["result"]
     test_date   = data["test-date"]
     submitter   = data["submitter"]
@@ -145,7 +149,8 @@ def get_latest_obj_by_achievement(app):
         ok, data = hippod.api_shared.read_cont_obj_by_id(app, sha_major)
         if not ok:
             msg = "cannot read object by id: {}".format(sha_major)
-            raise ApiError(msg)
+            log.error(msg)
+            continue
         latest_achiev_date = get_latest_achievement(app, data)
         if not latest_achiev_date:
             continue
@@ -165,7 +170,8 @@ def container_obj_to_ret_obj(app, request_data, sha_major, cont_obj):
         if not ok:
             msg = "subcontainer {} not available, although entry in subcontainer-list"
             msg = msg.format(sub_cont['sha-minor'])
-            raise ApiError(msg)
+            log.error(msg)
+            continue
         data = hippod.api_object_get_full.get_all_achievement_data(app, sha_major, sub_cont['sha-minor'], full_sub_cont)
         if data:
             buff_dict[sub_cont['sha-minor']] = data[0]['date-added']
@@ -228,7 +234,8 @@ def object_data_by_id(app, request_data, sha_major):
     ret, data = hippod.api_shared.read_cont_obj_by_id(app, sha_major)
     if not ret:
         msg = "cannot read object by id: {}".format(sha_major)
-        raise ApiError(msg)
+        ĺog.error(msg)
+        return False, None
     return container_obj_to_ret_obj(app, request_data, sha_major, data)
 
 

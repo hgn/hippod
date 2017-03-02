@@ -2,45 +2,25 @@
 
 hippoD.controller("DashboardCtrl", function ($scope, ResourcesService, ResultService) {
 
+    ResultService.getResults().then(function(res) {
+        $scope.data_sunburn = res['achievement-results-sunburn-chart'];
+        $scope.achievements_over_time = [
+            {"key": "passed",
+             "values": res['achievements-by-time']['passed'],
+             "color": '#4caf50'},
+            {"key": "failed",
+             "values": res['achievements-by-time']['failed'],
+             "color": "#f44336"},
+            {"key": "nonapplicable",
+             "values": res['achievements-by-time']['nonapplicable'],
+             "color": "#2196f3"},
+            {"key": "exception",
+             "values": res['achievements-by-time']['exception'],
+             "color": "#ff9800"}
 
-  $scope.diskConsumptionData = null;
-
-	ResourcesService.getRessource().then(function(res) {
-		var data_array = res['data']['data']['item-bytes-overtime']
-		var bytes_actual = data_array[data_array.length - 1][1]
-		$scope.overall_data_byte_human = prettyNumber(bytes_actual, 'iec');
-		$scope.overall_data_byte_vanilla = bytes_actual;
-
-		var new_array = new Array();
-		var new_array2 = new Array();
-		var new_array3 = new Array();
-		angular.forEach(data_array, function(value, key) {
-			var unix_tm = new Date(value[0]).getTime() / 1000;
-			new_array.push([unix_tm, value[1]]);
-			new_array2.push([unix_tm, value[2]]);
-			new_array3.push([unix_tm, value[3]]);
-		});
-
-    $scope.diskConsumptionData = [
-			{
-				"key": "Series 1",
-				"values": new_array
-			},
-			{
-				"key": "Series 2",
-				"values": new_array2
-			},
-			{
-				"key": "Series 3",
-				"values": new_array3
-			}
-    ];
-
-	}, function(error) {
-		$scope.overall_data_byte_human = "unknown (API error)";
-		$scope.overall_data_byte_vanilla = "unknown (API error)";
-	});
-
+        ]
+        createVisualization($scope.data_sunburn)
+        });
 
     $scope.options = {
         chart: {
@@ -83,26 +63,6 @@ hippoD.controller("DashboardCtrl", function ($scope, ResourcesService, ResultSer
         }
     };
 
-    ResultService.getResults().then(function(res) {
-        $scope.data_sunburn = res['achievement-results-sunburn-chart'];
-        $scope.achievements_over_time = [
-            {"key": "passed",
-             "values": res['achievements-by-time']['passed']},
-            {"key": "failed",
-             "values": res['achievements-by-time']['failed']},
-            {"key": "nonapplicable",
-             "values": res['achievements-by-time']['nonapplicable']}
-        ]
-        createVisualization($scope.data_sunburn)
-        });
-
-
-	$scope.yAxisTickFormatFunction = function(){
-		return function(d){
-      return prettyNumber(d, 'iec');
-		}
-	}
-
 
 // <------ Configuration and execution of sunburn chart from here ------>
 
@@ -113,7 +73,7 @@ var radius = Math.min(width, height) / 2;
 
 // Breadcrumb dimensions: width, height, spacing, width of tip/tail.
 var b = {
-  w: 130, h: 30, s: 3, t: 10
+  w: 130, h: 20, s: 0.5, t: 5
 };
 
 var colors_global = {};
@@ -233,7 +193,6 @@ var arc = d3.svg.arc()
 function createVisualization(json) {
   // Basic setup of page elements.
   initializeBreadcrumbTrail();
-  d3.select("#togglelegend").on("click", toggleLegend);
 
   // Bounding circle underneath the sunburst, to make it easier to detect
   // when the mouse leaves the parent g.
@@ -262,7 +221,6 @@ function createVisualization(json) {
 
   // Get total size of the tree = value of root node from partition.
   totalSize = path.node().__data__.value;
-  drawLegend();
  };
 
 // Fade all but the current sequence, and show it in the breadcrumb trail.
@@ -396,47 +354,6 @@ function updateBreadcrumbs(nodeArray, percentageString) {
   d3.select("#trail")
       .style("visibility", "");
 
-}
-
-function drawLegend() {
-  // Dimensions of legend item: width, height, spacing, radius of rounded rect.
-  var li = {
-    w: 160, h: 20, s: 3, r: 3
-  };
-
-  var legend = d3.select("#sunburn-legend").append("svg:svg")
-      .attr("width", li.w)
-      .attr("height", d3.keys(colors_global).length * (li.h + li.s));
-
-  var g = legend.selectAll("g")
-      .data(d3.entries(colors_global))
-      .enter().append("svg:g")
-      .attr("transform", function(d, i) {
-              return "translate(0," + i * (li.h + li.s) + ")";
-           });
-
-  g.append("svg:rect")
-      .attr("rx", li.r)
-      .attr("ry", li.r)
-      .attr("width", li.w)
-      .attr("height", li.h)
-      .style("fill", function(d) { return d.value; });
-
-  g.append("svg:text")
-      .attr("x", li.w / 2)
-      .attr("y", li.h / 2)
-      .attr("dy", "0.35em")
-      .attr("text-anchor", "middle")
-      .text(function(d) { return d.key; });
-}
-
-function toggleLegend() {
-  var legend = d3.select("#sunburn-legend");
-  if (legend.style("visibility") == "hidden") {
-    legend.style("visibility", "");
-  } else {
-    legend.style("visibility", "hidden");
-  }
 }
 
 });

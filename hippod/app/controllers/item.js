@@ -194,7 +194,6 @@ function formatReferences(ref_arr) {
 };
 
 DBService.getFoo($scope.id, $scope.sub_id).then(function(res) {
-    console.log(res)
     $scope.data = res;
     if ('object-attachment' in res){
         $scope.responsible = res['object-attachment']['responsible'];
