@@ -18,7 +18,7 @@ class Cache(object):
         self.data = self.init_data()
         self.stored_data = self.read_old_cache()
         dt = datetime.datetime.now()
-        dt = dt.replace(hour=0, minute=0, second=0, microsecond= 0)
+        dt = dt.replace(minute=0, second=0, microsecond=0)
         self.date = dt.timestamp()
         self.stored_data['passed'].insert(len(self.stored_data['passed']), [self.date, 0])
         self.stored_data['failed'].insert(len(self.stored_data['failed']), [self.date, 0])
