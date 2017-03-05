@@ -8,6 +8,7 @@ import inspect
 import time
 import zlib
 import sys
+import logging
 
 import aiohttp
 
@@ -17,6 +18,7 @@ import hippod.api_shared
 
 from hippod.error_object import *
 
+log = logging.getLogger()
 
 
 def get_all_achievement_data(app, sha_major, sha_minor, subcont_obj):
@@ -26,6 +28,10 @@ def get_all_achievement_data(app, sha_major, sha_minor, subcont_obj):
     ret_list = list()
     for achievement in reversed(subcont_obj['achievements']):
         data = hippod.api_shared.get_achievement_data_by_sha_id(app, sha_major, sha_minor, achievement["id"])
+        if not data:
+            msg = "couldn't read achievement {} from container {}/{}".format(achievement['id'], sha_major, sha_minor)
+            log.error(msg)
+            continue
         r = dict()
         r['id'] = achievement["id"]
         r['variety-id'] = achievement["variety-id"]
@@ -103,7 +109,8 @@ def container_obj_to_ret_obj(app, sha_major, sha_minor, cont_obj):
         if not ok:
             msg = "subcontainer {} not available, although entry in subcontainer-list"
             msg = msg.format(sub_cont['sha-minor'])
-            raise ApiError(msg)
+            log.error(msg)
+            continue
         data = get_all_achievement_data(app, sha_major, sub_cont['sha-minor'], full_sub_cont)
         if data:
             sub_dict['object-achievements'] = data

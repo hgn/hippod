@@ -11,6 +11,8 @@ def check_subcontainer(app, sha_major, sha_minor, sc_content):
     for achiev in achievements:
         id_no = str(achiev['id'])
         achievement = hippod.api_shared.get_achievement_data_by_sha_id(app, sha_major, sha_minor, id_no)
+        if not achievement:
+            continue
         if 'data' not in achievement:
             continue
         for data in achievement['data']:
@@ -47,7 +49,7 @@ def all_referenced_mime_ids(app):
     for container in object_index_data:
         ok, cont_obj = hippod.api_shared.read_cont_obj_by_id(app, container['object-item-id'])
         if not ok:
-            log.error("cannot read container {} by sha, ignore for now")
+            log.error("cannot read  container {} by sha, ignore for now".format(container['object-item-id']))
             continue
         ref_container_list = check_container(app, cont_obj)
         for reference in ref_container_list:
