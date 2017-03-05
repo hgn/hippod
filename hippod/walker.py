@@ -25,9 +25,9 @@ class Walker(object):
         if not ok:
             msg = "couldn't open container {} although listed in directoy. ignore for now".format(container)
             log.error(msg)
-            return None, None, None
+            return None, None, a
         if len(cont_content['attachments']) <= 0:
-            return None, None, None
+            return None, None, a
         for subc in cont_content['subcontainer-list']:
             subcontainer_list.append(subc['sha-minor'])
         attachment_id = cont_content['attachments'][-1]['id']
@@ -39,6 +39,8 @@ class Walker(object):
     @staticmethod
     def walk_achievement(app, container, subcontainer, achievement, a, limit_to_last_achievement):
         content = hippod.api_shared.get_achievement_data_by_sha_id(app, container, subcontainer, achievement)
+        if not content:
+            return a
         if limit_to_last_achievement == False:
             a.result = content['result']
             return a
@@ -49,12 +51,12 @@ class Walker(object):
     @staticmethod
     def walk_attachment(app, container, attachment_id, a):
         content = hippod.api_shared.get_attachment_data_by_sha_id(app, container, attachment_id)
-        if content == None: return None
+        if content == None: return False, a
         if 'tags' in content:
             a.container.attachment.tags = content['tags']
         else:
             a.container.attachment.tags = []
-        return a
+        return True, a
 
 
     @staticmethod
@@ -85,7 +87,7 @@ class Walker(object):
 
 
     @staticmethod
-    def get_last_achievement(app, container, subcontainer, a):
+    def get_last_achievement(app, container, subcontainer):
         # fetches last achievement with date to compare with last achievement of other subcontainers
         last_achiev_id = Walker.get_achievement_list(app, container, subcontainer, True)
         achievement_date = Walker.walk_achievement(app, container, subcontainer, last_achiev_id, a, True)
@@ -119,8 +121,8 @@ class Walker(object):
             subcontainer_list, attachment_id, a = Walker.walk_container(app, container, a)
             if not subcontainer_list:
                 continue
-            a = Walker.walk_attachment(app, container, attachment_id, a)
-            if not a:
+            ok, a = Walker.walk_attachment(app, container, attachment_id, a)
+            if not ok:
                 continue
             for subcontainer in subcontainer_list:
                 if limit_to_last_achievement == False:
@@ -131,7 +133,7 @@ class Walker(object):
                         a = Walker.walk_achievement(app, container, subcontainer, achievement, a, limit_to_last_achievement)
                         yield a
                 else:
-                    achievement = Walker.get_last_achievement(app, container, subcontainer, a)
+                    achievement = Walker.get_last_achievement(app, container, subcontainer)
                     if not achievement:
                         continue
                     last_achievements_of_subcontainer.append(achievement)
