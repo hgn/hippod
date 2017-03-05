@@ -141,7 +141,8 @@ class GHContainerAchievements(object):
             obj_path = app['DB_OBJECT_PATH']
             ok, cont_content = hippod.api_shared.read_subcont_obj_by_id(app, sha_major, sha_minor)
             if not ok:
-                log.error("cannot read container {} by sha, ignore for now".format(cont['object-item-id']))
+                log.error("cannot read container {}/{} by sha, ignore for now".format(sha_major, sha_minor))
+                return
             lifetimes = list()
             for achievement in cont_content['achievements']:
                 if str(achievement['id']) == achiev_id:
@@ -164,7 +165,7 @@ class GHContainerAchievements(object):
                 return_list.append(path)
                 self.correct_container(app, sha_major, sha_minor)
                 if len(sc_list) == 1:
-                    path = os.path.join(sha_major[0:2])
+                    path = os.path.join(sha_major[0:2], sha_major)
                     return_list.append(path)
                     self.correct_object_index(app, sha_major)
             return return_list
@@ -177,7 +178,8 @@ class GHContainerAchievements(object):
                 achiev_id = str(achiev['id'])
                 date_added = hippod.utils_date.string_to_datetime(achiev['date-added'])
                 achievement = hippod.api_shared.get_achievement_data_by_sha_id(app, sha_major, sha_minor, achiev_id)
-                # in case not readable?
+                if not achievement:
+                    continue
                 deltatime = (datetime.datetime.now() - date_added).total_seconds()
                 diff = deltatime
                 # labled tests shouldn't be removed, so continue
@@ -214,13 +216,13 @@ class GHContainerAchievements(object):
                 sha_minor = subcont['sha-minor']
                 ok, sc_content = hippod.api_shared.read_subcont_obj_by_id(app, sha_major, sha_minor)
                 if not ok:
-                    log.error("cannot read container {} by sha, ignore for now".format(cont_obj['object-item-id']))
+                    log.error("cannot read container {}/{} by sha, ignore for now".format(sha_major, sha_minor))
                     continue
                 achiev_list, sc_list = self.check_achiev_lifetime(app, sha_major, sha_minor, sc_content, sc_list)
                 for achievement in achiev_list:
                     ret_list.append(achievement)
             if len(sc_list) == 0:
-                path = os.path.join(sha_major[0:2])
+                path = os.path.join(sha_major[0:2], sha_major)
                 ret_list.append(path)
                 self.correct_object_index(app, sha_major)
             return ret_list
