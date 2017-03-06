@@ -211,18 +211,13 @@ def cache_update_daily(app):
     cache_category = cache_categories.Cache(app, frequency)
     cache_achievement = cache_achievements.Cache(app, frequency)
 
-    achievements_no = 0
-    cache_no = 0
-
     for achievement in walker.Walker.get_achievements(app, False):
         cache_tag.update(achievement)
         cache_category.update(achievement)
         cache_achievement.update(achievement)
         achievements_no += 1
-        cache_no += 1
 
     cache_person.update()
-    print(achievements_no, cache_no)
 
     cache_person.write_cache_file()
     cache_tag.write_cache_file()
