@@ -116,6 +116,8 @@ def get_last_attachment_data(app, sha_major, cont_obj):
 
 def scan_subcontainer(subcontainer_content):
     # returning the date of the latest achievement
+    if len(subcontainer_content['achievements']) <= 0:
+        return None
     return subcontainer_content['achievements'][-1]['date-added']
 
 
@@ -132,6 +134,11 @@ def get_latest_achievement(app, container_content):
             log.error(msg)
             continue
         latest_achiev_date = scan_subcontainer(data)
+        if latest_achiev_date == None:
+            msg = "latest achievement {} not available, although entry in subcontainer-list"
+            msg = msg.format(subcontainer['sha-minor'])
+            log.error(msg)
+            continue
         latest_achiev_date = datetime.datetime.strptime(latest_achiev_date, '%Y-%m-%dT%H:%M:%S.%f')
         dates.append(latest_achiev_date)
     if not dates:
