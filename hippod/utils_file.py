@@ -4,7 +4,7 @@ import datetime
 from contextlib import contextmanager
 
 @contextmanager
-def atomic_write(filepath, binary=False):
+def atomic_open(filepath, binary=False):
     tmppath = filepath + '~'
     while os.path.isfile(tmppath):
         tmppath += '~'
