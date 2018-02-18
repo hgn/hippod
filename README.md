@@ -25,7 +25,7 @@ Python request package is required for build in tests. You can use:
 sudo pacman -S python2-requests-toolbelt-0.4.0-1
 ```
 
-## Starting contestcolld #
+## Starting Hippod #
 
 Simple start the ```run.py``` script in the main directory for simple output.
 To use this package in a productive environment you can use *nginx* to power up
@@ -63,10 +63,10 @@ http://www.plankandwhittle.com/packaging-a-flask-web-app/
 
 # Concept and Architecture #
 
-This document describes the internal and external API of contestcolld.
+This document describes the internal and external API of hippod.
 Understanding this document provides nearly all required information how
-contestcolld works internally, how contestcolld can be extended and what are
-the basic concept behind contestcolld.
+hippod works internally, how hippod can be extended and what are
+the basic concept behind hippod.
 
 ![alt tag](https://raw.githubusercontent.com/hgn/contestcolld/master/doc/architecture.png)
 
