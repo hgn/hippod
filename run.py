@@ -23,7 +23,7 @@ from hippod import api_object_get
 from hippod import api_object_get_detail
 from hippod import api_object_get_full
 from hippod import api_data_get
-from hippod import aiohttp_login
+from hippod import hippod_login
 from hippod import user_db
 from hippod import api_report
 from hippod import api_get_reports
@@ -46,7 +46,7 @@ EXIT_FAILURE = 1
 
 log = logging.getLogger()
 
-login = aiohttp_login.Login()
+login = hippod_login.Login()
 
 def db_create_initial_statistics(path):
     sys.stderr.write("create statistics db: {}\n".format(path))
