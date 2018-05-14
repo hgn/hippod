@@ -24,6 +24,7 @@ from hippod import api_object_get_detail
 from hippod import api_object_get_full
 from hippod import api_data_get
 from hippod import hippod_login
+from hippod import error_handling
 from hippod import user_db
 from hippod import api_report
 from hippod import api_get_reports
@@ -106,7 +107,7 @@ def set_config_defaults(app):
 
 
 def init_aiohttp(conf):
-    app = web.Application()
+    app = web.Application(middlewares=[error_handling.error_middleware])
 
     app["CONF"] = conf
 
