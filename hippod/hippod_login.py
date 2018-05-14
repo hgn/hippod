@@ -1,3 +1,4 @@
+# HippoD Login system
 
 import os
 
@@ -26,7 +27,7 @@ CONFIG_FILE = 'login_system/configuration.json'
 
 
 # We use ERROR for server_error web response.
-ERROR = '''<!DOCTYPE html>
+ERROR = '''
 <html>
   <head>
     <title>SERVER ERROR</title>
