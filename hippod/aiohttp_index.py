@@ -39,7 +39,7 @@ def IndexMiddleware(index='index.html'):
                 filename = request.match_info['filename']
                 if not filename:
                     filename = index
-                if filename.endswith('/'):
+                if filename.endswith('/dashboard'):
                     filename += index
                 request.match_info['filename'] = filename
             except KeyError:
