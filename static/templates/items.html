@@ -1,0 +1,498 @@
+<div class="mainbar">Tests
+</div>
+
+<div class="main-content-container">
+	<div class="controll-container">
+
+		<div class="row">
+      <div class="col-xs-8 filter-display-box">
+        <b>Filter</b>
+        <div class="row inner-filter-display-box text-center">
+					<div class="col-sm-3">
+            Result<br>
+
+						<div class="btn-group" uib-dropdown>
+							<button id="single-button" type="button"
+																	class="btn btn-default" uib-dropdown-toggle
+								 ng-disabled="disabled">
+								{{result_button}} <span class="caret"></span>
+							</button>
+							<ul class="uib-dropdown-menu" role="menu" aria-labelledby="single-button">
+								<li role="menuitem">
+									<a href="#" ng-click="result_change(action)" ng-repeat="action in result_actions">{{action}}</a>
+								</li>
+							</ul>
+						</div>
+
+          </div> <!-- col-sm-3 -->
+					<div class="col-sm-3">
+            Submitter<br>
+
+						<div class="btn-group" uib-dropdown>
+							<button id="single-button" type="button"
+																	class="btn btn-default" uib-dropdown-toggle
+								 ng-disabled="disabled">
+								{{submitter_button}} <span class="caret"></span>
+							</button>
+							<ul class="uib-dropdown-menu" role="menu" aria-labelledby="single-button">
+								<li role="menuitem">
+									<a href="#" ng-click="submitter_change(action)"
+                   ng-repeat="action in submitter_actions">{{action}}</a>
+								</li>
+							</ul>
+						</div>
+
+          </div> <!-- col-sm-3 -->
+					<div class="col-sm-3">
+            Responsible<br>
+
+						<div class="btn-group" uib-dropdown>
+							<button id="single-button" type="submit"
+																	class="btn btn-default" uib-dropdown-toggle
+								 ng-disabled="disabled">
+								{{responsible_button}} <span class="caret"></span>
+							</button>
+							<ul class="uib-dropdown-menu" role="menu" aria-labelledby="single-button">
+								<li role="menuitem">
+									<a href="#" ng-click="responsible_change(action)"
+                   ng-repeat="action in responsible_actions">{{action}}</a>
+								</li>
+							</ul>
+						</div>
+
+
+
+          </div> <!-- col-sm-3 -->
+		    </div> <!-- row -->
+      </div>
+      <div class="col-xs-3 col-sm-offset-1 filter-display-box">
+        <b>Display</b>
+        <div class="row inner-filter-display-box text-center">
+          <div class="col-sm-6">
+            Sorting<br>
+
+						<div class="btn-group" uib-dropdown>
+							<button id="single-button" type="button"
+																	class="btn btn-default" uib-dropdown-toggle
+								 ng-disabled="disabled">
+								{{sort_button}} <span class="caret"></span>
+							</button>
+							<ul class="uib-dropdown-menu" role="menu" aria-labelledby="single-button">
+								<li role="menuitem">
+									<a href="#" ng-click="sort_change(action)"
+                   ng-repeat="action in sort_actions">{{action}}</a>
+								</li>
+							</ul>
+						</div>
+
+
+          </div> <!-- col-sm-6 -->
+          <div class="col-sm-6">
+            Detail<br>
+
+						<span ng-switch on="condensed">
+							<span class="btn-group" role="group" aria-label="">
+								<button type="button" class="btn btn-default"
+															ng-switch-when='true' ng-click='verbose_button()'>Condensed</button>
+								<button type="button" class="btn btn-default"
+															ng-switch-when='false' ng-click='condensed_button()'>Verbose</button>
+							</span>
+						</span>
+
+
+
+          </div> <!-- col-sm-6 -->
+		    </div> <!-- row -->
+      </div>
+
+
+		</div> <!-- row -->
+
+
+
+
+
+
+
+
+
+
+
+	</div> <!-- controll-container -->
+	<div class="row">
+		<div class="col-sm-8" ng-switch on="condensed">
+
+
+			<!-- verbose version -->
+			<div ng-switch-when='false'>
+
+					<div ng-repeat="items in data | filter:filterSelection()">
+
+						<div ng-switch on='items["object-achievements"]["test-result"]'>
+
+							<div ng-switch-when="passed">
+								<a ng-href="#/item/{{items['object-item-id']}}/{{items['object-item']['sha-minor']}}">
+
+									<div class="item-container">
+										<div class="status-area status-area-success"></div>
+										<div class="item-main">
+											<div class="header">
+												<p class="alignleft">{{ items["object-item"]['title'] }}</p>
+												<p class="alignright">{{ items["object-item-id"] }}</p>
+												<div style="clear: both;"></div>
+											</div>
+											<div class="content">
+												<div class="achievements">
+													<b>Last Submitter:</b> {{ items['object-achievements']['submitter'] }}<br>
+													<b>Submitter Date:</b> {{ items['object-achievements']['date-added'] }}<br>
+													<b>Test Date:</b> {{ items['object-achievements']['test-date-relative-long'] }}<br>
+													<b>Result:</b> {{ items['object-achievements']['test-result'] }}<br>
+													<div ng-switch on='items["conflict"]'>
+														<div ng-switch-when="true">
+															<div class="alert alert-danger" role="alert">
+															 <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+																<b>Conflict:</b> Multiple subcontainers detected<br>
+															</div>
+														</div>
+														<div ng-switch-default></div>
+													</div>
+												</div>
+												<div class="attachments">
+													<b>Category:</b> {{ items['object-item']['categories'] }}<br>
+													<b>References:</b> {{ items['object-attachment']['references'] }}<br>
+													<b>Responsible:</b> {{ items['object-attachment']['responsible'] }}<br>
+													<b>Tags:</b> {{ items['object-attachment']['tags'] }}<br>
+												</div>
+											</div>
+										</div>
+									</div>
+								</a>
+							</div>
+
+							<div ng-switch-when="failed">
+								<a ng-href="#/item/{{items['object-item-id']}}/{{items['object-item']['sha-minor']}}">
+
+									<div class="item-container">
+										<div class="status-area status-area-failure"></div>
+										<div class="item-main">
+											<div class="header">
+												<p class="alignleft">{{ items["object-item"]['title'] }}</p>
+												<p class="alignright">{{ items["object-item-id"] }}</p>
+												<div style="clear: both;"></div>
+											</div>
+											<div class="content">
+												<div class="achievements">
+													<b>Last Submitter:</b> {{ items['object-achievements']['submitter'] }}<br>
+													<b>Submitter Date:</b> {{ items['object-achievements']['date-added'] }}<br>
+													<b>Test Date:</b> {{ items['object-achievements']['test-date-relative-long'] }}<br>
+													<b>Result:</b> {{ items['object-achievements']['test-result'] }}<br>
+													<div ng-switch on='items["conflict"]'>
+														<div ng-switch-when="true">
+															<div class="alert alert-danger" role="alert">
+															 <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+																<b>Conflict:</b> Multiple subcontainers detected<br>
+															</div>
+														</div>
+														<div ng-switch-default></div>
+													</div>
+												</div>
+												<div class="attachments">
+													<b>Category:</b> {{ items['object-item']['categories'] }}<br>
+													<b>References:</b> {{ items['object-attachment']['references'] }}<br>
+													<b>Responsible:</b> {{ items['object-attachment']['responsible'] }}<br>
+													<b>Tags:</b> {{ items['object-attachment']['tags'] }}<br>
+												</div>
+											</div>
+										</div>
+									</div>
+								</a>
+							</div>
+
+							<div ng-switch-when="nonapplicable">
+								<a ng-href="#/item/{{items['object-item-id']}}/{{items['object-item']['sha-minor']}}">
+									<div class="item-container">
+										<div class="status-area status-area-nonapplicable"></div>
+										<div class="item-main">
+											<div class="header">
+												<p class="alignleft">{{ items["object-item"]['title'] }}</p>
+												<p class="alignright">{{ items["object-item-id"] }}</p>
+												<div style="clear: both;"></div>
+											</div>
+											<div class="content">
+												<div class="achievements">
+													<b>Last Submitter:</b> {{ items['object-achievements']['submitter'] }}<br>
+													<b>Submitter Date:</b> {{ items['object-achievements']['date-added'] }}<br>
+													<b>Test Date:</b> {{ items['object-achievements']['test-date-relative-long'] }}<br>
+													<b>Result:</b> {{ items['object-achievements']['test-result'] }}<br>
+													<div ng-switch on='items["conflict"]'>
+														<div ng-switch-when="true">
+															<div class="alert alert-danger" role="alert">
+															 <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+																<b>Conflict:</b> Multiple subcontainers detected<br>
+															</div>
+														</div>
+														<div ng-switch-default></div>
+													</div>
+												</div>
+												<div class="attachments">
+													<b>Category:</b> {{ items['object-item']['categories'] }}<br>
+													<b>References:</b> {{ items['object-attachment']['references'] }}<br>
+													<b>Responsible:</b> {{ items['object-attachment']['responsible'] }}<br>
+													<b>Tags:</b> {{ items['object-attachment']['tags'] }}<br>
+												</div>
+											</div>
+										</div>
+									</div>
+								</a>
+							</div>
+
+							<div ng-switch-when="exception">
+								<a ng-href="#/item/{{items['object-item-id']}}/{{items['object-item']['sha-minor']}}">
+									<div class="item-container">
+										<div class="status-area status-area-exception"></div>
+										<div class="item-main">
+											<div class="header">
+												<p class="alignleft">{{ items["object-item"]['title'] }}</p>
+												<p class="alignright">{{ items["object-item-id"] }}</p>
+												<div style="clear: both;"></div>
+											</div>
+											<div class="content">
+												<div class="achievements">
+													<b>Last Submitter:</b> {{ items['object-achievements']['submitter'] }}<br>
+													<b>Submitter Date:</b> {{ items['object-achievements']['date-added'] }}<br>
+													<b>Test Date:</b> {{ items['object-achievements']['test-date-relative-long'] }}<br>
+													<b>Result:</b> {{ items['object-achievements']['test-result'] }}<br>
+													<div ng-switch on='items["conflict"]'>
+														<div ng-switch-when="true">
+															<div class="alert alert-danger" role="alert">
+															 <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+																<b>Conflict:</b> Multiple subcontainers detected<br>
+															</div>
+														</div>
+														<div ng-switch-default></div>
+													</div>
+												</div>
+												<div class="attachments">
+													<b>Category:</b> {{ items['object-item']['categories'] }}<br>
+													<b>References:</b> {{ items['object-attachment']['references'] }}<br>
+													<b>Responsible:</b> {{ items['object-attachment']['responsible'] }}<br>
+													<b>Tags:</b> {{ items['object-attachment']['tags'] }}<br>
+												</div>
+											</div>
+										</div>
+									</div>
+								</a>
+							</div>
+
+							<div ng-switch-default>
+								<a ng-href="#/item/{{items['object-item-id']}}/{{items['object-item']['sha-minor']}}">
+
+									<div class="item-container">
+										<div class="status-area status-area-nontest"></div>
+										<div class="item-main">
+											<div class="header">
+												<p class="alignleft">{{ items["object-item"]['title'] }}</p>
+												<p class="alignright">{{ items["object-item-id"] }}</p>
+												<div style="clear: both;"></div>
+											</div>
+											<div class="content">
+												<div class="achievements">
+													<b>Last Submitter:</b> {{ items['object-achievements']['submitter'] }}<br>
+													<b>Submitter Date:</b> {{ items['object-achievements']['date-added'] }}<br>
+													<b>Test Date:</b> {{ items['object-achievements']['test-date-relative-long'] }}<br>
+													<b>Result:</b> {{ items['object-achievements']['test-result'] }}<br>
+													<div ng-switch on='items["conflict"]'>
+														<div ng-switch-when="true">
+															<div class="alert alert-danger" role="alert">
+															 <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+																<b>Conflict:</b> Multiple subcontainers detected<br>
+															</div>
+														</div>
+														<div ng-switch-default></div>
+													</div>
+												</div>
+												<div class="attachments">
+													<b>Category:</b> {{ items['object-item']['categories'] }}<br>
+													<b>References:</b> {{ items['object-attachment']['references'] }}<br>
+													<b>Responsible:</b> {{ items['object-attachment']['responsible'] }}<br>
+													<b>Tags:</b> {{ items['object-attachment']['tags'] }}<br>
+												</div>
+											</div>
+										</div>
+									</a>
+							</div>
+						</div>
+					</div>
+
+			</div>
+
+
+
+			</div> <!-- ng-switch-when='false' -->
+
+			<!-- condensed version -->
+			<div ng-switch-when='true'>
+				<div class="list-group">
+					<div ng-repeat="items in data | filter:filterSelection()">
+
+						<div ng-switch on='items["object-achievements"]["test-result"]'>
+							<div ng-switch-when="passed">
+								<a ng-href="#/item/{{items['object-item-id']}}/{{items['object-item']['sha-minor']}}">
+									<div class="list-group-item test-success-indicator">
+										<p class="alignleft">{{ items["object-item"]['title'] }}</p>
+										<div style="clear: both;"></div>
+										<div class="header-seperator"></div>
+										<b>Last Submitter:</b> {{ items['object-achievements']['submitter'] }}<br>
+										<b>Date:</b> {{ items['object-achievements']['test-date-relative'] }}<br>
+										<b>Result:</b> {{ items['object-achievements']['test-result'] }}<br>
+										<div ng-switch on='items["conflict"]'>
+														<div ng-switch-when="true">
+															<div class="alert alert-danger" role="alert">
+															 <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+																<b>Conflict:</b> Multiple subcontainers detected<br>
+															</div>
+														</div>
+														<div ng-switch-default></div>
+													</div>
+									</div>
+								</a>
+							</div>
+							<div ng-switch-when="failed">
+								<a ng-href="#/item/{{items['object-item-id']}}/{{items['object-item']['sha-minor']}}">
+									<div class="list-group-item test-failure-indicator">
+										<p class="alignleft">{{ items["object-item"]['title'] }}</p>
+										<div style="clear: both;"></div>
+										<div class="header-seperator"></div>
+										<b>Last Submitter:</b> {{ items['object-achievements']['submitter'] }}<br>
+										<b>Date:</b> {{ items['object-achievements']['test-date-relative'] }}<br>
+										<b>Result:</b> {{ items['object-achievements']['test-result'] }}<br>
+										<div ng-switch on='items["conflict"]'>
+														<div ng-switch-when="true">
+															<div class="alert alert-danger" role="alert">
+															 <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+																<b>Conflict:</b> Multiple subcontainers detected<br>
+															</div>
+														</div>
+														<div ng-switch-default></div>
+													</div>
+									</div>
+								</a>
+							</div>
+							<div ng-switch-when="exception">
+								<a ng-href="#/item/{{items['object-item-id']}}/{{items['object-item']['sha-minor']}}">
+									<div class="list-group-item test-exception-indicator">
+										<p class="alignleft">{{ items["object-item"]['title'] }}</p>
+										<div style="clear: both;"></div>
+										<div class="header-seperator"></div>
+										<b>Last Submitter:</b> {{ items['object-achievements']['submitter'] }}<br>
+										<b>Date:</b> {{ items['object-achievements']['test-date-relative'] }}<br>
+										<b>Result:</b> {{ items['object-achievements']['test-result'] }}<br>
+										<div ng-switch on='items["conflict"]'>
+														<div ng-switch-when="true">
+															<div class="alert alert-danger" role="alert">
+															 <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+																<b>Conflict:</b> Multiple subcontainers detected<br>
+															</div>
+														</div>
+														<div ng-switch-default></div>
+													</div>
+									</div>
+								</a>
+							</div>
+							<div ng-switch-when="nonapplicable">
+								<a ng-href="#/item/{{items['object-item-id']}}/{{items['object-item']['sha-minor']}}">
+									<div class="list-group-item test-nonapplicable-indicator">
+										<p class="alignleft">{{ items["object-item"]['title'] }}</p>
+										<div style="clear: both;"></div>
+										<div class="header-seperator"></div>
+										<b>Last Submitter:</b> {{ items['object-achievements']['submitter'] }}<br>
+										<b>Date:</b> {{ items['object-achievements']['test-date-relative'] }}<br>
+										<b>Result:</b> {{ items['object-achievements']['test-result'] }}<br>
+										<div ng-switch on='items["conflict"]'>
+														<div ng-switch-when="true">
+															<div class="alert alert-danger" role="alert">
+															 <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+																<b>Conflict:</b> Multiple subcontainers detected<br>
+															</div>
+														</div>
+														<div ng-switch-default></div>
+													</div>
+									</div>
+								</a>
+							</div>
+							<div ng-switch-default>
+								<a ng-href="#/item/{{items['object-item-id']}}/{{items['object-item']['sha-minor']}}">
+									<div class="list-group-item test-nontest-indicator">
+										<p class="alignleft">{{ items["object-item"]['title'] }}</p>
+										<div style="clear: both;"></div>
+										<div class="header-seperator"></div>
+										<b>Last Submitter:</b> {{ items['object-achievements']['submitter'] }}<br>
+										<b>Date:</b> {{ items['object-achievements']['test-date-relative'] }}<br>
+										<b>Result:</b> {{ items['object-achievements']['test-result'] }}<br>
+										<div ng-switch on='items["conflict"]'>
+														<div ng-switch-when="true">
+															<div class="alert alert-danger" role="alert">
+															 <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+																<b>Conflict:</b> Multiple subcontainers detected<br>
+															</div>
+														</div>
+														<div ng-switch-default></div>
+													</div>
+									</div>
+								</a>
+							</div>
+						</div>
+
+					</div>
+				</div>
+			</div>
+
+
+		</div> <!-- col-sm-6 -->
+
+		<div class="col-sm-4">
+
+			<div class="list-group">
+				<li class="list-group-item">
+					<h4 class="list-group-item-heading">Statistics for Selection</h4>
+					<p class="list-group-item-text">
+					Number of tests: {{ numberItems }}
+					</p>
+					<p class="list-group-item-text">
+					Number of Submitter:
+					</p>
+					<p class="list-group-item-text">
+					Number of Responsibility:
+					</p>
+					<p class="list-group-item-text">
+					Newest test: {{ testDateYoungest }}
+					</p>
+					<p class="list-group-item-text">
+					Oldest test: {{ testDateOldest }}
+					</p>
+				</li>
+
+				<li class="list-group-item">
+					<h4 class="list-group-item-heading">Results</h4>
+					Passed: {{ passedAchievements }}<br>
+					Failed: {{ failedAchievements }}<br>
+					Non Applicable: {{ nonApplicableAchievements }}<br>
+					Exception: {{ exceptionAchievements }}<br>
+					Never tested: {{ noAchievements }}<br>
+
+					<hr class="divider">
+
+					<div ng-controller="ItemsCtrl">
+						<nvd3 options="optionsPieChart" data="exampleData2"></nvd3>
+					</div>
+
+
+
+				</li>
+
+			</div>
+
+		</div> <!-- col-sm-6 -->
+	</div>
+</div> <!-- main-content-container -->
+

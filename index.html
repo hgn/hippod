@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html ng-app="hippoDApp">
+<head>
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<link href='https://fonts.googleapis.com/css?family=Open+Sans:400,300,700' rel='stylesheet' type='text/css'>
+<link href='https://fonts.googleapis.com/css?family=Lato:400,300,700' rel='stylesheet' type='text/css'>
+
+<!-- <script src="assets/libs/d3.js"></script> -->
+<script src="static/assets/libs/d3-3.5.10.min.js"></script>
+<!-- <script src="assets/libs/nv.d3.min.js"></script> -->
+<script src="static/assets/libs/nv.d3-1.2.0.min.js"></script>
+
+<script src="static/assets/js/helper.js"></script>
+
+<script src="static/assets/js/angular.min.js"></script>
+<script src="static/assets/js/angular-ui-router.min.js"></script>
+<script src="static/assets/js/ui-bootstrap-tpls-0.14.3.min.js"></script>
+
+<!-- <script src="assets/libs/angularjs-nvd3-directives.min.js"></script>-->
+<script src="static/assets/libs/angular-nvd3-1.0.5.min.js"></script>
+
+<script src="static/assets/libs/loading-bar.min.js"></script>
+
+<script src="static/app.js"></script>
+
+<script src="static/controllers/dashboard.js"></script>
+<script src="static/controllers/admin.js"></script>
+<script src="static/controllers/items.js"></script>
+<script src="static/controllers/item.js"></script>
+<script src="static/controllers/achievement.js"></script>
+<script src="static/controllers/report.js"></script>
+<script src="static/services/ressources.js"></script>
+<script src="static/services/items.js"></script>
+
+
+<title>hippod</title>
+
+<!-- Bootstrap Core CSS -->
+<link href="static/assets/css/bootstrap.min.css" rel="stylesheet">
+<!-- <link href="assets/css/nv.d3.min.css" rel="stylesheet"> -->
+<link href="static/assets/css/nv.d3-1.2.0.min.css" rel="stylesheet">
+<link href="static/assets/css/loading-bar.min.css" rel="stylesheet">
+<!--
+<link href="assets/css/mdb.min.css" rel="stylesheet">
+-->
+
+<!-- Custom CSS -->
+<link href="static/assets/css/style.css" rel="stylesheet">
+
+<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+<!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+<![endif]-->
+
+</head>
+
+<body >
+
+	<div id="wrapper">
+
+		<!-- Sidebar -->
+	<div id="sidebar-wrapper">
+		<ul class="sidebar-nav">
+			<li class="sidebar-brand">
+				<a ui-sref="dashboard">
+					HippoD
+				</a>
+			</li>
+			<li><a ui-sref="dashboard" ui-sref-active="active_nav">
+					<span class="glyphicon glyphicon-equalizer"
+						aria-hidden="true"></span>&nbsp;
+					Dashboard </a></li>
+			<li><a ui-sref="items" ui-sref-active="active_nav">
+					<span class="glyphicon glyphicon-flash"
+						aria-hidden="true"></span>&nbsp;
+					Tests</a></li>
+			<li><a ui-sref="report" ui-sref-active="active_nav">
+					<span class="glyphicon glyphicon-print"
+						aria-hidden="true"></span>&nbsp;
+					Report </a></li>
+			<li><a ui-sref="admin" ui-sref-active="active_nav">
+					<span class="glyphicon glyphicon-cog"
+						aria-hidden="true"></span>&nbsp;
+					Admin</a></li>
+		</ul>
+		<div id="hippod-logo"></div>
+	</div> <!-- /#sidebar-wrapper -->
+
+	<!-- Page Content -->
+	<div class="container-fluid">
+		<div class="row">
+			<div class="col-lg-12">
+				<!-- MAIN CONTENT -->
+				<div class="container-fluid">
+					<div ui-view></div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	</div> <!-- /#wrapper -->
+	<script src="static/assets/js/jquery.js"></script>
+	<script src="static/assets/js/bootstrap.min.js"></script>
+</body>
+</html>
