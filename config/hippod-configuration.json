@@ -18,7 +18,7 @@
 		"title" : "Test Report",
 		"driver" : "pandoc",
 		"export_formats" : [ "PDF" ],
-		"pandoc_pdf_tex_template_path" : "/home/muthu/hippod/config/pandoc-templates/pdf-template-modern.tex"
+		"pandoc_pdf_tex_template_path" : "config/pandoc-templates/pdf-template-modern.tex"
 	},
 
 	"userdb" : {
