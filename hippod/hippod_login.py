@@ -20,10 +20,11 @@ HOST = '127.0.0.1'
 PORT = 8080
 
 # Add required files.
-LOGIN_HTML = 'login_system/login.html'
-SITE_HTML = 'login_system/site.html'
-REDIRECT_HTML = 'login_system/redirect.html'
-CONFIG_FILE = 'login_system/configuration.json'
+LOGIN_HTML = 'templates/login.html'
+SITE_HTML = 'templates/site.html'
+REDIRECT_HTML = 'templates/redirect.html'
+INDEX_FILE = 'templates/index.html'
+CONFIG_FILE = 'config/configuration.json'
 
 
 # We use ERROR for server_error web response.
@@ -133,7 +134,7 @@ class Login:
         valid_cookie = self._check_cookie(request)
         if not valid_cookie:
             return web.HTTPFound('/log')
-        home_file = self._load_html_file('index.html')
+        home_file = self._load_html_file(INDEX_FILE)
         if not home_file:
             return web.HTTPFound('/error')
         return web.Response(text=home_file, content_type='text/html')
