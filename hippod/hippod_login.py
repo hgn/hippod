@@ -15,10 +15,6 @@ COOKIE_NAME = "OldTamil"
 COOKIE_VALUE = 0
 
 
-# Define host and port.
-HOST = '127.0.0.1'
-PORT = 8080
-
 # Add required files.
 LOGIN_HTML = 'templates/login.html'
 SITE_HTML = 'templates/site.html'
