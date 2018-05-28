@@ -20,7 +20,7 @@ LOGIN_HTML = 'templates/login.html'
 SITE_HTML = 'templates/site.html'
 REDIRECT_HTML = 'templates/redirect.html'
 INDEX_FILE = 'templates/index.html'
-CONFIG_FILE = 'config/hippod-configuration.json'
+CONFIG_FILE = 'assets/hippod-configuration.json'
 
 
 # We use ERROR for server_error web response.
