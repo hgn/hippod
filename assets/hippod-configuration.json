@@ -1,8 +1,10 @@
 {
 	"common" : {
 		"logging" : "debug",
-		"host"    : "0.0.0.0",
-		"port"    : 80
+		"host"    : "127.0.0.1",
+		"port"    : 9000, 
+		"username": "admin",
+		"password": "admin"
 	},
 
 	"achievements_validity_lifetime" : {
@@ -11,14 +13,14 @@
 	},
 
 	"db" : {
-		"path" : "/var/lib/hippod"
+		"path" : "var/lib/hippod"
 	},
 
 	"reports" : {
 		"title" : "Test Report",
 		"driver" : "pandoc",
 		"export_formats" : [ "PDF" ],
-		"pandoc_pdf_tex_template_path" : "/usr/share/hippod/assets/pandoc-templates/pdf-template-modern.tex"
+		"pandoc_pdf_tex_template_path" : "assets/pandoc-templates/pdf-template-modern.tex"
 	},
 
 	"userdb" : {

@@ -7,37 +7,37 @@ hippoD.config(function($stateProvider, $urlRouterProvider) {
 	$stateProvider
         .state('dashboard', {
             url: '/',
-            templateUrl: 'templates/home.html',
+            templateUrl: 'static/templates/home.html',
             controller: 'DashboardCtrl'
         })
 
         .state('items', {
             url: '/items',
-            templateUrl: 'templates/items.html',
+            templateUrl: 'static/templates/items.html',
             controller: 'ItemsCtrl'
         })
 
         .state('achievement', {
 					url: '/item/:id/:sub_id/:achievement_id',
-            templateUrl: 'templates/achievement.html',
+            templateUrl: 'static/templates/achievement.html',
             controller: 'AchievementCtrl'
         })
 
         .state('item', {
                     url: '/item/:id/:sub_id',
-            templateUrl: 'templates/item.html',
+            templateUrl: 'static/templates/item.html',
             controller: 'ItemCntrl'
         })
 
         .state('admin', {
             url: '/admin',
-            templateUrl: 'templates/admin.html',
+            templateUrl: 'static/templates/admin.html',
             controller: 'AdminCtrl'
         })
 
         .state('report', {
             url: '/report',
-            templateUrl: 'templates/report.html',
+            templateUrl: 'static/templates/report.html',
             controller: 'ReportCtrl'
         });
 });

@@ -14,8 +14,6 @@ import time
 
 from aiohttp import web
 
-from hippod import aiohttp_index
-
 from hippod import api_ping
 from hippod import api_resources
 from hippod import api_achievement_get
@@ -25,6 +23,8 @@ from hippod import api_object_get
 from hippod import api_object_get_detail
 from hippod import api_object_get_full
 from hippod import api_data_get
+from hippod import hippod_login
+from hippod import error_handling
 from hippod import user_db
 from hippod import api_report
 from hippod import api_get_reports
@@ -47,6 +47,7 @@ EXIT_FAILURE = 1
 
 log = logging.getLogger()
 
+login = hippod_login.Login()
 
 def db_create_initial_statistics(path):
     sys.stderr.write("create statistics db: {}\n".format(path))
@@ -106,7 +107,7 @@ def set_config_defaults(app):
 
 
 def init_aiohttp(conf):
-    app = web.Application(middlewares=[aiohttp_index.IndexMiddleware()])
+    app = web.Application(middlewares=[error_handling.error_middleware])
 
     app["CONF"] = conf
 
@@ -131,6 +132,8 @@ def init_aiohttp(conf):
     app["USER_DB"] = user_db.UserDB(conf, user_db_path, ldap_db_path)
 
     return app
+
+
 
 
 def setup_routes(app, conf):
@@ -177,9 +180,13 @@ def setup_routes(app, conf):
     #                     '/api/v1/users',
     #                     api_users.handle)
 
-    absdir = os.path.dirname(os.path.realpath(__file__))
-    app_path = os.path.join(absdir, 'hippod/app')
-    app.router.add_static('/', app_path)
+    app.router.add_static('/static', 'static')
+    app.router.add_routes([web.get('/log', login.login_page),
+                           web.post('/login', login.login_required),
+                           web.get('/', login.index),
+                           web.get('/error', login.server_error),
+                           web.get('/redirect', login.redirect_page)])
+
 
 
 def gh_container_achievements_daily(app):
