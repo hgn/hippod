@@ -20,7 +20,7 @@ LOGIN_HTML = 'templates/login.html'
 SITE_HTML = 'templates/site.html'
 REDIRECT_HTML = 'templates/redirect.html'
 INDEX_FILE = 'templates/index.html'
-CONFIG_FILE = 'config/configuration.json'
+CONFIG_FILE = 'config/hippod-configuration.json'
 
 
 # We use ERROR for server_error web response.
@@ -89,7 +89,7 @@ class Login:
             return False
         configure_file = open(filename)
         load_json_data = json.load(configure_file)
-        if not all(key in load_json_data for key in("USERNAME", "PASSWORD")):
+        if not load_json_data.get('common', {}).get('username'):
             return False
         return load_json_data
 
@@ -111,8 +111,8 @@ class Login:
         credentials = self._load_credentials(CONFIG_FILE)
         if not credentials:
             return False
-        authorized_username = credentials['USERNAME']
-        authorized_password = credentials['PASSWORD']
+        authorized_username = credentials.get('common', {}).get('username')
+        authorized_password = credentials.get('common', {}).get('password')
         if not (username == authorized_username and
                 password == authorized_password):
             return False
