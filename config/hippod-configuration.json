@@ -2,7 +2,9 @@
 	"common" : {
 		"logging" : "debug",
 		"host"    : "127.0.0.1",
-		"port"    : 9000
+		"port"    : 9000, 
+		"username": "admin",
+		"password": "admin"
 	},
 
 	"achievements_validity_lifetime" : {
