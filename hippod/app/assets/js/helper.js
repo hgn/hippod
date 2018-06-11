@@ -66,10 +66,8 @@ function formatDateYYYYMMDDHHMM(date) {
 
 function humanRelativeDate(date) {
 	var actual_date = new Date();
-	var current_date_timezone_offset = actual_date.getTimezoneOffset();
-	var offset = Math.abs(current_date_timezone_offset) * 60;
 	var prev_date = new Date(date);
-	var delta = Math.floor((actual_date - prev_date) / 1000) + offset;
+	var delta = Math.floor((actual_date - prev_date) / 1000);
 
 	if (delta < 0)
 	{
