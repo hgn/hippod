@@ -1,67 +1,56 @@
-# HippoD Login system
-
 import os
-
 import datetime
-
 import json
-
 from aiohttp import web
 
 
-# Customize the cookie
-# this is more convient way to modify cookie.
 COOKIE_NAME = "OldTamil"
 COOKIE_VALUE = 0
 
+# Get the file path
+absdir = os.path.dirname(os.path.realpath(__file__))
+path = os.path.join(absdir, 'app')
 
 # Add required files.
-LOGIN_HTML = 'templates/login.html'
-SITE_HTML = 'templates/site.html'
-REDIRECT_HTML = 'templates/redirect.html'
-INDEX_FILE = 'templates/index.html'
+LOGIN_HTML = path + '/login.html'
+REDIRECT_HTML = path + '/redirect.html'
+INDEX_FILE = path + '/index.html'
 CONFIG_FILE = 'assets/hippod-configuration.json'
 
-
-# We use ERROR for server_error web response.
+# server error
 ERROR = '''
 <html>
-  <head>
-    <title>SERVER ERROR</title>
-    <style type ="text/css">
-    body { text-align:center; padding: 10%;
-    font-weight: bold; font: 20px Helvetica, sans-serif; }
-    a {padding: 30px;}
-    h1 {color:#FF0000 ; font-family: Arial, Helvetica, sans-serif;
-        font-size: 30px;}
-    </style>
-  </head>
-     <body>
-     <h1> Sorry! Something went wrong </h1>
-     <h2> Internal server error</h2>
-       <p> Please visit us later</p>
-       <p>The Team</p>
-     </body>
-</html>'''
+   <head>
+   <title>SERVER ERROR</title>
+       <style type ="text/css">
+              body { text-align:center; padding: 10%;
+              font-weight: bold; font: 20px Helvetica, sans-serif; }
+              a {padding: 30px;}
+              h1 {color:#FF0000 ; font-family: Arial, Helvetica, sans-serif;
+                  font-size: 30px;}
+       </style>
+   </head>
+      <body>
+          <h1> Sorry! Something went wrong </h1>
+          <h2> Internal server error</h2>
+          <p> Please visit us later</p>
+          <p>The Team</p>
+      </body>
+</html>
+'''
 
 
 class Login:
-    """ Login performs the main task of this system.
+    """ Hippod login
 
-    The class runs login_required function which validate the user and gives
-    permission and _check_the_file, _check_credentials, and _load_html_file
-    are responsible for file handling and credentials loading.
-
-    Cookie handling has been implemented.
-    The cookie will be stored on the client site for 30 days long.
-
-
+    Arguments:
+        None
     """
 
     def _check_the_file(self, filename):
         if not os.path.isfile(filename):
-            print("Internal server error! "
-                  "file not found:{}".format(filename))
+            print("Internal server error\n"
+                  "File not found:{}\r\n".format(filename))
             return False
         return True
 
@@ -74,14 +63,6 @@ class Login:
         return open(filename).read()
 
     def _load_credentials(self, filename):
-        """Load the user credentials from json file.
-
-        First _load_credentials starts to read the json
-        and make sure that the keys and values are accessible.
-
-        Return to dictionary if the conditions succeed.
-        """
-
         if not self._check_the_file(filename):
             return False
         if not filename.endswith(".json"):
@@ -93,7 +74,6 @@ class Login:
             return False
         return load_json_data
 
-    # Return True if there is cookie with requested value.
     def _check_cookie(self, request):
         cookie_value = request.cookies.get(COOKIE_NAME, None)
         if not cookie_value:
@@ -106,7 +86,6 @@ class Login:
             return False
         return False
 
-    # Validating the user inputs with authorized credentials.
     def _check_credentials(self, username, password):
         credentials = self._load_credentials(CONFIG_FILE)
         if not credentials:
@@ -119,11 +98,6 @@ class Login:
         return True
 
     async def server_error(self, request):
-        """Handles the server error.
-
-        This function creates the server error web view.
-        Simply Returns to a html web response.
-        """
         return web.Response(text=ERROR, content_type='text/html')
 
     async def index(self, request):
