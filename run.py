@@ -5,7 +5,6 @@ import os
 import sys
 import datetime
 import json
-import random
 import argparse
 import addict
 import logging
@@ -41,7 +40,7 @@ APP_VERSION = "002"
 
 # exit codes for shell, failures can later be sub-devided
 # if required and shell/user has benefit of this information
-EXIT_OK      = 0
+EXIT_OK = 0
 EXIT_FAILURE = 1
 
 
@@ -49,14 +48,30 @@ log = logging.getLogger()
 
 login = hippod_login.Login()
 
+# get path for web-app html/js files
+ABSDIR = os.path.dirname(os.path.realpath(__file__))
+APP_PATH = os.path.join(ABSDIR, 'hippod/app')
+
+
+# define all required files path
+STATIC_FILES = APP_PATH + '/static'
+ERROR_HTML = APP_PATH + '/404.html'
+
+
+# 404 page not found middle ware
+ERROR_MIDDLEWARE = error_handling.ErrorMiddleware(ERROR_HTML)
+
+
 def db_create_initial_statistics(path):
     sys.stderr.write("create statistics db: {}\n".format(path))
     today = datetime.datetime.now().strftime('%Y-%m-%d')
     d = dict()
     d['item-bytes-overtime'] = list()
     d['data-compression'] = dict()
-    d_jsonfied =  json.dumps(d, sort_keys=True,indent=4, separators=(',', ': '))
-    with open(path,"w+") as f:
+    d_jsonfied = json.dumps(d,
+                            sort_keys=True,
+                            indent=4, separators=(',', ': '))
+    with open(path, "w+") as f:
         f.write(d_jsonfied)
 
 
@@ -107,7 +122,7 @@ def set_config_defaults(app):
 
 
 def init_aiohttp(conf):
-    app = web.Application(middlewares=[error_handling.error_middleware])
+    app = web.Application(middlewares=[ERROR_MIDDLEWARE.error_middleware])
 
     app["CONF"] = conf
 
@@ -128,51 +143,50 @@ def init_aiohttp(conf):
     check_report_path(app, report_path)
 
     user_db_path = os.path.join(conf_path_root, "user.db")
+    print("the user db path", user_db_path)
     ldap_db_path = os.path.join(conf_path_root, "ldap.db")
     app["USER_DB"] = user_db.UserDB(conf, user_db_path, ldap_db_path)
 
     return app
 
 
-
-
 def setup_routes(app, conf):
     app.router.add_route('*',
-                        '/api/v1/achievement/{sha_major}/{sha_minor}/{achievement_id}',
-                        api_achievement_get.handle)
+                         '/api/v1/achievement/{sha_major}/{sha_minor}/{achievement_id}',
+                         api_achievement_get.handle)
     app.router.add_route('*',
-                        '/api/v1/object/{sha_major}/{sha_minor}',
-                        api_object_get_full.handle)
+                         '/api/v1/object/{sha_major}/{sha_minor}',
+                         api_object_get_full.handle)
     app.router.add_route('*',
-                        '/api/v1/data/{sha_sum}',
-                        api_data_get.handle)
+                         '/api/v1/data/{sha_sum}',
+                         api_data_get.handle)
     app.router.add_route('*',
-                        '/api/v1/data-snippet/{sha_sum}',
-                        api_data_get.handle_snippet)
+                         '/api/v1/data-snippet/{sha_sum}',
+                         api_data_get.handle_snippet)
     app.router.add_route('POST',
-                        '/api/v1/report',
-                        api_report.handle)
+                         '/api/v1/report',
+                         api_report.handle)
     app.router.add_route('GET',
-                        '/api/v1/get-reports/{report_name}',
-                        api_get_reports.handle_concrete)
+                         '/api/v1/get-reports/{report_name}',
+                         api_get_reports.handle_concrete)
     app.router.add_route('GET',
-                        '/api/v1/get-reports',
-                        api_get_reports.handle)
+                         '/api/v1/get-reports',
+                         api_get_reports.handle)
     app.router.add_route('GET',
-                        '/api/v1/ping',
-                        api_ping.handle)
+                         '/api/v1/ping',
+                         api_ping.handle)
     app.router.add_route('GET',
-                        '/api/v1.0/resources',
-                        api_resources.handle)
+                         '/api/v1.0/resources',
+                         api_resources.handle)
     app.router.add_route('*',
-                        '/api/v1/objects',
-                        api_object_get.handle)
+                         '/api/v1/objects',
+                         api_object_get.handle)
     app.router.add_route('*',
-                        '/api/v1/objects-detail-last',
-                        api_object_get_detail.handle)
+                         '/api/v1/objects-detail-last',
+                         api_object_get_detail.handle)
     app.router.add_route('POST',
-                        '/api/v1/object',
-                        api_object_post.handle)
+                         '/api/v1/object',
+                         api_object_post.handle)
     app.router.add_route('GET',
                          '/api/v1/cache/achievements',
                          api_cache_achievements.handle)
@@ -180,13 +194,15 @@ def setup_routes(app, conf):
     #                     '/api/v1/users',
     #                     api_users.handle)
 
-    app.router.add_static('/static', 'static')
+    # static route
+    app.router.add_static('/static', STATIC_FILES)
+
+    # web-app routes
     app.router.add_routes([web.get('/log', login.login_page),
                            web.post('/login', login.login_required),
                            web.get('/', login.index),
                            web.get('/error', login.server_error),
                            web.get('/redirect', login.redirect_page)])
-
 
 
 def gh_container_achievements_daily(app):
@@ -294,17 +310,18 @@ def load_configuration_file(args):
     with open(args.configuration) as json_data:
         return addict.Dict(json.load(json_data))
 
+
 def configuration_check(conf):
     # this function check for variables, if required
     # we should exit here with a proper message. If a
     # configuration knob is not required we set here a
     # proper default
-    if not "host" in conf.common:
+    if "host" not in conf.common:
         conf.common.host = '0.0.0.0'
-    if not "port" in conf.common:
+    if "port" not in conf.common:
         conf.common.port = '8080'
 
-    if not "path" in conf.db:
+    if "path" not in conf.db:
         sys.stderr.write("No path configured for database, but required! Please specify "
                          "a path in db section\n")
         sys.exit(EXIT_FAILURE)
