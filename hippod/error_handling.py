@@ -1,4 +1,5 @@
 from aiohttp import web
+import os
 
 
 class ErrorMiddleware:
@@ -24,5 +25,8 @@ class ErrorMiddleware:
         except web.HTTPException as e:
             if e.status != 404:
                 raise
-        ERROR_FILE = self._filename.read()
+        if not os.path.isfile(self._filename):
+            return web.Response(text="404 Page not found",
+                                content_type='text/html')
+        ERROR_FILE = open(self._filename).read()
         return web.Response(text=ERROR_FILE, content_type='text/html')
