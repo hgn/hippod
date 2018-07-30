@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Login HippoD</title>
+  <link rel="shortcut icon" href="static/assets/images/hippod_icon.ico">
+  <style type ="text/css">
+    h1 {color: azure; font-family: Arial, Helvetica, sans-serif; text-align:center; padding:-20%; font-size: 100px;}
+    p {border: none; margin:4px 2px; padding:-20%;color: #E6D102; font-weight:bold; font-size: 50px; text-align: center;}
+    body { text-align:right; padding: 1%; font-weight: bold; font: 20px Helvetica, sans-serif; }
+
+    input[type=text]
+    {
+    align-content: right;
+    width: 40%;
+    padding:5px;
+    margin: 1px 0px;
+    display: inline-block;
+    border: 1px solid #ccc;
+    box-sizing: content-box;
+    }
+
+    input[type=password]
+    {
+    width: 40%;
+    padding: 5px;
+    margin: 1px 0px;
+    display: inline-block;
+    border: 1px solid #ccc;
+    box-sizing: content-box;
+    }
+
+    input[type=submit] {
+    width: 10%;
+    padding: 5px;
+    margin: 8px -12px;
+    display: inline-block;
+    border: 1px solid #ccc;
+    box-sizing: content-box;
+    }
+
+   form {text-align:-moz-left; color: azure; font-weight: bold;display:inline-block;font-family: Arial, Helvetica, sans-serif; font-size: 18px; margin: 5px; }
+  </style>
+</head>
+<body style="background-color: #06bfd4">
+   <form action='/login'  method ='post'>
+     <input type ='text' name = 'username' placeholder="Username">
+     <input type ='password' name  = 'password' placeholder="Password">
+     <input class="btn btn-default" type ='submit' value = 'Login'>
+   </form>
+</body>
+<h1> Welcome </h1>
+<p> HippoD</p>
+</html>

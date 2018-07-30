@@ -1,0 +1,49 @@
+<div class="mainbar">Achievement
+</div>
+
+<div class="main-content-container">
+	<h5><a ng-href="#/item/{{id}}/{{sub_id}}" data-toggle="tooltip" title="Return to the item"><b>ID:</b>
+	<span class="glyphicon glyphicon-link"></span>
+	{{ id }} / {{ sub_id }}</a> / {{ achievement }}</h5>
+	<h5><b>Test-Result:</b> {{response['result']}}</h5>
+	<br>
+	<br>
+	<div ng-repeat="data in data_ids_scope track by $index">
+		<div ng-switch on="data.type">
+			<div ng-switch-when="snippet">
+				<img data-ng-src="api/v1/data-snippet/{{data['data-id']}}">
+				<br>
+			</div>
+			<div ng-switch-default>
+				<img data-ng-src="api/v1/data/{{data['data-id']}}">
+				<br>
+			</div>
+		</div>
+	</div>
+	<br>
+	<br>
+	<h5>Attachments:</h5>
+	<ul class="list-group">
+		<div ng-repeat="attachments in data_attach['__attachments']">
+			<li class="list-group-item clearfix">
+				<span class="glyphicon glyphicon-file"></span>
+				{{ attachments['name'] }} ({{ attachments['size-real'] }} byte)
+				<span class="pull-right">
+					<div ng-switch on="attachments.type">
+									<div ng-switch-when="undefined">
+										<a ng-href="api/v1/data/{{ attachments['data-id'] }}" class="btn btn-xs" role="button">
+											<span class="glyphicon glyphicon-download"></span>
+										</a>
+									</div>
+									<div ng-switch-default>
+										<a ng-href="api/v1/data-snippet/{{ attachments['data-id'] }}" class="btn btn-xs" role="button">
+											<span class="glyphicon glyphicon-download"></span>
+										</a>
+									</div>
+								</div>
+				</span>
+			</li>
+		</div>
+	</ul>
+</div> <!-- main-content-container -->
+
