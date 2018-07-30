@@ -53,7 +53,7 @@ class LDAP:
             return True, self.sanitize_result(r)
         except Exception as e:
             return False, str(e)
-        
+
 
 
 class UserDB:
