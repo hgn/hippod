@@ -319,7 +319,7 @@ def configuration_check(conf):
     if "host" not in conf.common:
         conf.common.host = '0.0.0.0'
     if "port" not in conf.common:
-        conf.common.port = '8080'
+        conf.common.port = 8080
 
     if "path" not in conf.db:
         sys.stderr.write("No path configured for database, but required! Please specify "
