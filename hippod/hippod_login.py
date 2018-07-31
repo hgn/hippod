@@ -44,8 +44,16 @@ class Login:
     """ Hippod login
 
     Arguments:
-        None
+        logging    --> logging for warning
+                       -Root logging level should be warning
+    Usage:
+        from hippod_login import Login
+
+        login = Login(logging)
+
     """
+    def __init__(self, logging=None):
+        self._logging = logging
 
     def _check_the_file(self, filename):
         if not os.path.isfile(filename):
@@ -71,6 +79,7 @@ class Login:
         configure_file = open(filename)
         load_json_data = json.load(configure_file)
         if not load_json_data.get('common', {}).get('username'):
+            self._logging.warning("WARNING: User credentials are missing....\n")
             return False
         return load_json_data
 
@@ -135,8 +144,6 @@ class Login:
         password = form.get('password')
         if not self._check_credentials(username, password):
             return web.HTTPFound('/redirect')
-        # We are setting cookie on the client site after user successfully
-        # logged in.
         time_ = datetime.datetime.utcnow() + datetime.timedelta(days=30)
         cookie_expiry_date = time_.strftime("%a, %d %b %Y %H:%M:%S GMT")
         response = web.HTTPFound('/')

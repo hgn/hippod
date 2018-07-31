@@ -46,7 +46,7 @@ EXIT_FAILURE = 1
 
 log = logging.getLogger()
 
-login = hippod_login.Login()
+login = hippod_login.Login(log)
 
 # get path for web-app html/js files
 ABSDIR = os.path.dirname(os.path.realpath(__file__))
@@ -361,6 +361,7 @@ def conf_check_report(app, conf):
 def conf_init():
     args = parse_args()
     conf = load_configuration_file(args)
+    configuration_check(conf)
     init_logging(conf)
     return conf
 
