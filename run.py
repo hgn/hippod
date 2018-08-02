@@ -47,16 +47,17 @@ EXIT_FAILURE = 1
 
 log = logging.getLogger()
 
+# Set cookie
+COOKIE_NAME = 'OldTamil'
+COOKIE_VALUE = 0
 
 # get path for web-app html/js files
 ABSDIR = os.path.dirname(os.path.realpath(__file__))
 APP_PATH = os.path.join(ABSDIR, 'hippod/app')
 
-
 # define all required files path
 STATIC_FILES = APP_PATH + '/static'
 ERROR_HTML = APP_PATH + '/404.html'
-
 
 # 404 page not found middle ware
 ERROR_MIDDLEWARE = error_handling.ErrorMiddleware(ERROR_HTML)
@@ -290,7 +291,13 @@ def register_timeout_handler(app):
 def main(conf):
     app = init_aiohttp(conf)
     conf_check_report(app, conf)
+
+    # login
     login = hippod_login.Login(conf, path=APP_PATH)
+
+    # set a cookie
+    login.set_cookie(COOKIE_NAME, COOKIE_VALUE)
+
     setup_routes(app, conf, login)
     register_timeout_handler(app)
     web.run_app(app, host=conf.common.host, port=conf.common.port)
