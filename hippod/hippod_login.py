@@ -1,6 +1,5 @@
 import os
 import datetime
-import json
 from aiohttp import web
 
 
@@ -15,7 +14,6 @@ path = os.path.join(absdir, 'app')
 LOGIN_HTML = path + '/login.html'
 REDIRECT_HTML = path + '/redirect.html'
 INDEX_FILE = path + '/index.html'
-CONFIG_FILE = 'assets/hippod-configuration.json'
 
 # server error
 ERROR = '''
@@ -52,8 +50,8 @@ class Login:
         login = Login(logging)
 
     """
-    def __init__(self, logging=None):
-        self._logging = logging
+    def __init__(self, conf):
+        self._conf = conf
 
     def _check_the_file(self, filename):
         if not os.path.isfile(filename):
@@ -70,19 +68,6 @@ class Login:
             return False
         return open(filename).read()
 
-    def _load_credentials(self, filename):
-        if not self._check_the_file(filename):
-            return False
-        if not filename.endswith(".json"):
-            print("{} is not a json file.".format(filename))
-            return False
-        configure_file = open(filename)
-        load_json_data = json.load(configure_file)
-        if not load_json_data.get('common', {}).get('username'):
-            self._logging.warning("WARNING: User credentials are missing....\n")
-            return False
-        return load_json_data
-
     def _check_cookie(self, request):
         cookie_value = request.cookies.get(COOKIE_NAME, None)
         if not cookie_value:
@@ -95,12 +80,15 @@ class Login:
             return False
         return False
 
-    def _check_credentials(self, username, password):
-        credentials = self._load_credentials(CONFIG_FILE)
-        if not credentials:
+    def check_configuration(self):
+        if 'username' or 'password' not in self._conf.common:
+            print("\nWarning: User credentials are missing....\r\n")
             return False
-        authorized_username = credentials.get('common', {}).get('username')
-        authorized_password = credentials.get('common', {}).get('password')
+        return True
+
+    def _check_credentials(self, username, password):
+        authorized_username = self._conf.common.username
+        authorized_password = self._conf.common.password
         if not (username == authorized_username and
                 password == authorized_password):
             return False
@@ -137,7 +125,7 @@ class Login:
         return web.HTTPFound('/')
 
     async def login_required(self, request):
-        if not self._load_credentials(CONFIG_FILE):
+        if not self.check_configuration():
             return web.HTTPFound('/error')
         form = await request.post()
         username = form.get('username')
