@@ -290,7 +290,7 @@ def register_timeout_handler(app):
 def main(conf):
     app = init_aiohttp(conf)
     conf_check_report(app, conf)
-    login = hippod_login.Login(conf)
+    login = hippod_login.Login(conf, path=APP_PATH)
     setup_routes(app, conf, login)
     register_timeout_handler(app)
     web.run_app(app, host=conf.common.host, port=conf.common.port)
