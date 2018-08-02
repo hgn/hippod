@@ -36,6 +36,7 @@ from hippod import cache_achievements
 from hippod import cache_persons
 from hippod import api_cache_achievements
 
+
 APP_VERSION = "002"
 
 # exit codes for shell, failures can later be sub-devided
@@ -46,7 +47,6 @@ EXIT_FAILURE = 1
 
 log = logging.getLogger()
 
-login = hippod_login.Login(log)
 
 # get path for web-app html/js files
 ABSDIR = os.path.dirname(os.path.realpath(__file__))
@@ -150,7 +150,7 @@ def init_aiohttp(conf):
     return app
 
 
-def setup_routes(app, conf):
+def setup_routes(app, conf, login):
     app.router.add_route('*',
                          '/api/v1/achievement/{sha_major}/{sha_minor}/{achievement_id}',
                          api_achievement_get.handle)
@@ -290,7 +290,8 @@ def register_timeout_handler(app):
 def main(conf):
     app = init_aiohttp(conf)
     conf_check_report(app, conf)
-    setup_routes(app, conf)
+    login = hippod_login.Login(conf)
+    setup_routes(app, conf, login)
     register_timeout_handler(app)
     web.run_app(app, host=conf.common.host, port=conf.common.port)
 
