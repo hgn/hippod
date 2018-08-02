@@ -5,16 +5,10 @@ from aiohttp import web
 
 COOKIE_NAME = "OldTamil"
 COOKIE_VALUE = 0
+COOKIE_STORAGE_DATE = 30
 
-# Get the file path
-absdir = os.path.dirname(os.path.realpath(__file__))
-path = os.path.join(absdir, 'app')
 
 # Add required files.
-LOGIN_HTML = path + '/login.html'
-REDIRECT_HTML = path + '/redirect.html'
-INDEX_FILE = path + '/index.html'
-
 # server error
 ERROR = '''
 <html>
@@ -50,8 +44,14 @@ class Login:
         login = Login(logging)
 
     """
-    def __init__(self, conf):
+    def __init__(self, conf, path):
         self._conf = conf
+        self._path = path
+        if self._path.endswith('/'):
+            self._path = self._path[:-1]
+        self._login_html_file = self._path + '/login.html'
+        self._redirect_html_file = self._path + '/redirect.html'
+        self._index_html_file = self._path + '/index.html'
 
     def _check_the_file(self, filename):
         if not os.path.isfile(filename):
@@ -81,7 +81,7 @@ class Login:
         return False
 
     def check_configuration(self):
-        if 'username' or 'password' not in self._conf.common:
+        if ('username' or 'password') not in self._conf.common:
             print("\nWarning: User credentials are missing....\r\n")
             return False
         return True
@@ -101,13 +101,13 @@ class Login:
         valid_cookie = self._check_cookie(request)
         if not valid_cookie:
             return web.HTTPFound('/log')
-        home_file = self._load_html_file(INDEX_FILE)
-        if not home_file:
+        index_html = self._load_html_file(self._index_html_file)
+        if not index_html:
             return web.HTTPFound('/error')
-        return web.Response(text=home_file, content_type='text/html')
+        return web.Response(text=index_html, content_type='text/html')
 
     async def redirect_page(self, request):
-        redirect_file = self._load_html_file(REDIRECT_HTML)
+        redirect_file = self._load_html_file(self._redirect_html_file)
         if not redirect_file:
             return web.HTTPFound('/error')
         valid_cookie = self._check_cookie(request)
@@ -116,7 +116,7 @@ class Login:
         return web.HTTPFound('/')
 
     async def login_page(self, request):
-        login_file = self._load_html_file(LOGIN_HTML)
+        login_file = self._load_html_file(self._login_html_file)
         if not login_file:
             return web.HTTPFound('/error')
         valid_cookie = self._check_cookie(request)
@@ -132,7 +132,8 @@ class Login:
         password = form.get('password')
         if not self._check_credentials(username, password):
             return web.HTTPFound('/redirect')
-        time_ = datetime.datetime.utcnow() + datetime.timedelta(days=30)
+        time_ = datetime.datetime.utcnow() + datetime.timedelta(
+            days=COOKIE_STORAGE_DATE)
         cookie_expiry_date = time_.strftime("%a, %d %b %Y %H:%M:%S GMT")
         response = web.HTTPFound('/')
         response.set_cookie(COOKIE_NAME,
