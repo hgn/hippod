@@ -3,12 +3,6 @@ import datetime
 from aiohttp import web
 
 
-COOKIE_NAME = "OldTamil"
-COOKIE_VALUE = 0
-COOKIE_STORAGE_DATE = 30
-
-
-# Add required files.
 # server error
 ERROR = '''
 <html>
@@ -33,17 +27,8 @@ ERROR = '''
 
 
 class Login:
-    """ Hippod login
+    """ Hippod login """
 
-    Arguments:
-        logging    --> logging for warning
-                       -Root logging level should be warning
-    Usage:
-        from hippod_login import Login
-
-        login = Login(logging)
-
-    """
     def __init__(self, conf, path):
         self._conf = conf
         self._path = path
@@ -68,12 +53,17 @@ class Login:
             return False
         return open(filename).read()
 
+    def set_cookie(self, name, value):
+        """ set cookie """
+        self._cookie_name, self._cookie_value = name, value
+        return None
+
     def _check_cookie(self, request):
-        cookie_value = request.cookies.get(COOKIE_NAME, None)
+        cookie_value = request.cookies.get(self._cookie_name, None)
         if not cookie_value:
             return False
         try:
-            if not int(cookie_value) == COOKIE_VALUE:
+            if not int(cookie_value) == self._cookie_value:
                 return False
             return True
         except ValueError:
@@ -133,9 +123,10 @@ class Login:
         if not self._check_credentials(username, password):
             return web.HTTPFound('/redirect')
         time_ = datetime.datetime.utcnow() + datetime.timedelta(
-            days=COOKIE_STORAGE_DATE)
+            days=30)
         cookie_expiry_date = time_.strftime("%a, %d %b %Y %H:%M:%S GMT")
         response = web.HTTPFound('/')
-        response.set_cookie(COOKIE_NAME,
-                            value=COOKIE_VALUE, expires=cookie_expiry_date)
+        response.set_cookie(self._cookie_name,
+                            value=self._cookie_value,
+                            expires=cookie_expiry_date)
         return response
