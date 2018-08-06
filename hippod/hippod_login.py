@@ -2,7 +2,6 @@ import os
 import datetime
 from aiohttp import web
 
-
 # server error
 ERROR = '''
 <html>
@@ -37,6 +36,8 @@ class Login:
         self._login_html_file = self._path + '/login.html'
         self._redirect_html_file = self._path + '/redirect.html'
         self._index_html_file = self._path + '/index.html'
+        self._cookie_name = 'OldTamil'
+        self._cookie_value = 1
 
     def _check_the_file(self, filename):
         if not os.path.isfile(filename):
@@ -76,7 +77,7 @@ class Login:
             return False
         return True
 
-    def _check_credentials(self, username, password):
+    async def _check_credentials(self, username, password):
         authorized_username = self._conf.common.username
         authorized_password = self._conf.common.password
         if not (username == authorized_username and
@@ -120,7 +121,8 @@ class Login:
         form = await request.post()
         username = form.get('username')
         password = form.get('password')
-        if not self._check_credentials(username, password):
+        authorization = await self._check_credentials(username, password)
+        if not authorization:
             return web.HTTPFound('/redirect')
         time_ = datetime.datetime.utcnow() + datetime.timedelta(
             days=30)
