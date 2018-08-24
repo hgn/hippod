@@ -1,53 +1,99 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Login HippoD</title>
-  <link rel="shortcut icon" href="static/assets/images/hippod_icon.ico">
-  <style type ="text/css">
-    h1 {color: azure; font-family: Arial, Helvetica, sans-serif; text-align:center; padding:-20%; font-size: 100px;}
-    p {border: none; margin:4px 2px; padding:-20%;color: #E6D102; font-weight:bold; font-size: 50px; text-align: center;}
-    body { text-align:right; padding: 1%; font-weight: bold; font: 20px Helvetica, sans-serif; }
+	<title>HippoD LogIn</title>
+	<meta charset="UTF-8">
 
-    input[type=text]
-    {
-    align-content: right;
-    width: 40%;
-    padding:5px;
-    margin: 1px 0px;
-    display: inline-block;
-    border: 1px solid #ccc;
-    box-sizing: content-box;
-    }
 
-    input[type=password]
-    {
-    width: 40%;
-    padding: 5px;
-    margin: 1px 0px;
-    display: inline-block;
-    border: 1px solid #ccc;
-    box-sizing: content-box;
-    }
-
-    input[type=submit] {
-    width: 10%;
-    padding: 5px;
-    margin: 8px -12px;
-    display: inline-block;
-    border: 1px solid #ccc;
-    box-sizing: content-box;
-    }
-
-   form {text-align:-moz-left; color: azure; font-weight: bold;display:inline-block;font-family: Arial, Helvetica, sans-serif; font-size: 18px; margin: 5px; }
-  </style>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+<!--===============================================================================================-->	
+	<link rel="icon" type="image/png" href="images/icons/favicon.ico"/>
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="/home/muthu/hippod/hippod/app/static/assets/css/bootstrap.min.css">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="static/assets-login/fonts/font-awesome-4.7.0/css/font-awesome.min.css">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="static/assets-login/fonts/iconic/css/material-design-iconic-font.min.css">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="static/assets-login/vendor/animate/animate.css">
+<!--===============================================================================================-->	
+	<link rel="stylesheet" type="text/css" href="static/assets-login/vendor/css-hamburgers/hamburgers.min.css">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="static/assets-login/vendor/animsition/css/animsition.min.css">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="static/assets-login/vendor/select2/select2.min.css">
+<!--===============================================================================================-->	
+	<link rel="stylesheet" type="text/css" href="static/assets-loginvendor/daterangepicker/daterangepicker.css">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="static/assets-login/css/util.css">
+	<link rel="stylesheet" type="text/css" href="static/assets-login/css/main.css">
+        <link href="static/assets/css/style.css" rel="stylesheet">    
+<!--===============================================================================================-->
 </head>
-<body style="background-color: #06bfd4">
-   <form action='/login'  method ='post'>
-     <input type ='text' name = 'username' placeholder="Username">
-     <input type ='password' name  = 'password' placeholder="Password">
-     <input class="btn btn-default" type ='submit' value = 'Login'>
-   </form>
+
+<body>
+	<div id="hippod-logo"></div>
+	<div class="limiter">
+		<div class="container-login100">
+			<div class="wrap-login100">
+				<form action='/login'  method ='post'>
+					<span class="login100-form-title p-b-26">
+						HippoD
+                                       
+					</span>
+					<span class="login100-form-title p-b-48">
+					</span>
+                                        <div class="image-container">
+                                             <img src="static/assets/images/hippod-logo.png" alt="hippodimage" />
+                                        </div>
+
+					<div class="wrap-input100 validate-input" data-validate = "Valid email is: a@b.c">
+						<input class="input100" type="text" name="username">
+						<span class="focus-input100" data-placeholder="Username"></span>
+					</div>
+
+					<div class="wrap-input100 validate-input" data-validate="Enter password">
+						<span class="btn-show-pass">
+							<i class="zmdi zmdi-eye"></i>
+						</span>
+						<input class="input100" type="password" name="password">
+						<span class="focus-input100" data-placeholder="Password"></span>
+					</div>
+
+					<div class="container-login100-form-btn">
+						<div class="wrap-login100-form-btn">
+							<div class="login100-form-bgbtn"></div>
+							<button class="login100-form-btn">
+								Login
+							</button>
+						</div>
+					</div>
+
+				</form>
+			</div>
+		</div>
+	</div>
+	
+
+	<div id="dropDownSelect1"></div>
+       
+	
+<!--===============================================================================================-->
+	<script src="static/assets-login/vendor/jquery/jquery-3.2.1.min.js"></script>
+<!--===============================================================================================-->
+	<script src="static/assets-login/vendor/animsition/js/animsition.min.js"></script>
+<!--===============================================================================================-->
+	<script src="static/assets-login/vendor/bootstrap/js/popper.js"></script>
+	<script src="static/assets-login/vendor/bootstrap/js/bootstrap.min.js"></script>
+<!--===============================================================================================-->
+	<script src="static/assets-login/vendor/select2/select2.min.js"></script>
+<!--===============================================================================================-->
+	<script src="static/assets-login/vendor/daterangepicker/moment.min.js"></script>
+	<script src="static/assets-login/vendor/daterangepicker/daterangepicker.js"></script>
+<!--===============================================================================================-->
+	<script src="static/assets-login/vendor/countdowntime/countdowntime.js"></script>
+<!--===============================================================================================-->
+	<script src="static/assets-login/js/main.js"></script>
+
 </body>
-<h1> Welcome </h1>
-<p> HippoD</p>
 </html>
