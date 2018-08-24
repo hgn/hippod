@@ -296,7 +296,9 @@ def main(conf):
     login = hippod_login.Login(conf, path=APP_PATH)
 
     # set a cookie
-    login.set_cookie(COOKIE_NAME, COOKIE_VALUE)
+    login.set_cookie = (COOKIE_NAME, COOKIE_VALUE)
+    # get a cookie
+    log.info("Cookie: {}".format(login.get_cookie))
 
     setup_routes(app, conf, login)
     register_timeout_handler(app)
