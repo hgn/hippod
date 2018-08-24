@@ -173,7 +173,7 @@ iframe {
   flex-wrap: wrap;
   justify-content: center;
   align-items: center;
-  padding: 15px;
+  padding: 40px;
   background: #f2f2f2;  
 }
 
@@ -406,7 +406,7 @@ iframe {
   color: #fff;
   line-height: 1.2;
   text-transform: uppercase;
-
+  text-decoration: none;
   display: -webkit-box;
   display: -webkit-flex;
   display: -moz-box;
