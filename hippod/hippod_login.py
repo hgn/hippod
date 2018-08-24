@@ -1,6 +1,11 @@
 import os
 import datetime
 from aiohttp import web
+import logging
+
+
+log = logging.getLogger()
+
 
 # server error
 ERROR = '''
@@ -26,7 +31,13 @@ ERROR = '''
 
 
 class Login:
-    """ Hippod login """
+    """ Hippod login
+
+    Arguments:
+        conf --> [configuration file]
+        path --> [Path to templates]
+
+    """
 
     def __init__(self, conf, path):
         self._conf = conf
@@ -36,12 +47,10 @@ class Login:
         self._login_html_file = self._path + '/login.html'
         self._redirect_html_file = self._path + '/redirect.html'
         self._index_html_file = self._path + '/index.html'
-        self._cookie_name = 'OldTamil'
-        self._cookie_value = 1
 
     def _check_the_file(self, filename):
         if not os.path.isfile(filename):
-            print("Internal server error\n"
+            log.warning("Internal server error\n"
                   "File not found:{}\r\n".format(filename))
             return False
         return True
@@ -50,30 +59,54 @@ class Login:
         if not self._check_the_file(filename):
             return False
         if not filename.endswith(".html"):
-            print("{} is not html file".format(filename))
+            log.error("Error: {} is not html file".format(filename))
             return False
         return open(filename).read()
 
-    def set_cookie(self, name, value):
-        """ set cookie """
-        self._cookie_name, self._cookie_value = name, value
-        return None
+    @property
+    def get_cookie(self):
+        """Return tuple of cookie name and value"""
+        return self._cookie_name, self._cookie_value
+
+    @get_cookie.setter
+    def set_cookie(self, cookie):
+        """ set cookie
+
+        Default cookie:
+            cookie name = 'OldTamil'
+            cookie value = 0
+
+        Set cookie allows you to cutomize cookie
+        Arguments:
+            cookie --> tuple of cookie name and value[int]
+
+        Usage:
+            set_cookie(cookie)
+        """
+        self._cookie_name, self._cookie_value = cookie
+        if not isinstance(self._cookie_value, int):
+            log.warning("Cookie value should be int. Failed to cutomize the cookie\n"
+                  "Setting a default cookie")
+            self._cookie_name = 'OldTamil'
+            self._cookie_value = 0
 
     def _check_cookie(self, request):
-        cookie_value = request.cookies.get(self._cookie_name, None)
-        if not cookie_value:
+        if not len(request.cookies) > 0:
             return False
-        try:
-            if not int(cookie_value) == self._cookie_value:
+        for requested_cookie_name, requested_cookie_value in request.cookies.items():
+            if not (requested_cookie_name == self._cookie_name):
                 return False
-            return True
-        except ValueError:
+            try:
+                if not int(requested_cookie_value) == self._cookie_value:
+                    return False
+                return True
+            except ValueError:
+                return False
             return False
-        return False
 
     def check_configuration(self):
         if ('username' or 'password') not in self._conf.common:
-            print("\nWarning: User credentials are missing....\r\n")
+            log.error("\nUser credentials are missing....\r\n")
             return False
         return True
 
@@ -86,6 +119,7 @@ class Login:
         return True
 
     async def server_error(self, request):
+        """server error"""
         return web.Response(text=ERROR, content_type='text/html')
 
     async def index(self, request):
